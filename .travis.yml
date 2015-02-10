@@ -28,7 +28,7 @@ matrix:
 
 env:
   global:
-    - EXTNAME="RMcGirr83/nationalflags"  # CHANGE name of the extension HERE
+    - EXTNAME="RMcGirr83/phpBB-3.1-nationalflags"  # CHANGE name of the extension HERE
     - SNIFF="1"            # Should we run code sniffer on your code?
     - IMAGE_ICC="1"        # Should we run icc profile sniffer on your images?
     - EPV="0"              # Should we run EPV (Extension Pre Validator) on your code?
@@ -39,6 +39,13 @@ branches:
     - master
     - develop
     - /^develop-.*$/
+
+before_install:
+  - sudo mkdir travis
+  - git clone "https://github.com/nickvergessen/phpbb-ext-acme-demo.git"
+  - sudo cp phpbb-ext-acme-demo/phpunit.xml.dist ./
+  - sudo cp phpbb-ext-acme-demo/travis/prepare-phpbb.sh travis
+  - sudo rm -rf phpbb-ext-acme-demo
 
 install:
   - composer install --dev --no-interaction --prefer-source
@@ -54,4 +61,4 @@ script:
   - sh -c "if [ '$SNIFF' != '0' ]; then travis/ext-sniff.sh $DB $TRAVIS_PHP_VERSION $EXTNAME; fi"
   - sh -c "if [ '$IMAGE_ICC' != '0' ]; then travis/check-image-icc-profiles.sh $DB $TRAVIS_PHP_VERSION; fi"
   - phpBB/vendor/bin/phpunit --configuration phpBB/ext/$EXTNAME/travis/phpunit-$DB-travis.xml --bootstrap ./tests/bootstrap.php
-  - sh -c "if [ '$EPV' != '0' ] && [ '$TRAVIS_PHP_VERSION' = '5.3.3' ] && [ '$DB' = 'mysqli' ]; then phpBB/ext/$EXTNAME/vendor/bin/EPV.php run --dir='phpBB/ext/$EXTNAME/'; fi"
+  - sh -c "if [ '$EPV' != '0' ]; then phpBB/ext/$EXTNAME/vendor/bin/EPV.php run --dir='phpBB/ext/$EXTNAME/'; fi"
