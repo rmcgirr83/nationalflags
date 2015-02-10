@@ -7,7 +7,7 @@
 * @version $Id: info_acp_flags.php
 * @copyright (c) RMcGirr83
 * @copyright (c) Anybloodyid
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License 
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
 
@@ -50,11 +50,11 @@ $lang = array_merge($lang, array(
 	'FLAG_IMG_EXPLAIN'					=> 'The name of the image. Example: UK.gif. New images should be uploaded to images/flags/<br />If you do not want to use an image just leave this blank.',
 	'FLAG_IMAGE'						=> 'Flag Image',
 	'FLAG_ADD'							=> 'Add new flag',
-	
+
 	//A couple for the ACP User Profile
 	'FLAG'								=> 'Flag',
 	'FLAG_EXPLAIN'						=> 'Choose your National Flag.',
-		
+
 	//Settings
 	'ACP_FLAG_SETTINGS'					=> 'National Flag Settings',
 	'YES_FLAGS'							=> 'Enable Flags',
@@ -65,21 +65,21 @@ $lang = array_merge($lang, array(
 	'FLAG_IMAGE'						=> 'Image',
 	'FLAG_BOTH'							=> 'Both',
 	'FLAGS_VERSION'						=> 'National Flags Version',
-	
+
 	//Logs, messages and errors
 	'LOG_FLAGS_DELETED'					=> 'Deleted Flag: %1$s',
 	'LOG_FLAG_EDIT'						=> 'Updated Flag: %1$s',
 	'LOG_FLAG_ADD'						=> 'Added new Flag: %1$s',
 	'MSG_FLAGS_DELETED'					=> 'Flag has been deleted.',
-	'MSG_FLAG_CONFIRM_DELETE'			=> 'Are you sure you want to delete this Flag?<br /><strong>%d</strong> user has this flag and will have to select a different flag if you choose to delete this one.',	
+	'MSG_FLAG_CONFIRM_DELETE'			=> 'Are you sure you want to delete this Flag?<br /><strong>%d</strong> user has this flag and will have to select a different flag if you choose to delete this one.',
 	'MSG_FLAGS_CONFIRM_DELETE'			=> 'Are you sure you want to delete this Flag?<br /><strong>%d</strong> users have this flag and will have to select a different flag if you choose to delete this one.',
 	'MSG_FLAG_EDITED'					=> 'Flag has been edited.',
-	'MSG_FLAG_ADDED'					=> 'New Flag has been added.',	
+	'MSG_FLAG_ADDED'					=> 'New Flag has been added.',
 	'FLAG_ERROR_NO_FLAG_NAME'			=> 'No Flag name defined, this is a required field.',
 	'FLAG_ERROR_NOT_EXIST'				=> 'The selected Flag does not exist.',
 	'FLAG_CONFIG_SAVED'					=> 'Flag configuration has been updated',
 	'FLAG_NAME_EXISTS'					=> 'A flag with that name already exists',
-	
+
 	//Install file entries
 	'INSTALL_FLAG'						=> 'National Flags',
 	'INSTALL_FLAG_EXPLAIN'				=> 'Here you can install, update or uninstall National Flags.',
