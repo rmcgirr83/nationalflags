@@ -16,5 +16,5 @@ git clone https://github.com/RMcGirr83/phpBB-3.1-elonw.git ext/rmcgirr83/nationa
 ```
 
 ### 2. activate
-Go to admin panel -> tab customise -> Manage extensions -> enable External Links in New Window
+Go to admin panel -> tab customise -> Manage extensions -> enable National Flags
 
