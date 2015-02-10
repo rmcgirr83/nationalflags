@@ -90,5 +90,3 @@ $lang = array_merge($lang, array(
 	'UNINSTALL_INSTALL_FLAG_CONFIRM'	=> 'Are you sure you want to uninstall National Flags?',
 	'INSERT_IMAGES'						=> 'Images inserted.',
 ));
-
-?>

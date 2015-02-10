@@ -94,7 +94,7 @@ class functions_topfive
 			{
 				$flag = $user_flags[$flag_id]['flag_name'];
 			}
-			elseif ($display == USER_FLAG_IMAGE)//Image
+			else if ($display == USER_FLAG_IMAGE)//Image
 			{
 				$flag = '<img src="' . $this->root_path . 'images/flags/' . $user_flags[$flag_id]['flag_image'] . '" alt="'. htmlspecialchars($user_flags[$flag_id]['flag_name']) . '" title="'. htmlspecialchars($user_flags[$flag_id]['flag_name']) . '" />';
 			}
