@@ -44,7 +44,11 @@ class nationalflags_module
 
 	function flags()
 	{
-		global $cache, $db, $request, $user, $phpbb_container;
+		global $cache, $db, $request, $user, $phpbb_container, $table_prefix;
+		global $template, $phpbb_root_path, $phpEx;
+
+		$flags_table = $table_prefix . 'flags';
+		$flags_dir = '../ext/rmcgirr83/nationalflags/flags/';
 
 		$submit = $request->is_set_post('submit');
 		$action = $request->variable('action', '');
@@ -63,14 +67,14 @@ class nationalflags_module
 				{
 					// Grab the flag name for the log...
 					$sql = 'SELECT flag_name
-						FROM ' . FLAGS_DATA_TABLE . '
+						FROM ' . $flags_table . '
 						WHERE flag_id = ' .(int) $flag_id;
 					$result = $db->sql_query($sql);
 					$flag_name = $db->sql_fetchfield('flag_name');
 					$db->sql_freeresult($result);
 
 					// Delete the flag...
-					$sql = 'DELETE FROM ' . FLAGS_DATA_TABLE . '
+					$sql = 'DELETE FROM ' . $flags_table . '
 						WHERE flag_id = ' . (int) $flag_id;
 					$db->sql_query($sql);
 
@@ -80,8 +84,8 @@ class nationalflags_module
 						WHERE user_flag = ' . (int) $flag_id;
 					$db->sql_query($sql);
 
-					$log = $this->phpbb_container->get('log');
-					$log->add('admin', $user->data['user_id'], $user->ip, 'LOG_FLAGS_DELETED', $flag_name);
+					$log = $phpbb_container->get('log');
+					$log->add('admin', $user->data['user_id'], $user->ip, 'LOG_FLAGS_DELETED', time(), array($flag_name));
 
 					$cache->destroy('_user_flags');
 
@@ -97,7 +101,11 @@ class nationalflags_module
 					$row = $db->sql_fetchrow($result);
 					$db->sql_freeresult($result);
 
-					$message = $row['flag_count'] <> 1 ? sprintf($user->lang['MSG_FLAGS_CONFIRM_DELETE'], $row['flag_count']) : sprintf($user->lang['MSG_FLAG_CONFIRM_DELETE'], $row['flag_count']);
+					$message = $user->lang['MSG_CONFIRM'];
+					if (!empty($row['flag_count']))
+					{
+						$message .= $row['flag_count'] <> 1 ? sprintf($user->lang['MSG_FLAGS_CONFIRM_DELETE'], $row['flag_count']) : sprintf($user->lang['MSG_FLAG_CONFIRM_DELETE'], $row['flag_count']);
+					}
 					confirm_box(false, $message, build_hidden_fields(array(
 						'id'		=> (int) $flag_id,
 						'mode'		=> $mode,
@@ -126,22 +134,22 @@ class nationalflags_module
 
 					if (!sizeof($error))
 					{
-						$sql = 'UPDATE ' . FLAGS_DATA_TABLE . '
+						$sql = 'UPDATE ' . $flags_table . '
 							SET ' . $db->sql_build_array('UPDATE', $flag_row) . '
 							WHERE flag_id = ' . (int) $flag_id;
 						$db->sql_query($sql);
 
-						$log = $this->phpbb_container->get('log');
-						$log->add('admin', $user->data['user_id'], $user->ip, 'LOG_FLAG_EDIT', $flag_row['flag_name']);
+						$log = $phpbb_container->get('log');
+						$log->add('admin', $user->data['user_id'], $user->ip, 'LOG_FLAG_EDIT', time(), array($flag_row['flag_name']));
 
 						$cache->destroy('_user_flags');
 
-						trigger_error($user->lang['MSG_FLAG_EDITED'] . adm_back_link($this->u_action . "&amp;id=$flag_id&amp;action=$action"));
+						trigger_error($user->lang['MSG_FLAG_EDITED'] . adm_back_link($this->u_action));
 					}
 				}
 
 				$sql = 'SELECT flag_id, flag_name, flag_image
-					FROM ' . FLAGS_DATA_TABLE . '
+					FROM ' . $flags_table . '
 					WHERE flag_id =' . (int) $flag_id;
 				$result = $db->sql_query($sql);
 				$flag_row = $db->sql_fetchrow($result);
@@ -173,7 +181,7 @@ class nationalflags_module
 
 				//we don't want two flags with the same name...right?
 				$sql = 'SELECT *
-					FROM ' . FLAGS_DATA_TABLE;
+					FROM ' . $flags_table;
 				$result = $db->sql_query($sql);
 
 				$flag_name_arry = array();
@@ -186,7 +194,7 @@ class nationalflags_module
 
 				// convert the array to string
 				$flag_name_arry = implode(',', $flag_name_arry);
-				$flag_name_arry = strtolower($flag_name_arry);
+				$flag_name_arry = strtoupper($flag_name_arry);
 
 				// convert the string back into an array
 				$flag_name_arry = explode(',', $flag_name_arry);
@@ -206,17 +214,17 @@ class nationalflags_module
 						$error[] = $user->lang['FLAG_ERROR_NO_FLAG_NAME'];
 					}
 					//check to make sure the flag name is different
-					if (in_array(strtolower($flag_row['flag_name']), $flag_name_arry))
+					if (in_array(strtoupper($flag_row['flag_name']), $flag_name_arry))
 					{
 						$error[] = $user->lang['FLAG_NAME_EXISTS'];
 					}
 					if (!sizeof($error))
 					{
-						$sql = 'INSERT INTO ' . FLAGS_DATA_TABLE . ' ' . $db->sql_build_array('INSERT', $flag_row);
+						$sql = 'INSERT INTO ' . $flags_table . ' ' . $db->sql_build_array('INSERT', $flag_row);
 						$db->sql_query($sql);
 
-						$log = $this->phpbb_container->get('log');
-						$log->add('admin', $user->data['user_id'], $user->ip, 'LOG_FLAG_ADD', $flag_row['flag_name']);
+						$log = $phpbb_container->get('log');
+						$log->add('admin', $user->data['user_id'], $user->ip, 'LOG_FLAG_ADD', time(), array($flag_row['flag_name']));
 
 						$cache->destroy('_user_flags');
 
@@ -237,7 +245,7 @@ class nationalflags_module
 		}
 
 		$sql = 'SELECT *
-			FROM ' . FLAGS_DATA_TABLE . '
+			FROM ' . $flags_table . '
 			ORDER BY flag_name ASC';
 		$result = $db->sql_query($sql);
 
@@ -245,7 +253,7 @@ class nationalflags_module
 		{
 			$template->assign_block_vars('flags', array(
 				'FLAG_NAME'		=> $row['flag_name'],
-				'FLAG_IMG'		=> "{$phpbb_root_path}images/flags/" . $row['flag_image'],
+				'FLAG_IMG'		=> "$flags_dir" . strtolower($row['flag_image']),
 				'FLAG_ID'		=> $row['flag_id'],
 
 				'U_EDIT'		=> $this->u_action . "&amp;id={$row['flag_id']}&amp;action=edit",
@@ -259,30 +267,16 @@ class nationalflags_module
 		));
 	}
 
-	function flag_type($value)
-	{
-		return '<select id="flag_type" name="flag_type">' . $this->flag_type_select($value) . '</select>';
-	}
-
-	/**
-	* Select Flag behaviour
-	*/
-
-	function flag_type_select($value)
-	{
-		global $user;
-
-		return '<option value="1"' . (($value == 1) ? ' selected="selected"' : '') . '>' . $user->lang['FLAG_TEXT'] . '</option><option value="2"' . (($value == 2) ? ' selected="selected"' : '') . '>' . $user->lang['FLAG_IMAGE'] . '</option><option value="3"' . (($value == 3) ? ' selected="selected"' : '') . '>' . $user->lang['FLAG_BOTH'] . '</option>';
-	}
-
 	function config()
 	{
 		global $config, $template, $user, $request;
 
-		$submit 	= (isset($_POST['submit'])) ? true : false;
+		$submit	= $request->is_set_post('submit');
 
 		$allow_flags = $request->variable('allow_flags', (int) $config['allow_flags']);
-		$flag_type = $request->variable('flag_type', 0);
+		$flag_on_reg = $request->variable('flags_on_reg', 0);
+		$flag_msg = $request->variable('flags_display_msg', 0);
+
 		$error = array();
 		if ($submit)
 		{
@@ -294,17 +288,18 @@ class nationalflags_module
 			if (!sizeof($error))
 			{
 				set_config('allow_flags', $allow_flags);
-				set_config('flag_type', $flag_type);
+				set_config('flags_display_msg', $flag_msg);
+				set_config('flags_on_reg', $flag_on_reg);
 
 				trigger_error($user->lang['FLAG_CONFIG_SAVED'] . adm_back_link($this->u_action));
 			}
 		}
 
 		$template->assign_vars(array(
-			'FLAGS_VERSION' => $config['flag_version'],
+			'FLAGS_VERSION' => $config['nationalflags_version'],
 			'ALLOW_FLAGS'	=> $allow_flags,
-			'FLAG_DISPLAY'	=> $this->flag_type($config['flag_type']),
-
+			'FLAGS_ON_REG'	=> $config['flags_on_reg'],
+			'FLAGS_DISPLAY_MSG'	=> $config['flags_display_msg'],
 			'ERROR_MSG'		=> (sizeof($error)) ? implode('<br />', $error) : '',
 
 			'S_ERROR'		=> (sizeof($error)) ? true : false,

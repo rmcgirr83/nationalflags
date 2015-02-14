@@ -12,7 +12,7 @@ Clone (or download and move) the repository into the folder ext/rmcgirr83/nation
 
 ```
 cd phpBB3
-git clone https://github.com/RMcGirr83/phpBB-3.1-elonw.git ext/rmcgirr83/nationalflags/
+git clone https://github.com/RMcGirr83/phpBB-3.1-nationalflags.git ext/rmcgirr83/nationalflags/
 ```
 
 ### 2. activate

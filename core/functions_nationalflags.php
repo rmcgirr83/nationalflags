@@ -9,7 +9,7 @@
 
 namespace rmcgirr83\nationalflags\core;
 
-class functions_topfive
+class functions_nationalflags
 {
 	/** @var \phpbb\auth\auth */
 	protected $auth;
@@ -19,9 +19,6 @@ class functions_topfive
 
 	/** @var \phpbb\cache\service */
 	protected $cache;
-
-	/** @var \phpbb\content_visibility */
-	protected $content_visibility;
 
 	/** @var \phpbb\db\driver\driver */
 	protected $db;
@@ -41,12 +38,11 @@ class functions_topfive
 	/** @var string PHP extension */
 	protected $php_ext;
 
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\cache\service $cache, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\event\dispatcher_interface $dispatcher, \phpbb\template\template $template, \phpbb\user $user, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\cache\service $cache, \phpbb\db\driver\driver_interface $db, \phpbb\event\dispatcher_interface $dispatcher, \phpbb\template\template $template, \phpbb\user $user, $phpbb_root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
 		$this->cache = $cache;
-		$this->content_visibility = $content_visibility;
 		$this->db = $db;
 		$this->dispatcher = $dispatcher;
 		$this->template = $template;
@@ -96,7 +92,7 @@ class functions_topfive
 			}
 			else if ($display == USER_FLAG_IMAGE)//Image
 			{
-				$flag = '<img src="' . $this->root_path . 'images/flags/' . $user_flags[$flag_id]['flag_image'] . '" alt="'. htmlspecialchars($user_flags[$flag_id]['flag_name']) . '" title="'. htmlspecialchars($user_flags[$flag_id]['flag_name']) . '" />';
+				$flag = '<img src="' . $this->root_path . 'flags/' . $user_flags[$flag_id]['flag_image'] . '" alt="'. htmlspecialchars($user_flags[$flag_id]['flag_name']) . '" title="'. htmlspecialchars($user_flags[$flag_id]['flag_name']) . '" />';
 			}
 			else// it's not 1 or 2 so it must be 3 which is both
 			{

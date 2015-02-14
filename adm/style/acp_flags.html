@@ -56,7 +56,7 @@
 			<!-- IF flags.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
 				<td style="width: 15%;">{flags.FLAG_NAME}</td>
 				<td style="text-align: center;"><img src="{flags.FLAG_IMG}" alt="{flags.FLAG_NAME}" title="{flags.FLAG_NAME}" /></td>
-				<td style="text-align: right; white-space: nowrap;">
+				<td style="text-align: center; white-space: nowrap;">
 					&nbsp;<a href="{flags.U_EDIT}">{ICON_EDIT}</a> <a href="{flags.U_DELETE}">{ICON_DELETE}</a>
 				</td>
 			</tr>
@@ -83,17 +83,23 @@
 <form id="acp_flags_config" method="post" action="{U_ACTION}">
 	<fieldset>
 		<dl>
-			<dt><label for="allow_flags">{L_YES_FLAGS}:</label><br />
+			<dt><label for="allow_flags">{L_YES_FLAGS}{L_COLON}</label><br />
 			<span>{L_YES_FLAGS_EXPLAIN}</span></dt>
 			<dd><label><input type="radio" class="radio" name="allow_flags" value="1" <!-- IF ALLOW_FLAGS -->id="allow_flags" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
 			<label><input type="radio" class="radio" name="allow_flags" value="0" <!-- IF not ALLOW_FLAGS -->id="allow_flags" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>		
+		<dl>
+			<dt><label for="flags_on_reg">{L_FLAGS_ON_REG}{L_COLON}</label><br />
+			<span>{L_FLAGS_ON_REG_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" class="radio" name="flags_on_reg" value="1" <!-- IF FLAGS_ON_REG -->id="flags_on_reg" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+			<label><input type="radio" class="radio" name="flags_on_reg" value="0" <!-- IF not FLAGS_ON_REG -->id="flags_on_reg" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
 		<dl>
-			<dt><label for="flag_type">{L_FLAG_TYPE}:</label><br />
-			<span>{L_FLAG_TYPE_EXPLAIN}</span></dt>
-			<dd>{FLAG_DISPLAY}</dd>
-		</dl>		
-
+			<dt><label for="flags_display_msg">{L_FLAGS_DISPLAY_MSG}{L_COLON}</label><br />
+			<span>{L_FLAGS_DISPLAY_MSG_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" class="radio" name="flags_display_msg" value="1" <!-- IF FLAGS_DISPLAY_MSG -->id="flags_display_msg" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+			<label><input type="radio" class="radio" name="flags_display_msg" value="0" <!-- IF not FLAGS_DISPLAY_MSG -->id="flags_display_msg" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>
 		<p class="submit-buttons">
 			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
 			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
