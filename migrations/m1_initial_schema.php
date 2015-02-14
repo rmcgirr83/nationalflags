@@ -32,7 +32,7 @@ class m1_initial_schema extends \phpbb\db\migration\migration
 			'add_tables'    => array(
 				$this->table_prefix . 'flags'        => array(
 					'COLUMNS' => array(
-						'flag_id' => array('UINT', NULL, 'auto_increment'),
+						'flag_id' => array('UINT', null, 'auto_increment'),
 						'flag_name' => array('VCHAR_UNI:255', ''),
 						'flag_image' => array('VCHAR', ''),
 					),
