@@ -9,7 +9,7 @@
 
 namespace rmcgirr83\nationalflags\core;
 
-class functions_topfive
+class functions_nationalflags
 {
 	/** @var \phpbb\auth\auth */
 	protected $auth;
