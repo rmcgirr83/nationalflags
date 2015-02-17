@@ -1,35 +1,51 @@
 imports:
     - { resource: tables.yml }
+    - { resource: extpath.yml }
 
 services:
-    rmcgirr83.nationalflags.acp:
-        class: rmcgirr83\nationalflags\acp\nationalflags_module
+    rmcgirr83.nationalflags.admin.controller:
+        class: rmcgirr83\nationalflags\controller\admin_controller
         arguments:
+            - @cache
+            - @config
             - @dbal.conn
-            - %rmcgirr83.nationalflags.tables.nationalflags%
+            - @request
+            - @template
+            - @user
+            - @service_container
+            - %rmcgirr83.nationalflags.table.nationalflags%
+            - %rmcgirr83.nationalflags.flagpath.nationalflags%
+            - %core.root_path%
+            - %core.php_ext%
+
     rmcgirr83.nationalflags.listener:
         class: rmcgirr83\nationalflags\event\listener
         arguments:
             - @rmcgirr83.nationalflags.functions
+            - @cache
             - @config
             - @controller.helper
             - @dbal.conn
             - @template
             - @user
+            - %rmcgirr83.nationalflags.table.nationalflags%
+            - %rmcgirr83.nationalflags.flagpath.nationalflags%
             - %core.root_path%
             - %core.php_ext%
         tags:
             - { name: event.listener }
+
     rmcgirr83.nationalflags.functions:
         class: rmcgirr83\nationalflags\core\functions_nationalflags
         arguments:
             - @auth
             - @config
             - @cache
-            - @content.visibility
             - @dbal.conn
             - @dispatcher
             - @template
             - @user
+            - %rmcgirr83.nationalflags.table.nationalflags%
+            - %rmcgirr83.nationalflags.flagpath.nationalflags%
             - %core.root_path%
             - %core.php_ext%

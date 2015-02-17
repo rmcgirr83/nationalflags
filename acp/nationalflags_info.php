@@ -19,7 +19,7 @@ class nationalflags_info
 			'version'	=> '1.0.0',
 			'modes'	=> array(
 				'config'	=> array('title' => 'ACP_FLAG_SETTINGS', 'auth' => 'ext_rmcgirr83/nationalflags && acl_a_board', 'cat' => array('ACP_CAT_FLAGS')),
-				'flags'		=> array('title' => 'ACP_FLAGS', 'auth' => 'ext_rmcgirr83/nationalflags && acl_a_board', 'cat' => array('ACP_CAT_FLAGS')),
+				'manage'		=> array('title' => 'ACP_FLAGS', 'auth' => 'ext_rmcgirr83/nationalflags && acl_a_board', 'cat' => array('ACP_CAT_FLAGS')),
 			),
 		);
 	}

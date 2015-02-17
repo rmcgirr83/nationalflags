@@ -1,2 +1,2 @@
 parameters:
-    rmcgirr83.nationalflags.tables.nationalflags: %core.table_prefix%flags
+    rmcgirr83.nationalflags.table.nationalflags: %core.table_prefix%flags

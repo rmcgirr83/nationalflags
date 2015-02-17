@@ -28,17 +28,12 @@ class m2_initial_data extends \phpbb\db\migration\migration
 			array('config.add', array('allow_flags', true)),
 			array('config.add', array('flags_display_msg', true)),
 			array('config.add', array('flags_on_reg', true)),
+			array('config.add', array('flags_how_many', 10)),
+			array('module.add', array('acp','ACP_CAT_DOT_MODS','ACP_CAT_FLAGS')),
 			array('module.add', array(
-				'acp',
-				'ACP_CAT_DOT_MODS',
-				'ACP_CAT_FLAGS'
-			)),
-			array('module.add', array(
-				'acp',
-				'ACP_CAT_FLAGS',
-				array(
+				'acp', 'ACP_CAT_FLAGS', array(
 					'module_basename'	=> '\rmcgirr83\nationalflags\acp\nationalflags_module',
-					'modes'				=> array('config', 'flags'),
+					'modes'				=> array('config', 'manage'),
 				),
 			)),
 			array('custom', array(

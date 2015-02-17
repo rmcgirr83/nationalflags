@@ -1,0 +1,70 @@
+<!-- INCLUDE overall_header.html -->
+<!-- IF S_ADD_FLAG -->
+
+<a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
+
+<h1>{L_FLAG_ADD}</h1>
+<!-- IF S_ERROR -->
+<div class="errorbox">
+	<h3>{L_WARNING}</h3>
+	<p>{ERROR_MSG}</p>
+</div>
+<!-- ENDIF -->
+
+<form id="acp_add_flag" method="post" action="{U_ACTION}">
+	<fieldset>
+		<dl>
+			<dt><label for="flag_name">{L_FLAG_NAME}{L_COLON}</label><br /><span>{L_FLAG_NAME_EXPLAIN}</span></dt>
+			<dd><input name="flag_name" type="text" id="flag_name" value="{FLAG_NAME}" maxlength="255" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="flag_image">{L_FLAG_IMG}{L_COLON}</label><br /><span>{L_FLAG_IMG_EXPLAIN}</span></dt>
+			<dd><input name="flag_image" type="text" id="flag_image" value="{FLAG_IMAGE}" maxlength="255" /></dd>
+		</dl>
+
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		</p>
+		{S_FORM_TOKEN}
+	</fieldset>
+</form>
+
+<!-- ELSEIF S_FLAGS -->
+
+<h1>{L_ACP_FLAGS}</h1>
+
+<p>{L_ACP_FLAGS_EXPLAIN}</p>
+
+<form id="acp_flags" method="post" action="{U_ACTION}">
+	<fieldset class="quick">
+		<input class="button2" name="add" type="submit" value="{L_FLAG_ADD}" />
+	</fieldset>
+	<table cellspacing="1">
+		<thead>
+			<tr>
+				<th>{L_FLAG_NAME}</th>
+				<th style="text-align: center;">{L_FLAG_IMG}</th>
+				<th style="text-align: center;">{L_OPTIONS}</th>
+			</tr>
+		</thead>
+		<tbody>
+		<!-- BEGIN flags -->
+			<!-- IF flags.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+				<td style="width: 15%;">{flags.FLAG_NAME}</td>
+				<td style="text-align: center;"><img src="{flags.FLAG_IMG}" alt="{flags.FLAG_NAME}" title="{flags.FLAG_NAME}" /></td>
+				<td style="text-align: center; white-space: nowrap;">
+					&nbsp;<a href="{flags.U_EDIT}">{ICON_EDIT}</a> <a href="{flags.U_DELETE}">{ICON_DELETE}</a>
+				</td>
+			</tr>
+		<!-- END flags -->
+		</tbody>
+	</table>
+	<fieldset class="quick">
+		<input class="button2" name="add" type="submit" value="{L_FLAG_ADD}" />
+		{S_FORM_TOKEN}
+	</fieldset>
+
+</form>
+<!-- ENDIF -->
+<!-- INCLUDE overall_footer.html -->

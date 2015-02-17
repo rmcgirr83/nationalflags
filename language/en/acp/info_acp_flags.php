@@ -41,11 +41,10 @@ $lang = array_merge($lang, array(
 
 	//Add/Edit Flags
 	'FLAG_EDIT'							=> 'Edit Flag',
-	'FLAG_ADD'							=> 'Add new Flag',
 	'FLAG_NAME'							=> 'Flag Name',
-	'FLAG_NAME_EXPLAIN'					=> 'The name of the Flag. If you choose to display as text or both the flag will displayed as it is here.',
+	'FLAG_NAME_EXPLAIN'					=> 'The name of the Flag. The flag will title is displayed as it is here.',
 	'FLAG_IMG'							=> 'Image Name',
-	'FLAG_IMG_EXPLAIN'					=> 'The name of the image. Example: UK.gif. New images should be uploaded to ext/rmcgirr83/nationalflags/flags<br />If you do not want to use an image just leave this blank.',
+	'FLAG_IMG_EXPLAIN'					=> 'The name of the image. Example: UK.gif. New images should be uploaded to ext/rmcgirr83/nationalflags/flags.',
 	'FLAG_IMAGE'						=> 'Flag Image',
 	'FLAG_ADD'							=> 'Add new flag',
 
@@ -53,16 +52,13 @@ $lang = array_merge($lang, array(
 	'ACP_FLAG_SETTINGS'					=> 'National Flag Settings',
 	'YES_FLAGS'							=> 'Enable Flags',
 	'YES_FLAGS_EXPLAIN'					=> 'Choose to disable or enable the Flags',
-	'FLAG_TYPE'							=> 'Display behaviour',
-	'FLAG_TYPE_EXPLAIN'					=> 'Choose how to display the flag.',
-	'FLAG_TEXT'							=> 'Text',
-	'FLAG_IMAGE'						=> 'Image',
-	'FLAG_BOTH'							=> 'Both',
+	'FLAGS_HOW_MANY'					=> 'How many flags to display',
+	'FLAGS_HOW_MANY_EXPLAIN'			=> 'Input a number of how many flags to display on the index page.<br />You are limited from 5 to 100 flags to display.',
 	'FLAGS_VERSION'						=> 'National Flags Version',
 	'FLAGS_ON_REG'						=> 'Flags on Registration',
 	'FLAGS_ON_REG_EXPLAIN'				=> 'Choosing Yes here will force new registrants to choose a flag',
 	'FLAGS_DISPLAY_MSG'					=> 'Display a message',
-	'FLAGS_DISPLAY_MSG_EXPLAIN'			=> 'Choosing Yes here will display a message on the forum for a user to choose a flag',
+	'FLAGS_DISPLAY_MSG_EXPLAIN'			=> 'Choosing Yes here will display a message on the forum for a user to choose a flag.',
 
 	//Logs, messages and errors
 	'LOG_FLAGS_DELETED'					=> 'Deleted Flag: %1$s',
@@ -75,8 +71,11 @@ $lang = array_merge($lang, array(
 	'MSG_FLAG_EDITED'					=> 'Flag has been edited.',
 	'MSG_FLAG_ADDED'					=> 'New Flag has been added.',
 	'FLAG_ERROR_NO_FLAG_NAME'			=> 'No Flag name defined, this is a required field.',
+	'FLAG_ERROR_NO_FLAG_IMG'			=> 'No Flag image defined, this is a required field.',
 	'FLAG_ERROR_NOT_EXIST'				=> 'The selected Flag does not exist.',
-	'FLAG_CONFIG_SAVED'					=> 'Flag configuration has been updated',
+	'FLAG_CONFIG_SAVED'					=> '<strong>National flags settings changed</strong>',
 	'FLAG_NAME_EXISTS'					=> 'A flag with that name already exists',
-
+	'FLAG_SETTINGS_CHANGED'				=> 'National flags settings changed.',
+	'TOO_SMALL_FLAGS_HOW_MANY'			=> 'The number to display value is too small.',
+	'TOO_LARGE_FLAGS_HOW_MANY'			=> 'The number to display value is too large.',
 ));
