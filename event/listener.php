@@ -64,7 +64,19 @@ class listener implements EventSubscriberInterface
 	/** @var string phpEx */
 	protected $php_ext;
 
-	public function __construct(\rmcgirr83\nationalflags\core\functions_nationalflags $functions, \rmcgirr83\nationalflags\core\ajax_nationalflags $ajax, \phpbb\cache\service $cache, \phpbb\config\config $config, \phpbb\controller\helper $controller_helper, \phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user, $flags_table, $flags_path, $phpbb_root_path, $php_ext)
+	public function __construct(
+			\rmcgirr83\nationalflags\core\functions_nationalflags $functions,
+			\rmcgirr83\nationalflags\core\ajax_nationalflags $ajax, 
+			\phpbb\cache\service $cache, 
+			\phpbb\config\config $config, 
+			\phpbb\controller\helper $controller_helper, 
+			\phpbb\db\driver\driver_interface $db, 
+			\phpbb\template\template $template, 
+			\phpbb\user $user, 
+			$flags_table, 
+			$flags_path, 
+			$phpbb_root_path, 
+			$php_ext)
 	{
 		$this->nf_functions = $functions;
 		$this->nf_ajax = $ajax;
@@ -82,39 +94,21 @@ class listener implements EventSubscriberInterface
 
 	static public function getSubscribedEvents()
 	{
-
 		return array(
-			'core.user_setup'						=> 'load_language_on_setup',
+			'core.user_setup'						=> 'flag_setup',
 			'core.page_header_after'				=> 'display_message',
 			'core.ucp_profile_modify_profile_info'	=> 'user_flag_profile',
 		);
 	}
 
-	public function load_language_on_setup($event)
+	public function flag_setup($event)
 	{
-		// Need to ensure the flags are cached on page load
-		if (($user_flags = $this->cache->get('_user_flags')) === false)
+		if (!$this->config['allow_flags'])
 		{
-			$user_flags = array();
-
-			$sql = 'SELECT flag_id, flag_name, flag_image
-				FROM ' . $this->flags_table . '
-			ORDER BY flag_id';
-			$result = $this->db->sql_query($sql);
-
-			while ($row = $this->db->sql_fetchrow($result))
-			{
-				$user_flags[$row['flag_id']] = array(
-					'flag_id'		=> $row['flag_id'],
-					'flag_name'		=> $row['flag_name'],
-					'flag_image'	=> $row['flag_image'],
-				);
-			}
-			$this->db->sql_freeresult($result);
-
-			// cache this data for ever, can only change in ACP
-			$this->cache->put('_user_flags', $user_flags);
-		}
+			return;
+		}	
+		// Need to ensure the flags are cached on page load
+		$this->nf_functions->query_flags();
 
 		$lang_set_ext = $event['lang_set_ext'];
 		$lang_set_ext[] = array(
@@ -126,12 +120,12 @@ class listener implements EventSubscriberInterface
 
 	public function display_message($event)
 	{
-		if (!$this->config['flags_display_msg'])
+		if (!$this->config['allow_flags'])
 		{
 			return;
 		}
 
-		if ($this->config['allow_flags'])
+		if ($this->config['flags_display_msg'])
 		{
 			$this->template->assign_vars(array(
 				'S_FLAG_MESSAGE'	=> (empty($this->user->data['user_flag'])) ? true : false,
