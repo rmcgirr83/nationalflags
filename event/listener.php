@@ -66,16 +66,16 @@ class listener implements EventSubscriberInterface
 
 	public function __construct(
 			\rmcgirr83\nationalflags\core\functions_nationalflags $functions,
-			\rmcgirr83\nationalflags\core\ajax_nationalflags $ajax, 
-			\phpbb\cache\service $cache, 
-			\phpbb\config\config $config, 
-			\phpbb\controller\helper $controller_helper, 
-			\phpbb\db\driver\driver_interface $db, 
-			\phpbb\template\template $template, 
-			\phpbb\user $user, 
-			$flags_table, 
-			$flags_path, 
-			$phpbb_root_path, 
+			\rmcgirr83\nationalflags\core\ajax_nationalflags $ajax,
+			\phpbb\cache\service $cache,
+			\phpbb\config\config $config,
+			\phpbb\controller\helper $controller_helper,
+			\phpbb\db\driver\driver_interface $db,
+			\phpbb\template\template $template,
+			\phpbb\user $user,
+			$flags_table,
+			$flags_path,
+			$phpbb_root_path,
 			$php_ext)
 	{
 		$this->nf_functions = $functions;
@@ -106,7 +106,7 @@ class listener implements EventSubscriberInterface
 		if (!$this->config['allow_flags'])
 		{
 			return;
-		}	
+		}
 		// Need to ensure the flags are cached on page load
 		$this->nf_functions->query_flags();
 
