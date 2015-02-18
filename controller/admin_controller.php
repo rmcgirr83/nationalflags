@@ -82,7 +82,18 @@ class admin_controller implements admin_interface
 	* @return \rmcgirr83\nationalflags\controller\admin_controller
 	* @access public
 	*/
-	public function __construct(\phpbb\cache\service $cache, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, ContainerInterface $container, $flags_table, $flags_path, $root_path, $php_ext)
+	public function __construct(
+			\phpbb\cache\service $cache,
+			\phpbb\config\config $config,
+			\phpbb\db\driver\driver_interface $db,
+			\phpbb\request\request $request,
+			\phpbb\template\template $template,
+			\phpbb\user $user,
+			ContainerInterface $container,
+			$flags_table,
+			$flags_path,
+			$root_path,
+			$php_ext)
 	{
 		$this->cache = $cache;
 		$this->config = $config;
