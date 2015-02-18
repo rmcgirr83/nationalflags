@@ -20,8 +20,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 */
 class listener implements EventSubscriberInterface
 {
-	/* @var \rmcgirr83\topfive\core\functions_nationalflags */
+	/* @var \rmcgirr83\nationalflags\core\functions_nationalflags */
 	protected $nf_functions;
+
+	/* @var \rmcgirr83\nationalflags\core\ajax_nationalflags */
+	protected $ajax_functions;
 
 	/** @var \phpbb\cache\service */
 	protected $cache;
@@ -61,9 +64,10 @@ class listener implements EventSubscriberInterface
 	/** @var string phpEx */
 	protected $php_ext;
 
-	public function __construct(\rmcgirr83\nationalflags\core\functions_nationalflags $functions, \phpbb\cache\service $cache, \phpbb\config\config $config, \phpbb\controller\helper $controller_helper, \phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user, $flags_table, $flags_path, $phpbb_root_path, $php_ext)
+	public function __construct(\rmcgirr83\nationalflags\core\functions_nationalflags $functions, \rmcgirr83\nationalflags\core\ajax_nationalflags $ajax,\phpbb\cache\service $cache, \phpbb\config\config $config, \phpbb\controller\helper $controller_helper, \phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user, $flags_table, $flags_path, $phpbb_root_path, $php_ext)
 	{
 		$this->nf_functions = $functions;
+		$this->nf_ajax = $ajax;
 		$this->cache = $cache;
 		$this->config = $config;
 		$this->controller_helper = $controller_helper;

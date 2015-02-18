@@ -11,8 +11,6 @@ namespace rmcgirr83\nationalflags\core;
 
 class functions_nationalflags
 {
-	/** @var \phpbb\auth\auth */
-	protected $auth;
 
 	/** @var \phpbb\config\config */
 	protected $config;
@@ -23,33 +21,42 @@ class functions_nationalflags
 	/** @var \phpbb\db\driver\driver */
 	protected $db;
 
-	/** @var \phpbb\event\dispatcher_interface */
-	protected $dispatcher;
-
 	/** @var \phpbb\template\template */
 	protected $template;
 
 	/** @var \phpbb\user */
 	protected $user;
 
+	/**
+	* The database table the rules are stored in
+	*
+	* @var string
+	*/
+	protected $flags_table;
+
+	/**
+	* the path to the flags directory
+	*
+	*@var string
+	*/
+	protected $flags_path;
+
 	/** @var string phpBB root path */
 	protected $phpbb_root_path;
 
-	/** @var string PHP extension */
-	protected $php_ext;
 
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\cache\service $cache, \phpbb\db\driver\driver_interface $db, \phpbb\event\dispatcher_interface $dispatcher, \phpbb\template\template $template, \phpbb\user $user, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\config\config $config, \phpbb\cache\service $cache, \phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user, $flags_table, $flags_path, $phpbb_root_path)
 	{
-		$this->auth = $auth;
 		$this->config = $config;
 		$this->cache = $cache;
 		$this->db = $db;
-		$this->dispatcher = $dispatcher;
 		$this->template = $template;
 		$this->user = $user;
+		$this->flags_table = $flags_table;
+		$this->flags_path = $flags_path;
 		$this->root_path = $phpbb_root_path;
-		$this->php_ext = $php_ext;
 	}
+
 	/**
 	 * Get user flag
 	 *
@@ -59,48 +66,48 @@ class functions_nationalflags
 
 	public function get_user_flag($flag_id = false)
 	{
-
+		// check for the cache build
 		if (($user_flags = $this->cache->get('_user_flags')) === false)
 		{
-			$user_flags = array();
-
-			$sql = 'SELECT flag_id, flag_name, flag_image
-				FROM ' . FLAGS_DATA_TABLE . '
-			ORDER BY flag_id';
-			$result = $this->db->sql_query($sql);
-
-			while ($row = $this->db->sql_fetchrow($result))
-			{
-				$user_flags[$row['flag_id']] = array(
-					'flag_id'		=> $row['flag_id'],
-					'flag_name'		=> $row['flag_name'],
-					'flag_image'	=> $row['flag_image'],
-				);
-			}
-			$this->db->sql_freeresult($result);
-
-			// cache this data for ever, can only change in ACP
-			$this->cache->put('_user_flags', $user_flags);
+			$user_flags = $this->query_flags();
 		}
+
 		if ($flag_id)
 		{
-			//get the display type
-			$display = $this->config['flag_type'];
-			if ($display == USER_FLAG_TEXT)//Text only
-			{
-				$flag = $user_flags[$flag_id]['flag_name'];
-			}
-			else if ($display == USER_FLAG_IMAGE)//Image
-			{
-				$flag = '<img src="' . $this->root_path . 'flags/' . $user_flags[$flag_id]['flag_image'] . '" alt="'. htmlspecialchars($user_flags[$flag_id]['flag_name']) . '" title="'. htmlspecialchars($user_flags[$flag_id]['flag_name']) . '" />';
-			}
-			else// it's not 1 or 2 so it must be 3 which is both
-			{
-				$flag = $user_flags[$flag_id]['flag_name'] . '<img src="' . $this->root_path . 'images/flags/' . $user_flags[$flag_id]['flag_image'] . '" alt="'. htmlspecialchars($user_flags[$flag_id]['flag_name']) . '" title="'. htmlspecialchars($user_flags[$flag_id]['flag_name']) . '" />';
-			}
+			$flag = '<img src="' . $this->root_path . $this->flags_path . $user_flags[$flag_id]['flag_image'] . '" alt="'. htmlspecialchars($user_flags[$flag_id]['flag_name']) . '" title="'. htmlspecialchars($user_flags[$flag_id]['flag_name']) . '" />';
+
 			return $flag;
 		}
-		return;
+	}
+	/**
+	 * Get query flags
+	 *
+	 * Build the cache of the flags
+	 *
+	 * @return null
+	 */
+
+	public function query_flags()
+	{
+		$user_flags = array();
+
+		$sql = 'SELECT flag_id, flag_name, flag_image
+			FROM ' . $this->flags_table . '
+		ORDER BY flag_id';
+		$result = $this->db->sql_query($sql);
+
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$user_flags[$row['flag_id']] = array(
+				'flag_id'		=> $row['flag_id'],
+				'flag_name'		=> $row['flag_name'],
+				'flag_image'	=> $row['flag_image'],
+			);
+		}
+		$this->db->sql_freeresult($result);
+
+		// cache this data for ever, can only change in ACP
+		$this->cache->put('_user_flags', $user_flags);
 	}
 
 	/**
@@ -113,7 +120,7 @@ class functions_nationalflags
 	public function list_all_flags($flag_id)
 	{
 		$sql = 'SELECT flag_id, flag_name, flag_image
-			FROM ' . FLAGS_DATA_TABLE . '
+			FROM ' . $this->flags_table . '
 		ORDER BY flag_name';
 		$result = $this->db->sql_query($sql);
 
@@ -138,14 +145,14 @@ class functions_nationalflags
 		WHERE user_flag > 0
 		GROUP BY user_flag
 		ORDER BY fnum DESC';
-		$result = $this->db->sql_query_limit($sql, 5);
+		$result = $this->db->sql_query_limit($sql, $this->config['flags_how_many']);
 
 		$count = 0;
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			++$count;
 
-			$template->assign_block_vars('fnum', array(
+			$template->assign_block_vars('flag', array(
 				'FLAG' 			=> get_user_flag($row['user_flag']),
 				'L_FLAG_USERS'	=> $row['fnum'] == 1 ? sprintf($user->lang['FLAG_USER'], $row['fnum']) : sprintf($user->lang['FLAG_USERS'], $row['fnum']),
 			));
@@ -158,6 +165,5 @@ class functions_nationalflags
 				'S_FLAGS_FOUND'	=> true,
 			));
 		}
-		return;
 	}
 }
