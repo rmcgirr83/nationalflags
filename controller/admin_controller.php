@@ -225,7 +225,7 @@ class admin_controller implements admin_interface
 		// Add form key
 		add_form_key('add_flag');
 
-		$error = array();
+		$errors = array();
 
 		$flag_row = array(
 			'flag_name'			=> utf8_normalize_nfc($this->request->variable('flag_name', '', true)),
@@ -308,7 +308,7 @@ class admin_controller implements admin_interface
 		// Add form key
 		add_form_key('edit_flag');
 
-		$error = array();
+		$errors = array();
 
 		$flag_row = array(
 			'flag_name'			=> utf8_normalize_nfc($this->request->variable('flag_name', '', true)),
