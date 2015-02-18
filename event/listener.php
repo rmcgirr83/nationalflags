@@ -142,10 +142,6 @@ class listener implements EventSubscriberInterface
 
 	public function user_flag_profile($event)
 	{
-		if (!$this->auth->acl_get('u_chgprofileinfo'))
-		{
-			return;
-		}
 		if ($this->config['allow_flags'])
 		{
 			// Request the user option vars and add them to the data array
@@ -166,8 +162,11 @@ class listener implements EventSubscriberInterface
 
 	public function user_flag_sql($event)
 	{
-		$event['sql_ary'] = array_merge($event['sql_ary'], array(
-			'user_flag' => $event['data']['user_flag'],
-		));
+		if ($this->config['allow_flags'])
+		{	
+			$event['sql_ary'] = array_merge($event['sql_ary'], array(
+				'user_flag' => $event['data']['user_flag'],
+			));
+		}
 	}
 }
