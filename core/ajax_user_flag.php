@@ -49,7 +49,6 @@ class ajax_nationalflags
 			return;
 		}
 
-
 		$flag = $this->cache->get('_user_flags');
 		$flag_img = $this->root_path . $this->flags_path. $flag[$flag_id]['flag_image'];
 		$flag_name = $flag[$flag_id]['flag_name'];
