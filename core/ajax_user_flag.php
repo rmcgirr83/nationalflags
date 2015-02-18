@@ -16,13 +16,6 @@ class ajax_nationalflags
 	protected $cache;
 
 	/**
-	* The database table the rules are stored in
-	*
-	* @var string
-	*/
-	protected $flags_table;
-
-	/**
 	* the path to the flags directory
 	*
 	*@var string
@@ -33,10 +26,9 @@ class ajax_nationalflags
 	protected $phpbb_root_path;
 
 
-	public function __construct(\phpbb\cache\service $cache, $flags_table, $flags_path, $phpbb_root_path)
+	public function __construct(\phpbb\cache\service $cache, $flags_path, $phpbb_root_path)
 	{
 		$this->cache = $cache;
-		$this->flags_table = $flags_table;
 		$this->flags_path = $flags_path;
 		$this->root_path = $phpbb_root_path;
 	}

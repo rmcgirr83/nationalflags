@@ -20,11 +20,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 */
 class listener implements EventSubscriberInterface
 {
-	/* @var \rmcgirr83\nationalflags\core\functions_nationalflags */
-	protected $nf_functions;
-
-	/* @var \rmcgirr83\nationalflags\core\ajax_nationalflags */
-	protected $ajax_functions;
+	/** @var \phpbb\auth\auth */
+	protected $auth;
 
 	/** @var \phpbb\cache\service */
 	protected $cache;
@@ -44,6 +41,12 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\user */
 	protected $user;
 
+	/** @var string phpBB root path */
+	protected $phpbb_root_path;
+
+	/** @var string phpEx */
+	protected $php_ext;
+
 	/**
 	* The database table the rules are stored in
 	*
@@ -58,38 +61,40 @@ class listener implements EventSubscriberInterface
 	*/
 	protected $flags_path;
 
-	/** @var string phpBB root path */
-	protected $phpbb_root_path;
+	/* @var \rmcgirr83\nationalflags\core\functions_nationalflags */
+	protected $nf_functions;
 
-	/** @var string phpEx */
-	protected $php_ext;
+	/* @var \rmcgirr83\nationalflags\core\ajax_nationalflags */
+	protected $ajax_functions;
 
 	public function __construct(
-			\rmcgirr83\nationalflags\core\functions_nationalflags $functions,
-			\rmcgirr83\nationalflags\core\ajax_nationalflags $ajax,
+			\phpbb\auth\auth $auth,
 			\phpbb\cache\service $cache,
 			\phpbb\config\config $config,
 			\phpbb\controller\helper $controller_helper,
 			\phpbb\db\driver\driver_interface $db,
 			\phpbb\template\template $template,
 			\phpbb\user $user,
+			$phpbb_root_path,
+			$php_ext,
 			$flags_table,
 			$flags_path,
-			$phpbb_root_path,
-			$php_ext)
+			\rmcgirr83\nationalflags\core\functions_nationalflags $functions,
+			\rmcgirr83\nationalflags\core\ajax_nationalflags $ajax)
 	{
-		$this->nf_functions = $functions;
-		$this->nf_ajax = $ajax;
+		$this->auth = $auth;
 		$this->cache = $cache;
 		$this->config = $config;
 		$this->controller_helper = $controller_helper;
 		$this->db = $db;
 		$this->template = $template;
 		$this->user = $user;
-		$this->flags_table = $flags_table;
-		$this->flags_path = $flags_path;
 		$this->root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
+		$this->flags_table = $flags_table;
+		$this->flags_path = $flags_path;
+		$this->nf_functions = $functions;
+		$this->nf_ajax = $ajax;
 	}
 
 	static public function getSubscribedEvents()
@@ -98,6 +103,7 @@ class listener implements EventSubscriberInterface
 			'core.user_setup'						=> 'flag_setup',
 			'core.page_header_after'				=> 'display_message',
 			'core.ucp_profile_modify_profile_info'	=> 'user_flag_profile',
+			'core.ucp_profile_info_modify_sql_ary'	=> 'user_flag_sql',
 		);
 	}
 
@@ -120,12 +126,12 @@ class listener implements EventSubscriberInterface
 
 	public function display_message($event)
 	{
-		if (!$this->config['allow_flags'])
+		if (!$this->auth->acl_get('u_chgprofileinfo'))
 		{
 			return;
 		}
 
-		if ($this->config['flags_display_msg'])
+		if ($this->config['flags_display_msg'] && $this->config['allow_flags'])
 		{
 			$this->template->assign_vars(array(
 				'S_FLAG_MESSAGE'	=> (empty($this->user->data['user_flag'])) ? true : false,
@@ -136,22 +142,32 @@ class listener implements EventSubscriberInterface
 
 	public function user_flag_profile($event)
 	{
-		if (!$this->config['allow_flags'])
+		if (!$this->auth->acl_get('u_chgprofileinfo'))
 		{
 			return;
 		}
-
-		// Request the user option vars and add them to the data array
-		$event['data'] = array_merge($event['data'], array(
-			'user_flag'	=> $this->request->variable('user_flag', (int) $this->user->data['user_flag']),
-		));
-
-		// Output the data vars to the template (except on form submit)
-		if (!$event['submit'])
+		if ($this->config['allow_flags'])
 		{
-			$this->template->assign_vars(array(
-				'USER_FLAG'	=> $event['data']['user_flag'],
+			// Request the user option vars and add them to the data array
+			$event['data'] = array_merge($event['data'], array(
+				'user_flag'	=> $this->request->variable('user_flag', (int) $this->user->data['user_flag']),
 			));
+
+			// Output the data vars to the template (except on form submit)
+			if (!$event['submit'])
+			{
+				$this->template->assign_vars(array(
+					'USER_FLAG'	=> $event['data']['user_flag'],
+					'S_FLAGS_ENABLED' => true,
+				));
+			}
 		}
+	}
+
+	public function user_flag_sql($event)
+	{
+		$event['sql_ary'] = array_merge($event['sql_ary'], array(
+			'user_flag' => $event['data']['user_flag'],
+		));
 	}
 }
