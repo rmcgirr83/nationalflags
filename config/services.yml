@@ -17,23 +17,31 @@ services:
             - %rmcgirr83.nationalflags.flagpath.nationalflags%
             - %core.root_path%
             - %core.php_ext%
+			
+    rmcgirr83.nationalflags.controller:
+        class: rmcgirr83\nationalflags\controller\main_controller
+        arguments:
+            - @cache		
+            - @config
+            - @controller.helper			
+            - @template
+            - @user
+            - %core.root_path%
+            - %core.php_ext%
+            - %rmcgirr83.nationalflags.flagpath.nationalflags%
+            - @rmcgirr83.nationalflags.functions
 
     rmcgirr83.nationalflags.listener:
         class: rmcgirr83\nationalflags\event\listener
         arguments:
             - @auth
-            - @cache
             - @config
-            - @controller.helper
             - @dbal.conn
             - @template
             - @user
             - %core.root_path%
             - %core.php_ext%
-            - %rmcgirr83.nationalflags.table.nationalflags%
-            - %rmcgirr83.nationalflags.flagpath.nationalflags%
             - @rmcgirr83.nationalflags.functions
-            - @rmcgirr83.nationalflags.ajax
         tags:
             - { name: event.listener }
 
@@ -41,17 +49,11 @@ services:
         class: rmcgirr83\nationalflags\core\functions_nationalflags
         arguments:
             - @config
+            - @controller.helper
             - @cache
             - @dbal.conn
             - @template
             - @user
             - %rmcgirr83.nationalflags.table.nationalflags%
-            - %rmcgirr83.nationalflags.flagpath.nationalflags%
-            - %core.root_path%
-
-    rmcgirr83.nationalflags.ajax:
-        class: rmcgirr83\nationalflags\core\ajax_nationalflags
-        arguments:
-            - @cache
             - %rmcgirr83.nationalflags.flagpath.nationalflags%
             - %core.root_path%

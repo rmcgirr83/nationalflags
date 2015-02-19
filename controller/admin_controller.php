@@ -17,7 +17,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 */
 class admin_controller implements admin_interface
 {
-
 	/** @var \phpbb\cache\service */
 	protected $cache;
 
@@ -68,7 +67,7 @@ class admin_controller implements admin_interface
 	/**
 	* Constructor
 	*
-	* @ param \phpbb\cache\service					$cache					Cache object
+	* @param \phpbb\cache\service					$cache					Cache object
 	* @param \phpbb\config\config					$config					Config object
 	* @param \phpbb\db\driver\driver_interface		$db						Database object
 	* @param \phpbb\request\request					$request				Request object
