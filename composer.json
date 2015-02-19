@@ -5,7 +5,7 @@
 	"version": "1.0.0",
 	"time": "2015-02-09",
 	"keywords": ["phpbb", "extension", "flags", "national", "national flags", "user", "communication"],
-	"license": "Gnu GPL v2",
+	"license": "GPL-2.0",
 	"authors": [
 		{
 			"name": "Rich McGirr",
