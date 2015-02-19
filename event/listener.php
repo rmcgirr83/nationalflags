@@ -163,7 +163,7 @@ class listener implements EventSubscriberInterface
 	public function user_flag_sql($event)
 	{
 		if ($this->config['allow_flags'])
-		{	
+		{
 			$event['sql_ary'] = array_merge($event['sql_ary'], array(
 				'user_flag' => $event['data']['user_flag'],
 			));
