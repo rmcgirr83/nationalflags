@@ -39,4 +39,5 @@ $lang = array_merge($lang, array(
 	'FLAG'				=> 'Flag',
 	'FLAG_EXPLAIN'		=> 'Choose your National Flag.',
 	'USER_NEEDS_FLAG'	=> 'Please take a moment and %svisit your profile%s to choose a flag.',
+	'NATONALFLAGS_VIEWONLINE' => 'Viewing Flags',
 ));

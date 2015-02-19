@@ -23,14 +23,8 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\auth\auth */
 	protected $auth;
 
-	/** @var \phpbb\cache\service */
-	protected $cache;
-
 	/** @var \phpbb\config\config */
 	protected $config;
-
-	/** @var \phpbb\controller\helper */
-	protected $controller_helper;
 
 	/** @var \phpbb\db\driver\driver */
 	protected $db;
@@ -47,56 +41,36 @@ class listener implements EventSubscriberInterface
 	/** @var string phpEx */
 	protected $php_ext;
 
-	/**
-	* The database table the rules are stored in
-	*
-	* @var string
-	*/
-	protected $flags_table;
-
-	/**
-	* the path to the flags directory
-	*
-	*@var string
-	*/
-	protected $flags_path;
-
 	/* @var \rmcgirr83\nationalflags\core\functions_nationalflags */
 	protected $nf_functions;
 
-	/* @var \rmcgirr83\nationalflags\core\ajax_nationalflags */
-	protected $ajax_functions;
-
 	public function __construct(
 			\phpbb\auth\auth $auth,
-			\phpbb\cache\service $cache,
 			\phpbb\config\config $config,
-			\phpbb\controller\helper $controller_helper,
 			\phpbb\db\driver\driver_interface $db,
 			\phpbb\template\template $template,
 			\phpbb\user $user,
 			$phpbb_root_path,
 			$php_ext,
-			$flags_table,
-			$flags_path,
-			\rmcgirr83\nationalflags\core\functions_nationalflags $functions,
-			\rmcgirr83\nationalflags\core\ajax_nationalflags $ajax)
+			\rmcgirr83\nationalflags\core\functions_nationalflags $functions)
 	{
 		$this->auth = $auth;
-		$this->cache = $cache;
 		$this->config = $config;
-		$this->controller_helper = $controller_helper;
 		$this->db = $db;
 		$this->template = $template;
 		$this->user = $user;
 		$this->root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
-		$this->flags_table = $flags_table;
-		$this->flags_path = $flags_path;
 		$this->nf_functions = $functions;
-		$this->nf_ajax = $ajax;
 	}
-
+	
+	/**
+	* Assign functions defined in this class to event listeners in the core
+	*
+	* @return array
+	* @static
+	* @access public
+	*/
 	static public function getSubscribedEvents()
 	{
 		return array(
@@ -104,9 +78,17 @@ class listener implements EventSubscriberInterface
 			'core.page_header_after'				=> 'display_message',
 			'core.ucp_profile_modify_profile_info'	=> 'user_flag_profile',
 			'core.ucp_profile_info_modify_sql_ary'	=> 'user_flag_sql',
+			'core.viewonline_overwrite_location'	=> 'viewonline_page',
 		);
 	}
 
+	/**
+	* Set up the flags and add the lang vars
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
 	public function flag_setup($event)
 	{
 		if (!$this->config['allow_flags'])
@@ -114,7 +96,7 @@ class listener implements EventSubscriberInterface
 			return;
 		}
 		// Need to ensure the flags are cached on page load
-		$this->nf_functions->query_flags();
+		$this->nf_functions->cache_flags();
 
 		$lang_set_ext = $event['lang_set_ext'];
 		$lang_set_ext[] = array(
@@ -124,6 +106,13 @@ class listener implements EventSubscriberInterface
 		$event['lang_set_ext'] = $lang_set_ext;
 	}
 
+	/**
+	* Create URL and message to users if wanted.
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
 	public function display_message($event)
 	{
 		if (!$this->auth->acl_get('u_chgprofileinfo'))
@@ -140,6 +129,13 @@ class listener implements EventSubscriberInterface
 		}
 	}
 
+	/**
+	* Allow users to change their flag
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
 	public function user_flag_profile($event)
 	{
 		if ($this->config['allow_flags'])
@@ -160,6 +156,13 @@ class listener implements EventSubscriberInterface
 		}
 	}
 
+	/**
+	* User changed their flag so update the database
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
 	public function user_flag_sql($event)
 	{
 		if ($this->config['allow_flags'])
@@ -169,4 +172,23 @@ class listener implements EventSubscriberInterface
 			));
 		}
 	}
+	
+	/**
+	* Show users as viewing the flags on Who Is Online page
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
+	public function viewonline_page($event)
+	{
+		if ($event['on_page'][1] == 'app')
+		{
+			if (strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/flags') === 0)
+			{
+				$event['location'] = $this->user->lang('NATONALFLAGS_VIEWONLINE');
+				$event['location_url'] = $this->controller_helper->route('rmcgirr83_nationalflags_main_controller');
+			}
+		}
+	}	
 }

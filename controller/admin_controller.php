@@ -17,7 +17,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 */
 class admin_controller implements admin_interface
 {
-
 	/** @var \phpbb\cache\service */
 	protected $cache;
 
@@ -68,7 +67,7 @@ class admin_controller implements admin_interface
 	/**
 	* Constructor
 	*
-	* @ param \phpbb\cache\service					$cache					Cache object
+	* @param \phpbb\cache\service					$cache					Cache object
 	* @param \phpbb\config\config					$config					Config object
 	* @param \phpbb\db\driver\driver_interface		$db						Database object
 	* @param \phpbb\request\request					$request				Request object
@@ -238,6 +237,17 @@ class admin_controller implements admin_interface
 			{
 				$errors[] = $user->lang['FORM_INVALID'];
 			}
+
+			if (empty($flag_row['flag_name']))
+			{
+				$errors[] = $this->user->lang['FLAG_ERROR_NO_FLAG_NAME'];
+			}
+
+			if (empty($flag_row['flag_image']))
+			{
+				$errors[] = $this->user->lang['FLAG_ERROR_NO_FLAG_IMG'];
+			}
+
 			//we don't want two flags with the same name...right?
 			$sql = 'SELECT *
 				FROM ' . $this->flags_table;
@@ -258,14 +268,6 @@ class admin_controller implements admin_interface
 			// convert the string back into an array
 			$flag_name_arry = explode(',', $flag_name_arry);
 
-			if (empty($flag_row['flag_name']))
-			{
-				$errors[] = $this->user->lang['FLAG_ERROR_NO_FLAG_NAME'];
-			}
-			if (empty($flag_row['flag_image']))
-			{
-				$errors[] = $this->user->lang['FLAG_ERROR_NO_FLAG_IMG'];
-			}
 			//check to make sure the flag name is different
 			if (in_array(strtoupper($flag_row['flag_name']), $flag_name_arry))
 			{
@@ -320,6 +322,11 @@ class admin_controller implements admin_interface
 			if (!check_form_key('edit_flag'))
 			{
 				$errors[] = 'FORM_INVALID';
+			}
+
+			if (empty($flag_row['flag_image']))
+			{
+				$errors[] = $this->user->lang['FLAG_ERROR_NO_FLAG_IMG'];
 			}
 
 			if (empty($flag_row['flag_name']))
@@ -380,16 +387,14 @@ class admin_controller implements admin_interface
 	*/
 	public function delete_flag($flag_id)
 	{
-		$mode = 'manage';
-
 		if (confirm_box(true))
 		{
 			// Grab the flag name for the log...
-			$sql = 'SELECT flag_name
+			$sql = 'SELECT flag_name, flag_image
 				FROM ' . $this->flags_table . '
 				WHERE flag_id = ' .(int) $flag_id;
 			$result = $this->db->sql_query($sql);
-			$flag_name = $this->db->sql_fetchfield('flag_name');
+			$flag_row = $this->db->sql_fetchrow($result);
 			$this->db->sql_freeresult($result);
 
 			// Delete the flag...
@@ -403,8 +408,11 @@ class admin_controller implements admin_interface
 				WHERE user_flag = ' . (int) $flag_id;
 			$this->db->sql_query($sql);
 
+			// Delete the image
+			unlink($this->flags_path . $flag_row['flag_image']);
+
 			$log = $this->container->get('log');
-			$log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_FLAGS_DELETED', time(), array($flag_name));
+			$log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_FLAGS_DELETED', time(), array($flag_row['flag_name']));
 
 			$this->cache->destroy('_user_flags');
 
@@ -427,7 +435,7 @@ class admin_controller implements admin_interface
 			}
 			confirm_box(false, $message, build_hidden_fields(array(
 				'id'		=> (int) $flag_id,
-				'mode'		=> $mode,
+				'mode'		=> 'manage',
 				'action'	=> 'delete'))
 			);
 		}

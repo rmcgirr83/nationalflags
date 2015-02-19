@@ -1,0 +1,111 @@
+<?php
+/**
+*
+* National Flags extension for the phpBB Forum Software package.
+*
+* @copyright (c) 2015 Rich McGirr (RMcGirr83)
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+*
+*/
+
+namespace rmcgirr83\nationalflags\controller;
+
+/**
+* Main controller
+*/
+class main_controller implements main_interface
+{
+	/** @var \phpbb\cache\service */
+	protected $cache;
+	
+	/** @var \phpbb\config\config */
+	protected $config;
+
+	/** @var \phpbb\controller\helper */
+	protected $helper;
+
+	/** @var \phpbb\template\template */
+	protected $template;
+
+	/** @var \phpbb\user */
+	protected $user;
+
+	/** @var string phpBB root path */
+	protected $root_path;
+
+	/** @var string phpEx */
+	protected $php_ext;
+
+	/**
+	* the path to the flags directory
+	*
+	*@var string
+	*/
+	protected $flags_path;
+	
+	/* @var \rmcgirr83\nationalflags\core\functions_nationalflags */
+	protected $nf_functions;	
+	/**
+	* Constructor
+	*
+	* @param \phpbb\cache\service				$cache			Cache object	
+	* @param \phpbb\config\config               $config         Config object
+	* @param \phpbb\controller\helper           $helper         Controller helper object
+	* @param \phpbb\template\template           $template       Template object
+	* @param \phpbb\user                        $user           User object
+	* @param string                             $root_path      phpBB root path
+	* @param string                             $php_ext        phpEx
+	* @param string								$flags_path		path to flags directory
+	* @param \rmcgirr83\nationalflags\functions	$nf_functions	functions to be used by class
+	* @access public
+	*/
+	public function __construct(
+			\phpbb\cache\service $cache,
+			\phpbb\config\config $config, 
+			\phpbb\controller\helper $helper,
+			\phpbb\template\template $template, 
+			\phpbb\user $user, 
+			$root_path, 
+			$php_ext,
+			$flags_path,
+			\rmcgirr83\nationalflags\core\functions_nationalflags $functions)
+	{
+		$this->cache = $cache;	
+		$this->config = $config;
+		$this->helper = $helper;
+		$this->template = $template;
+		$this->user = $user;
+		$this->root_path = $root_path;
+		$this->php_ext = $php_ext;
+		$this->flags_path = $flags_path;
+		$this->nf_functions = $functions;
+	}
+
+	/**
+	* Display the flags page
+	*
+	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	* @access public
+	*/
+	public function display()
+	{
+		// When flags are disabled, redirect users back to the forum index
+		if (empty($this->config['allow_flags']))
+		{
+			redirect(append_sid("{$this->root_path}index.{$this->php_ext}"));
+		}
+
+		// Assign values to template vars for the flags page
+		$this->template->assign_vars(array(
+		));
+
+		// Assign breadcrumb template vars for the flags page
+		$this->template->assign_block_vars('navlinks', array(
+			'U_VIEW_FORUM'		=> $this->helper->route('rmcgirr83_nationalflags_main_controller'),
+			'FORUM_NAME'		=> $this->user->lang('FLAGS'),
+		));
+
+		// Send all data to the template file
+		return $this->helper->render('nationalflags_controller.html', $this->user->lang('FLAGS'));
+	}
+}
