@@ -17,13 +17,13 @@ services:
             - %rmcgirr83.nationalflags.flagpath.nationalflags%
             - %core.root_path%
             - %core.php_ext%
-			
+
     rmcgirr83.nationalflags.controller:
         class: rmcgirr83\nationalflags\controller\main_controller
         arguments:
-            - @cache		
+            - @cache
             - @config
-            - @controller.helper			
+            - @controller.helper
             - @template
             - @user
             - %core.root_path%
@@ -35,12 +35,16 @@ services:
         class: rmcgirr83\nationalflags\event\listener
         arguments:
             - @auth
+            - @cache
             - @config
+            - @controller.helper
             - @dbal.conn
+            - @request
             - @template
             - @user
             - %core.root_path%
             - %core.php_ext%
+            - %rmcgirr83.nationalflags.flagpath.nationalflags%
             - @rmcgirr83.nationalflags.functions
         tags:
             - { name: event.listener }

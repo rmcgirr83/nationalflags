@@ -69,7 +69,6 @@ class functions_nationalflags
 		$this->flags_path = $flags_path;
 		$this->root_path = $phpbb_root_path;
 	}
-
 	/**
 	 * Get user flag
 	 *
@@ -104,7 +103,7 @@ class functions_nationalflags
 				FROM ' . $this->flags_table . '
 			ORDER BY flag_id';
 			$result = $this->db->sql_query($sql);
-			
+
 			$user_flags = array();
 			while ($row = $this->db->sql_fetchrow($result))
 			{
@@ -158,14 +157,14 @@ class functions_nationalflags
 		ORDER BY fnum DESC';
 		$result = $this->db->sql_query_limit($sql, $this->config['flags_how_many']);
 
+		$user_flags = $this->cache->get('_user_flags');
 		$count = 0;
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			++$count;
-
-			$template->assign_block_vars('flag', array(
-				'FLAG' 			=> get_user_flag($row['user_flag']),
-				'L_FLAG_USERS'	=> $row['fnum'] == 1 ? sprintf($user->lang['FLAG_USER'], $row['fnum']) : sprintf($user->lang['FLAG_USERS'], $row['fnum']),
+			$this->template->assign_block_vars('flag', array(
+				'FLAG' 			=> '<img src="' . $this->root_path . $this->flags_path . $user_flags[$row['user_flag']]['flag_image'] . '" alt="'. htmlspecialchars($user_flags[$row['user_flag']]['flag_name']) . '" title="'. htmlspecialchars($user_flags[$row['user_flag']]['flag_name']) . '" />',
+				'L_FLAG_USERS'	=> $row['fnum'] == 1 ? sprintf($this->user->lang['FLAG_USER'], $row['fnum']) : sprintf($this->user->lang['FLAG_USERS'], $row['fnum']),
 			));
 		}
 		$this->db->sql_freeresult($result);

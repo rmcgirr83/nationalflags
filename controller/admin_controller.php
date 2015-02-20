@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
 * Admin controller
 */
-class admin_controller implements admin_interface
+class admin_controller
 {
 	/** @var \phpbb\cache\service */
 	protected $cache;
@@ -283,12 +283,13 @@ class admin_controller implements admin_interface
 
 				$this->cache->destroy('_user_flags');
 
-				trigger_error($this->user->lang['MSG_FLAG_ADDED'] . adm_back_link($this->u_action));
+				trigger_error($this->user->lang['MSG_FLAG_ADDED'] . adm_back_link($this->u_action . '&amp;action=add'));
 			}
 		}
 
 		$this->template->assign_vars(array(
-			'U_ACTION'		=> $this->u_action . "&amp;action=add",
+			'U_ACTION'		=> $this->u_action . '&amp;action=add',
+			'U_BACK'		=> $this->u_action,
 			'FLAG_NAME'		=> $flag_row['flag_name'],
 			'FLAG_IMAGE'	=> $flag_row['flag_image'],
 			'ERROR_MSG'		=> (sizeof($errors)) ? implode('<br />', $errors) : '',
@@ -346,7 +347,7 @@ class admin_controller implements admin_interface
 
 				$this->cache->destroy('_user_flags');
 
-				trigger_error($this->user->lang['MSG_FLAG_EDITED'] . adm_back_link($this->u_action));
+				trigger_error($this->user->lang['MSG_FLAG_EDITED'] . adm_back_link($this->u_action . "&amp;flag_id=$flag_id&amp;action=edit"));
 			}
 		}
 
@@ -359,13 +360,13 @@ class admin_controller implements admin_interface
 
 		if (!$flag_row)
 		{
-			trigger_error($this->user->lang['FLAG_ERROR_NOT_EXIST'] . adm_back_link($this->u_action), E_USER_WARNING);
+			trigger_error($this->user->lang['FLAG_ERROR_NOT_EXIST'] . adm_back_link($this->u_action . '&amp;mode=manage'), E_USER_WARNING);
 		}
 
 		$this->template->assign_vars(array(
 			'L_TITLE'		=> $this->user->lang['FLAG_EDIT'],
-			'U_ACTION'		=> $this->u_action . "&amp;flag_id=$flag_id&amp;action=edit",
-
+			'U_ACTION'		=> $this->u_action,
+			'U_BACK'		=> $this->u_action . '&amp;mode=manage',
 			'ERROR_MSG'		=> (sizeof($errors)) ? implode('<br />', $errors) : '',
 
 			'FLAG_NAME'		=> $flag_row['flag_name'],
@@ -409,14 +410,14 @@ class admin_controller implements admin_interface
 			$this->db->sql_query($sql);
 
 			// Delete the image
-			unlink($this->flags_path . $flag_row['flag_image']);
+			@unlink($this->root_path . $this->flags_path . $flag_row['flag_image']);
 
 			$log = $this->container->get('log');
 			$log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_FLAGS_DELETED', time(), array($flag_row['flag_name']));
 
 			$this->cache->destroy('_user_flags');
 
-			trigger_error($this->user->lang['MSG_FLAGS_DELETED'] . adm_back_link($this->u_action));
+			trigger_error($this->user->lang['MSG_FLAGS_DELETED'] . adm_back_link($this->u_action . "&amp;mode=manage"));
 		}
 		else
 		{
@@ -438,6 +439,9 @@ class admin_controller implements admin_interface
 				'mode'		=> 'manage',
 				'action'	=> 'delete'))
 			);
+			// Use a redirect to take the user back to the previous page
+			// if the user chose not delete the rule from the confirmation page.
+			redirect("{$this->u_action}");
 		}
 	}
 

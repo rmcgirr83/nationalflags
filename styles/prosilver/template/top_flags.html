@@ -1,24 +1,22 @@
 <!-- IF S_FLAGS_FOUND -->
-<div class="forabg" id="top_five">
+<div class="forabg" id="flags">
 	<div class="inner">
 	<ul class="topiclist">
 		<li class="header">
 			<dl>
 				<dt><div class="list-inner"><a href="{U_FLAGS}">{L_TOP_FLAG_TITLE}</a></div></dt>
+				<dd></dd>
 			</dl>
 		</li>
 	</ul>
-	<ul class="topiclist topics">
-		<li class="row bg1">
+		<ul class="topiclist forums">
+			<li class="row bg1">
 			<dl>
-				<dt>
-					<div class="list-inner">
-						<!-- BEGIN flag -->{flag.FLAG} {flag.L_FLAG_USERS}<!-- END fnum -->
-					</div>
-				</dt>
+				<dt style="width:100%;"><!-- BEGIN flag --><span class="flags">{flag.FLAG}<br />{flag.L_FLAG_USERS}</span><!-- END flag --></dt>
+				<dd></dd>
 			</dl>
-		</li>
-	</ul>
+			</li>
+		</ul>
 	</div>
 </div>
 <!-- ENDIF -->

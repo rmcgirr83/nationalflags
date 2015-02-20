@@ -10,14 +10,16 @@
 
 namespace rmcgirr83\nationalflags\controller;
 
+use Symfony\Component\HttpFoundation\Response;
+
 /**
 * Main controller
 */
-class main_controller implements main_interface
+class main_controller
 {
 	/** @var \phpbb\cache\service */
 	protected $cache;
-	
+
 	/** @var \phpbb\config\config */
 	protected $config;
 
@@ -42,13 +44,13 @@ class main_controller implements main_interface
 	*@var string
 	*/
 	protected $flags_path;
-	
+
 	/* @var \rmcgirr83\nationalflags\core\functions_nationalflags */
-	protected $nf_functions;	
+	protected $nf_functions;
 	/**
 	* Constructor
 	*
-	* @param \phpbb\cache\service				$cache			Cache object	
+	* @param \phpbb\cache\service				$cache			Cache object
 	* @param \phpbb\config\config               $config         Config object
 	* @param \phpbb\controller\helper           $helper         Controller helper object
 	* @param \phpbb\template\template           $template       Template object
@@ -61,16 +63,16 @@ class main_controller implements main_interface
 	*/
 	public function __construct(
 			\phpbb\cache\service $cache,
-			\phpbb\config\config $config, 
+			\phpbb\config\config $config,
 			\phpbb\controller\helper $helper,
-			\phpbb\template\template $template, 
-			\phpbb\user $user, 
-			$root_path, 
+			\phpbb\template\template $template,
+			\phpbb\user $user,
+			$root_path,
 			$php_ext,
 			$flags_path,
 			\rmcgirr83\nationalflags\core\functions_nationalflags $functions)
 	{
-		$this->cache = $cache;	
+		$this->cache = $cache;
 		$this->config = $config;
 		$this->helper = $helper;
 		$this->template = $template;
@@ -97,6 +99,22 @@ class main_controller implements main_interface
 
 		// Assign values to template vars for the flags page
 		$this->template->assign_vars(array(
+/*
+			'USER_FLAGS'		=> true,
+			'PAGE_NUMBER'		=> on_page($total_users, (int) $config['topics_per_page'], $start),
+			'TOTAL_USERS'		=> ($total_users <> 1) ? sprintf($user->lang['FLAG_USERS'], $total_users) : sprintf($user->lang['FLAG_USER'], $total_users),
+			'PAGINATION'		=> generate_pagination($pagination_url, $total_users, $config['topics_per_page'], $start),
+			'U_SORT_USERNAME'		=> $sort_url . '&amp;sk=a&amp;sd=' . (($sort_key == 'a' && $sort_dir == 'a') ? 'd' : 'a'),
+			'U_SORT_JOINED'			=> $sort_url . '&amp;sk=c&amp;sd=' . (($sort_key == 'c' && $sort_dir == 'a') ? 'd' : 'a'),
+			'U_SORT_POSTS'			=> $sort_url . '&amp;sk=d&amp;sd=' . (($sort_key == 'd' && $sort_dir == 'a') ? 'd' : 'a'),
+			'U_SORT_WEBSITE'		=> $sort_url . '&amp;sk=f&amp;sd=' . (($sort_key == 'f' && $sort_dir == 'a') ? 'd' : 'a'),
+			'U_SORT_LOCATION'		=> $sort_url . '&amp;sk=b&amp;sd=' . (($sort_key == 'b' && $sort_dir == 'a') ? 'd' : 'a'),
+			'U_SORT_ACTIVE'			=> ($auth->acl_get('u_viewonline')) ? $sort_url . '&amp;sk=l&amp;sd=' . (($sort_key == 'l' && $sort_dir == 'a') ? 'd' : 'a') : '',
+			'U_LIST_CHAR'			=> $sort_url . '&amp;sk=a&amp;sd=' . (($sort_key == 'l' && $sort_dir == 'a') ? 'd' : 'a'),
+			'S_MODE_SELECT'		=> $s_sort_key,
+			'S_ORDER_SELECT'	=> $s_sort_dir,
+			'S_MODE_ACTION'		=> $pagination_url,
+*/
 		));
 
 		// Assign breadcrumb template vars for the flags page
@@ -107,5 +125,28 @@ class main_controller implements main_interface
 
 		// Send all data to the template file
 		return $this->helper->render('nationalflags_controller.html', $this->user->lang('FLAGS'));
+	}
+
+	/**
+	 * Display flag on change in ucp
+	 *
+	 * @param $id
+	 *
+	 * @return \Symfony\Component\HttpFoundation\JsonResponse
+	 */
+	public function getFlag($id)
+	{
+		if (empty($id))
+		{
+			return;
+		}
+
+		$flag = $this->cache->get('_user_flags');
+		$flag_img = $this->flags_path . $flag[$id]['flag_image'];
+		$flag_name = $flag[$id]['flag_name'];
+
+		$return = '<img src="' . $flag_img . '" alt="' . $flag_name .'" title="' . $flag_name .'" style="vertical-align:middle;" />';
+
+		return new Response($return);
 	}
 }
