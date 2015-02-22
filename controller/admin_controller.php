@@ -126,17 +126,6 @@ class admin_controller
 			{
 				trigger_error($this->user->lang['FORM_INVALID'] . adm_back_link($this->u_action));
 			}
-			// validate the input for how many flags to display
-			if (!function_exists('validate_data'))
-			{
-				include($this->root_path . 'includes/functions_user.' . $this->php_ext);
-			}
-			$check_row = array('flags_how_many' => $this->request->variable('flags_how_many', 0));
-			$validate_row = array('flags_how_many' => array('num', false, 5, 100));
-			$error = validate_data($check_row, $validate_row);
-
-			// Replace "error" strings with their real, localised form
-			$error = array_map(array($this->user, 'lang'), $error);
 
 			// If no errors, process the form data
 			if (empty($error))
@@ -158,7 +147,6 @@ class admin_controller
 		$this->template->assign_vars(array(
 			'FLAGS_VERSION' 	=> $this->config['nationalflags_version'],
 			'ALLOW_FLAGS'		=> $this->config['allow_flags'] ? true : false,
-			'FLAGS_HOW_MANY'	=> $this->config['flags_how_many'] ? $this->config['flags_how_many'] : 0,
 			'FLAGS_ON_REG'		=> $this->config['flags_on_reg'] ? true : false,
 			'FLAGS_DISPLAY_MSG'	=> $this->config['flags_display_msg'] ? true : false,
 			'ERROR_MSG'			=> (!empty($error)) ? implode('<br />', $error) : '',
@@ -177,7 +165,6 @@ class admin_controller
 	protected function set_options()
 	{
 		$this->config->set('allow_flags', $this->request->variable('allow_flags', 0));
-		$this->config->set('flags_how_many', $this->request->variable('flags_how_many', 0));
 		$this->config->set('flags_on_reg', $this->request->variable('flags_on_reg', 0));
 		$this->config->set('flags_display_msg', $this->request->variable('flags_display_msg', 0));
 	}

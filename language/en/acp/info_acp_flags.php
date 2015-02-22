@@ -52,8 +52,6 @@ $lang = array_merge($lang, array(
 	'ACP_FLAG_SETTINGS'					=> 'National Flag Settings',
 	'YES_FLAGS'							=> 'Enable Flags',
 	'YES_FLAGS_EXPLAIN'					=> 'Choose to disable or enable the Flags',
-	'FLAGS_HOW_MANY'					=> 'How many flags to display',
-	'FLAGS_HOW_MANY_EXPLAIN'			=> 'Input a number of how many flags to display on the index page.<br />You are limited from 5 to 100 flags to display.',
 	'FLAGS_VERSION'						=> 'National Flags Version',
 	'FLAGS_ON_REG'						=> 'Flags on Registration',
 	'FLAGS_ON_REG_EXPLAIN'				=> 'Choosing Yes here will force new registrants to choose a flag',
@@ -76,6 +74,4 @@ $lang = array_merge($lang, array(
 	'FLAG_CONFIG_SAVED'					=> '<strong>National flags settings changed</strong>',
 	'FLAG_NAME_EXISTS'					=> 'A flag with that name already exists',
 	'FLAG_SETTINGS_CHANGED'				=> 'National flags settings changed.',
-	'TOO_SMALL_FLAGS_HOW_MANY'			=> 'The number to display value is too small.',
-	'TOO_LARGE_FLAGS_HOW_MANY'			=> 'The number to display value is too large.',
 ));

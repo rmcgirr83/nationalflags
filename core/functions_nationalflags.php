@@ -16,7 +16,7 @@ class functions_nationalflags
 	protected $config;
 
 	/** @var \phpbb\controller\helper */
-	protected $controller_helper;
+	protected $helper;
 
 	/** @var \phpbb\cache\service */
 	protected $cache;
@@ -50,7 +50,7 @@ class functions_nationalflags
 
 	public function __construct(
 			\phpbb\config\config $config,
-			\phpbb\controller\helper $controller_helper,
+			\phpbb\controller\helper $helper,
 			\phpbb\cache\service $cache,
 			\phpbb\db\driver\driver_interface $db,
 			\phpbb\template\template $template,
@@ -60,7 +60,7 @@ class functions_nationalflags
 			$phpbb_root_path)
 	{
 		$this->config = $config;
-		$this->controller_helper = $controller_helper;
+		$this->helper = $helper;
 		$this->cache = $cache;
 		$this->db = $db;
 		$this->template = $template;
@@ -155,16 +155,16 @@ class functions_nationalflags
 		WHERE user_flag > 0
 		GROUP BY user_flag
 		ORDER BY fnum DESC';
-		$result = $this->db->sql_query_limit($sql, $this->config['flags_how_many']);
+		$result = $this->db->sql_query_limit($sql, 15);
 
-		$user_flags = $this->cache->get('_user_flags');
 		$count = 0;
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			++$count;
 			$this->template->assign_block_vars('flag', array(
-				'FLAG' 			=> '<img src="' . $this->root_path . $this->flags_path . $user_flags[$row['user_flag']]['flag_image'] . '" alt="'. htmlspecialchars($user_flags[$row['user_flag']]['flag_name']) . '" title="'. htmlspecialchars($user_flags[$row['user_flag']]['flag_name']) . '" />',
+				'FLAG' 			=> $this->get_user_flag($row['user_flag']),
 				'L_FLAG_USERS'	=> $row['fnum'] == 1 ? sprintf($this->user->lang['FLAG_USER'], $row['fnum']) : sprintf($this->user->lang['FLAG_USERS'], $row['fnum']),
+				'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflagusers_controller', array('flag_id' => $row['user_flag'])),
 			));
 		}
 		$this->db->sql_freeresult($result);
@@ -172,7 +172,7 @@ class functions_nationalflags
 		if($count)
 		{
 			$this->template->assign_vars(array(
-				'U_FLAGS'		=> $this->controller_helper->route('rmcgirr83_nationalflags_main_controller'),
+				'U_FLAGS'		=> $this->helper->route('rmcgirr83_nationalflags_main_controller'),
 				'S_FLAGS_FOUND'	=> true,
 			));
 		}

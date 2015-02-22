@@ -38,10 +38,12 @@ $lang = array_merge($lang, array(
 	//A couple for the ACP User Profile
 	'FLAG'				=> 'Flag',
 	'FLAGS'				=> 'National Flags',
-	'FLAG_EXPLAIN'		=> 'Choose your National Flag.',
+	'FLAG_EXPLAIN'		=> 'Choose your Flag',
 	'USER_NEEDS_FLAG'	=> 'Please take a moment and %svisit your profile%s to choose a flag.',
-	'NATONALFLAGS_VIEWONLINE' => 'Viewing Flags',
-	'TOP_FLAG_TITLE'	=> 'Top Flags',
+	'FLAGS_VIEWONLINE'	=> 'Viewing Flags',
 	'FLAG_USER'			=> '%s User',
 	'FLAG_USERS'		=> '%s Users',
+	'MUST_CHOOSE_FLAG'	=> 'You must choose a flag',
+	'NO_SUCH_FLAG'		=> 'Please choose a flag',
+	'NO_USER_HAS_FLAG'	=> 'No user has this flag',
 ));

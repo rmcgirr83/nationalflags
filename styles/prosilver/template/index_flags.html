@@ -1,0 +1,21 @@
+<!-- IF S_FLAGS_FOUND -->
+<div class="forabg" id="flags">
+	<div class="inner">
+	<ul class="topiclist">
+		<li class="header">
+			<dl>
+				<dt><div class="list-inner"><!-- IF U_FLAGS --><a href="{U_FLAGS}"><!-- ENDIF -->{L_FLAGS}<!-- IF U_FLAGS --></a><!-- ENDIF --></div></dt>
+				<dd></dd>
+			</dl>
+		</li>
+	</ul>
+	<ul class="flags">
+	<!-- BEGIN flag -->
+		<li class="bg1">
+			<a href="{flag.U_FLAG}">{flag.FLAG}</a><br />{flag.L_FLAG_USERS}
+		</li>
+	<!-- END flag -->
+	</ul>
+	</div>
+</div>
+<!-- ENDIF -->
