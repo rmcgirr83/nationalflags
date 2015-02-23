@@ -127,12 +127,10 @@ class listener implements EventSubscriberInterface
 		{
 			return;
 		}
-		// Need to ensure the flags are cached on page load
-		$this->nf_functions->cache_flags();
 
 		$this->template->assign_vars(array(
 			'S_FLAGS'	=> $this->config['allow_flags'],
-			'U_FLAGS'	=> append_sid($this->helper->route('rmcgirr83_nationalflags_main_controller')),
+			'U_FLAGS'	=> $this->helper->route('rmcgirr83_nationalflags_main_controller'),
 		));
 
 		$lang_set_ext = $event['lang_set_ext'];
@@ -221,7 +219,7 @@ class listener implements EventSubscriberInterface
 				'FLAG_NAME'		=> $flag_name,
 				'S_FLAGS_ENABLED'	=> true,
 				'S_FLAG_OPTIONS'	=> $s_flag_options,
-				'AJAX_FLAG_INFO' 	=> append_sid($this->helper->route('rmcgirr83_nationalflags_getflag_controller', array('flag_id' => 'FLAG_ID'))),
+				'AJAX_FLAG_INFO' 	=> $this->helper->route('rmcgirr83_nationalflags_getflag_controller', array('flag_id' => 'FLAG_ID')),
 			));
 		}
 	}
@@ -281,7 +279,7 @@ class listener implements EventSubscriberInterface
 			'FLAG_NAME'		=> $flag_name,
 			'S_FLAGS_ENABLED'	=> true,
 			'S_FLAG_OPTIONS'	=> $s_flag_options,
-			'AJAX_FLAG_INFO' 	=> append_sid($this->helper->route('rmcgirr83_nationalflags_getflag_controller', array('flag_id' => 'FLAG_ID'))),
+			'AJAX_FLAG_INFO' 	=> $this->helper->route('rmcgirr83_nationalflags_getflag_controller', array('flag_id' => 'FLAG_ID')),
 		));
 	}
 
@@ -340,7 +338,7 @@ class listener implements EventSubscriberInterface
 			if (strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/flags') === 0)
 			{
 				$event['location'] = $this->user->lang('FLAGS_VIEWONLINE');
-				$event['location_url'] = append_sid($this->helper->route('rmcgirr83_nationalflags_main_controller'));
+				$event['location_url'] = $this->helper->route('rmcgirr83_nationalflags_main_controller');
 			}
 		}
 	}
@@ -390,7 +388,7 @@ class listener implements EventSubscriberInterface
 		$flags = $this->cache->get('_user_flags');
 		$this->template->assign_vars(array(
 			'NATIONAL_FLAG'	=> $flag,
-			'U_FLAG'		=> append_sid($this->helper->route('rmcgirr83_nationalflags_getflagusers_controller', array('flag_name' => $flags[$event['member']['user_flag']]['flag_name']))),
+			'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflagusers_controller', array('flag_name' => $flags[$event['member']['user_flag']]['flag_name'])),
 		));
 	}
 }

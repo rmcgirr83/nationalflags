@@ -166,7 +166,7 @@ class functions_nationalflags
 			$this->template->assign_block_vars('flag', array(
 				'FLAG' 			=> $this->get_user_flag($row['user_flag']),
 				'L_FLAG_USERS'	=> ($row['fnum'] == 1) ? sprintf($this->user->lang['FLAG_USER'], $row['fnum']) : sprintf($this->user->lang['FLAG_USERS'], $row['fnum']),
-				'U_FLAG'		=> append_sid($this->helper->route('rmcgirr83_nationalflags_getflagusers_controller', array('flag_name' => $flags[$row['user_flag']]['flag_name']))),
+				'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflagusers_controller', array('flag_name' => $flags[$row['user_flag']]['flag_name'])),
 			));
 		}
 		$this->db->sql_freeresult($result);
@@ -174,7 +174,7 @@ class functions_nationalflags
 		if($count)
 		{
 			$this->template->assign_vars(array(
-				'U_FLAGS'		=> append_sid($this->helper->route('rmcgirr83_nationalflags_main_controller')),
+				'U_FLAGS'		=> $this->helper->route('rmcgirr83_nationalflags_main_controller'),
 				'S_FLAGS_FOUND'	=> true,
 			));
 		}

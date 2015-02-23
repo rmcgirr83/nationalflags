@@ -9,3 +9,7 @@ rmcgirr83_nationalflags_getflag_controller:
 rmcgirr83_nationalflags_getflagusers_controller:
     pattern: /flags/{flag_name}
     defaults: { _controller: rmcgirr83.nationalflags.main.controller:getFlagUsers }
+
+rmcgirr83_nationalflags_cacheflags_controller:
+    path: /
+    defaults: { _controller: rmcgirr83.nationalflags.main.controller:cacheFlags }

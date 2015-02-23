@@ -158,7 +158,7 @@ class main_controller
 			$this->template->assign_block_vars('flag', array(
 				'FLAG' 			=> $this->nf_functions->get_user_flag($flag_id),
 				'FLAG_USER_COUNT'	=> $user_flag_count,
-				'U_FLAG'		=> append_sid($this->helper->route('rmcgirr83_nationalflags_getflagusers_controller', array('flag_name' => $row['flag_name']))),
+				'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflagusers_controller', array('flag_name' => $row['flag_name'])),
 			));
 		}
 		$this->db->sql_freeresult($result);
@@ -178,7 +178,7 @@ class main_controller
 
 		// Assign breadcrumb template vars for the flags page
 		$this->template->assign_block_vars('navlinks', array(
-			'U_VIEW_FORUM'		=> append_sid($this->helper->route('rmcgirr83_nationalflags_main_controller')),
+			'U_VIEW_FORUM'		=> $this->helper->route('rmcgirr83_nationalflags_main_controller'),
 			'FORUM_NAME'		=> $this->user->lang('FLAGS'),
 		));
 
@@ -277,13 +277,13 @@ class main_controller
 
 		// Assign breadcrumb template vars for the flags page
 		$this->template->assign_block_vars('navlinks', array(
-			'U_VIEW_FORUM'		=> append_sid($this->helper->route('rmcgirr83_nationalflags_main_controller')),
+			'U_VIEW_FORUM'		=> $this->helper->route('rmcgirr83_nationalflags_main_controller'),
 			'FORUM_NAME'		=> $this->user->lang('FLAGS'),
 		));
 
 		// Assign breadcrumb template vars for the flags page
 		$this->template->assign_block_vars('navlinks', array(
-			'U_VIEW_FORUM'		=> append_sid($this->helper->route('rmcgirr83_nationalflags_getflagusers_controller', array('flag_name' => $flag_name))),
+			'U_VIEW_FORUM'		=> $this->helper->route('rmcgirr83_nationalflags_getflagusers_controller', array('flag_name' => $flag_name)),
 			'FORUM_NAME'		=> $row['flag_name'],
 		));
 
