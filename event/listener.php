@@ -263,7 +263,6 @@ class listener implements EventSubscriberInterface
 			'user_flag'	=> $this->request->variable('user_flag', $this->user->data['user_flag']),
 		));
 
-
 		$flags = $this->cache->get('_user_flags');
 		$flag_name = $flag_image = '';
 		$flag_id = 0;
