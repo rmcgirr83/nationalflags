@@ -130,7 +130,6 @@ class listener implements EventSubscriberInterface
 
 		$this->template->assign_vars(array(
 			'S_FLAGS'	=> $this->config['allow_flags'],
-			'U_FLAGS'	=> $this->helper->route('rmcgirr83_nationalflags_main_controller'),
 		));
 
 		$lang_set_ext = $event['lang_set_ext'];
@@ -165,6 +164,7 @@ class listener implements EventSubscriberInterface
 	*/
 	public function display_message($event)
 	{
+		// todo don't show this on the ucp mode profile page.
 		if (!$this->auth->acl_get('u_chgprofileinfo') || empty($this->config['allow_flags']))
 		{
 			return;
@@ -201,7 +201,7 @@ class listener implements EventSubscriberInterface
 		// Output the data vars to the template (except on form submit)
 		if (!$event['submit'])
 		{
-			$flags = $this->cache->get('_user_flags');
+			$flags = $this->helper->route('rmcgirr83_nationalflags_cacheflags_controller');
 			$flag_name = $flag_image = '';
 			$flag_id = 0;
 			if ($event['data']['user_flag'])
@@ -261,7 +261,7 @@ class listener implements EventSubscriberInterface
 			'user_flag'	=> $this->request->variable('user_flag', $this->user->data['user_flag']),
 		));
 
-		$flags = $this->cache->get('_user_flags');
+		$flags = $this->helper->route('rmcgirr83_nationalflags_cacheflags_controller');
 		$flag_name = $flag_image = '';
 		$flag_id = 0;
 		if ($event['data']['user_flag'])
@@ -349,8 +349,9 @@ class listener implements EventSubscriberInterface
 		{
 			return;
 		}
+
 		$array = $event['user_cache_data'];
-		$flag = $this->nf_functions->get_user_flag($event['row']['user_flag']);
+		$flag = $this->helper->route('rmcgirr83_nationalflags_getflag_controller', array('flag_id' => $event['row']['user_flag']));
 		$array['user_flag'] = $flag;
 		$event['user_cache_data'] = $array;
 	}
@@ -384,8 +385,9 @@ class listener implements EventSubscriberInterface
 		{
 			return;
 		}
-		$flag = $this->nf_functions->get_user_flag($event['member']['user_flag']);
-		$flags = $this->cache->get('_user_flags');
+
+		$flag = $this->helper->route('rmcgirr83_nationalflags_getflag_controller', array('flag_id' => $event['member']['user_flag']));
+		$flags = $this->helper->route('rmcgirr83_nationalflags_cacheflags_controller');
 		$this->template->assign_vars(array(
 			'NATIONAL_FLAG'	=> $flag,
 			'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflagusers_controller', array('flag_name' => $flags[$event['member']['user_flag']]['flag_name'])),

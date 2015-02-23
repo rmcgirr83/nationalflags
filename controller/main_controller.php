@@ -11,7 +11,6 @@
 namespace rmcgirr83\nationalflags\controller;
 
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
 * Main controller
@@ -30,11 +29,11 @@ class main_controller
 	/** @var \phpbb\db\driver\driver */
 	protected $db;
 
+	/** @var \phpbb\pagination */
+	protected $pagination,
+
 	/** @var \phpbb\controller\helper */
 	protected $helper;
-
-	/** @var ContainerInterface */
-	protected $container;
 
 	/* @var \phpbb\request\request */
 	protected $request;
@@ -88,7 +87,6 @@ class main_controller
 			\phpbb\db\driver\driver_interface $db,
 			\phpbb\pagination $pagination,
 			\phpbb\controller\helper $helper,
-			ContainerInterface $container,
 			\phpbb\request\request $request,
 			\phpbb\template\template $template,
 			\phpbb\user $user,
@@ -104,7 +102,6 @@ class main_controller
 		$this->db = $db;
 		$this->pagination = $pagination;
 		$this->helper = $helper;
-		$this->container = $container;
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
@@ -156,7 +153,7 @@ class main_controller
 			}
 
 			$this->template->assign_block_vars('flag', array(
-				'FLAG' 			=> $this->nf_functions->get_user_flag($flag_id),
+				'FLAG' 			=> $this->helper->route('rmcgirr83_nationalflags_getflag_controller', array('flag_id' => $row['flag_id'])),
 				'FLAG_USER_COUNT'	=> $user_flag_count,
 				'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflagusers_controller', array('flag_name' => $row['flag_name'])),
 			));
@@ -173,7 +170,7 @@ class main_controller
 		}
 
 		$this->template->assign_vars(array(
-			'L_FLAGS'			=> $countries . ' ' . $this->user->lang['FLAGS'] . '&nbsp;&nbsp;' . $flag_users,
+			'L_FLAGS'	=> $countries . ' ' . $this->user->lang['FLAGS'] . '&nbsp;&nbsp;' . $flag_users,
 		));
 
 		// Assign breadcrumb template vars for the flags page
@@ -216,7 +213,7 @@ class main_controller
 			trigger_error('NO_USER_HAS_FLAG');
 		}
 
-		// now users that have that flag
+		// now users that have the flag
 		$sql = 'SELECT *
 			FROM ' . USERS_TABLE . '
 			WHERE user_flag = ' . (int) $row['flag_id'] . '
@@ -226,7 +223,7 @@ class main_controller
 		$rows = $this->db->sql_fetchrowset($result);
 		$this->db->sql_freeresult($result);
 
-		// for counting of flag users
+		// for counting of total flag users
 		$result = $this->db->sql_query($sql);
 		$row2 = $this->db->sql_fetchrowset($result);
 		$total_users = (int) count($row2);
@@ -237,8 +234,10 @@ class main_controller
 		{
 			$user_id = $userrow['user_id'];
 
-			$username = $this->auth->acl_get('u_viewprofile') ? get_username_string('full', $user_id, $userrow['username'], $userrow['user_colour']) : get_username_string('no_profile', $user_id, $userrow['username'], $userrow['user_colour']);
-
+			$username = ($this->auth->acl_get('u_viewprofile')) ? get_username_string('full', $user_id, $userrow['username'], $userrow['user_colour']) : get_username_string('no_profile', $user_id, $userrow['username'], $userrow['user_colour']);
+			$username = str_replace('./../../', generate_board_url() . '/', $username); // Fix paths
+			$username = str_replace('./../', generate_board_url() . '/', $username); // Fix paths
+			
 			$this->template->assign_block_vars('user_row', array(
 				'JOINED'		=> $this->user->format_date($userrow['user_regdate']),
 				'VISITED'		=> (empty($row['user_lastvisit'])) ? ' - ' : $this->user->format_date($userrow['user_lastvisit']),
@@ -257,7 +256,7 @@ class main_controller
 			$page
 		);
 
-		$flag_image = $this->nf_functions->get_user_flag($row['flag_id']);
+		$flag_image = $this->getFlag($row['flag_id']);
 		$flag_image = str_replace('./', generate_board_url() . '/', $flag_image); // Fix paths
 
 		if ($total_users == 1)
@@ -312,12 +311,45 @@ class main_controller
 			}
 		}
 
-		$flag = $this->cache->get('_user_flags');
+		$flag = $this->cacheFlags();
 		$flag_img = $this->root_path . $this->flags_path . $flag[$flag_id]['flag_image'];
 		$flag_name = $flag[$flag_id]['flag_name'];
 
 		$return = '<img src="' . $flag_img . '" alt="' . $flag_name .'" title="' . $flag_name .'" style="vertical-align:middle;" />';
 
 		return new Response($return);
+	}
+
+	/**
+	 * Get cache flags
+	 *
+	 * Build the cache of the flags
+	 *
+	 * @return array $user_flags
+	 */
+	public function cacheFlags()
+	{
+		if (($user_flags = $this->cache->get('_user_flags')) === false)
+		{
+			$sql = 'SELECT flag_id, flag_name, flag_image
+				FROM ' . $this->flags_table . '
+			ORDER BY flag_id';
+			$result = $this->db->sql_query($sql);
+
+			$user_flags = array();
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$user_flags[$row['flag_id']] = array(
+					'flag_id'		=> $row['flag_id'],
+					'flag_name'		=> $row['flag_name'],
+					'flag_image'	=> $row['flag_image'],
+				);
+			}
+			$this->db->sql_freeresult($result);
+
+			// cache this data for ever, can only change in ACP
+			$this->cache->put('_user_flags', $user_flags);
+		}
+		return $user_flags->getArrayResult();
 	}
 }

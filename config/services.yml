@@ -27,7 +27,6 @@ services:
             - @dbal.conn
             - @pagination
             - @controller.helper
-            - @service_container
             - @request
             - @template
             - @user
