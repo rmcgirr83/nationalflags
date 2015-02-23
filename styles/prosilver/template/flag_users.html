@@ -1,36 +1,46 @@
 <!-- INCLUDE overall_header.html -->
 
 <h2 class="solo" id="flagusers">{FLAG_IMAGE} {FLAG} {TOTAL_USERS}</h2>
-	<div class="forabg">
-		<div class="inner"><span class="corners-top"><span></span></span>
-		<ul class="topiclist">
-			<li class="header">
-				<dl class="icon">
-					<dt><div class="list-inner">{L_USERNAME}</div></dt>
-					<dd class="topics">{L_POSTS}</dd>
-					<dd class="posts">{L_JOINED}</dd>
-				</dl>
-			</li>
-		</ul>
-		<ul class="topiclist topics">
-		<!-- BEGIN user_row -->
-			<li class="row <!-- IF user_row.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
-				<dl>
-					<dt style="font-size: 1.2em;line-height: 2.2em;padding: 4px 0;">
-						<div class="list-inner">
-							{user_row.USERNAME_FULL}
-						</div>
-					</dt>
-					<dd class="topics">
-						<!-- IF user_row.POSTS and S_DISPLAY_SEARCH --><a href="{user_row.U_SEARCH_USER}" title="{L_SEARCH_USER_POSTS}">{user_row.POSTS}</a><!-- ELSE -->{user_row.POSTS}<!-- ENDIF -->
-					</dd>
-					<dd class="posts" style="width:150px;">
-						{user_row.JOINED}
-					</dd>
-				</dl>
-			</li>
-		<!-- END user_row -->
-		</ul>
-		<span class="corners-bottom"><span></span></span></div>
-	</div>
+		<div class="action-bar top">
+			<div class="pagination">
+				{TOTAL_USERS} &bull;
+				<!-- IF .pagination -->
+					<!-- INCLUDE pagination.html -->
+				<!-- ELSE -->
+					{PAGE_NUMBER}
+				<!-- ENDIF -->
+			</div>
+		</div>
+		<div class="forabg">
+			<div class="inner"><span class="corners-top"><span></span></span>
+			<ul class="topiclist">
+				<li class="header">
+					<dl class="icon">
+						<dt><div class="list-inner">{L_USERNAME}</div></dt>
+						<dd class="topics">{L_POSTS}</dd>
+						<dd class="posts">{L_JOINED}</dd>
+					</dl>
+				</li>
+			</ul>
+			<ul class="topiclist topics">
+			<!-- BEGIN user_row -->
+				<li class="row <!-- IF user_row.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
+					<dl>
+						<dt style="font-size: 1.2em;line-height: 2.2em;padding: 4px 0;">
+							<div class="list-inner">
+								{user_row.USERNAME_FULL}
+							</div>
+						</dt>
+						<dd class="topics">
+							<!-- IF user_row.POSTS and S_DISPLAY_SEARCH --><a href="{user_row.U_SEARCH_USER}" title="{L_SEARCH_USER_POSTS}">{user_row.POSTS}</a><!-- ELSE -->{user_row.POSTS}<!-- ENDIF -->
+						</dd>
+						<dd class="posts" style="width:150px;">
+							{user_row.JOINED}
+						</dd>
+					</dl>
+				</li>
+			<!-- END user_row -->
+			</ul>
+			<span class="corners-bottom"><span></span></span></div>
+		</div>
 <!-- INCLUDE overall_footer.html -->

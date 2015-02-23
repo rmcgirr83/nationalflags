@@ -11,6 +11,7 @@
 namespace rmcgirr83\nationalflags\controller;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
 * Main controller
@@ -31,6 +32,12 @@ class main_controller
 
 	/** @var \phpbb\controller\helper */
 	protected $helper;
+
+	/** @var ContainerInterface */
+	protected $container;
+
+	/* @var \phpbb\request\request */
+	protected $request;
 
 	/** @var \phpbb\template\template */
 	protected $template;
@@ -79,7 +86,10 @@ class main_controller
 			\phpbb\cache\service $cache,
 			\phpbb\config\config $config,
 			\phpbb\db\driver\driver_interface $db,
+			\phpbb\pagination $pagination,
 			\phpbb\controller\helper $helper,
+			ContainerInterface $container,
+			\phpbb\request\request $request,
 			\phpbb\template\template $template,
 			\phpbb\user $user,
 			$root_path,
@@ -92,7 +102,10 @@ class main_controller
 		$this->cache = $cache;
 		$this->config = $config;
 		$this->db = $db;
+		$this->pagination = $pagination;
 		$this->helper = $helper;
+		$this->container = $container;
+		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
 		$this->root_path = $root_path;
@@ -145,7 +158,7 @@ class main_controller
 			$this->template->assign_block_vars('flag', array(
 				'FLAG' 			=> $this->nf_functions->get_user_flag($flag_id),
 				'FLAG_USER_COUNT'	=> $user_flag_count,
-				'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflagusers_controller', array('flag_id' => $flag_id)),
+				'U_FLAG'		=> append_sid($this->helper->route('rmcgirr83_nationalflags_getflagusers_controller', array('flag_name' => $row['flag_name']))),
 			));
 		}
 		$this->db->sql_freeresult($result);
@@ -165,7 +178,7 @@ class main_controller
 
 		// Assign breadcrumb template vars for the flags page
 		$this->template->assign_block_vars('navlinks', array(
-			'U_VIEW_FORUM'		=> $this->helper->route('rmcgirr83_nationalflags_main_controller'),
+			'U_VIEW_FORUM'		=> append_sid($this->helper->route('rmcgirr83_nationalflags_main_controller')),
 			'FORUM_NAME'		=> $this->user->lang('FLAGS'),
 		));
 
@@ -176,11 +189,11 @@ class main_controller
 	/**
 	* Display the users of flags page
 	*
-	* @param $flag_id
+	* @param $flag_name
 	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	* @access public
 	*/
-	public function getFlagUsers($flag_id)
+	public function getFlagUsers($flag_name)
 	{
 		// When flags are disabled, redirect users back to the forum index
 		if (empty($this->config['allow_flags']))
@@ -188,10 +201,12 @@ class main_controller
 			redirect(append_sid("{$this->root_path}index.{$this->php_ext}"));
 		}
 
+		$page = $this->request->variable('page', 0);
+
 		//let's get the flag requested
 		$sql = 'SELECT flag_id, flag_name, flag_image
-			FROM ' . $this->flags_table . '
-			WHERE flag_id = ' .(int) $flag_id;
+			FROM ' . $this->flags_table . "
+			WHERE flag_name = '" . $this->db->sql_escape($flag_name) . "'";
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
@@ -204,10 +219,10 @@ class main_controller
 		// now users that have that flag
 		$sql = 'SELECT *
 			FROM ' . USERS_TABLE . '
-			WHERE user_flag = ' . (int) $flag_id . '
+			WHERE user_flag = ' . (int) $row['flag_id'] . '
 				AND ' . $this->db->sql_in_set ('user_type', array(USER_NORMAL, USER_FOUNDER)) . '
 			ORDER BY username_clean';
-		$result = $this->db->sql_query($sql);
+		$result = $this->db->sql_query_limit($sql, $this->config['posts_per_page'], $page);
 		$rows = $this->db->sql_fetchrowset($result);
 		$this->db->sql_freeresult($result);
 
@@ -233,15 +248,18 @@ class main_controller
 			));
 		}
 		$this->db->sql_freeresult($result);
+		$this->pagination->generate_template_pagination(
+			$this->helper->route('rmcgirr83_nationalflags_getflagusers_controller', array('flag_name' => $flag_name)),
+			'pagination',
+			'page',
+			$total_users,
+			$this->config['posts_per_page'],
+			$page
+		);
 
-		// Assign breadcrumb template vars for the flags page
-		$this->template->assign_block_vars('navlinks', array(
-			'U_VIEW_FORUM'		=> $this->helper->route('rmcgirr83_nationalflags_main_controller'),
-			'FORUM_NAME'		=> $this->user->lang('FLAGS'),
-		));
-
-		$flag_image = $this->nf_functions->get_user_flag($flag_id);
+		$flag_image = $this->nf_functions->get_user_flag($row['flag_id']);
 		$flag_image = str_replace('./', generate_board_url() . '/', $flag_image); // Fix paths
+
 		if ($total_users == 1)
 		{
 			$total_users = sprintf($this->user->lang['FLAG_USER'], $total_users);
@@ -256,6 +274,19 @@ class main_controller
 			'TOTAL_USERS'	=> $total_users,
 			'S_VIEWONLINE'	=> $this->auth->acl_get('u_viewonline'),
 		));
+
+		// Assign breadcrumb template vars for the flags page
+		$this->template->assign_block_vars('navlinks', array(
+			'U_VIEW_FORUM'		=> append_sid($this->helper->route('rmcgirr83_nationalflags_main_controller')),
+			'FORUM_NAME'		=> $this->user->lang('FLAGS'),
+		));
+
+		// Assign breadcrumb template vars for the flags page
+		$this->template->assign_block_vars('navlinks', array(
+			'U_VIEW_FORUM'		=> append_sid($this->helper->route('rmcgirr83_nationalflags_getflagusers_controller', array('flag_name' => $flag_name))),
+			'FORUM_NAME'		=> $row['flag_name'],
+		));
+
 		// Send all data to the template file
 		return $this->helper->render('flag_users.html', $this->user->lang('FLAGS'));
 	}
