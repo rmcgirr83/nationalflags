@@ -237,7 +237,7 @@ class main_controller
 			$username = ($this->auth->acl_get('u_viewprofile')) ? get_username_string('full', $user_id, $userrow['username'], $userrow['user_colour']) : get_username_string('no_profile', $user_id, $userrow['username'], $userrow['user_colour']);
 			$username = str_replace('./../../', generate_board_url() . '/', $username); // Fix paths
 			$username = str_replace('./../', generate_board_url() . '/', $username); // Fix paths
-			
+
 			$this->template->assign_block_vars('user_row', array(
 				'JOINED'		=> $this->user->format_date($userrow['user_regdate']),
 				'VISITED'		=> (empty($row['user_lastvisit'])) ? ' - ' : $this->user->format_date($userrow['user_lastvisit']),
