@@ -30,7 +30,7 @@ class main_controller
 	protected $db;
 
 	/** @var \phpbb\pagination */
-	protected $pagination,
+	protected $pagination;
 
 	/** @var \phpbb\controller\helper */
 	protected $helper;
@@ -153,9 +153,9 @@ class main_controller
 			}
 
 			$this->template->assign_block_vars('flag', array(
-				'FLAG' 			=> $this->helper->route('rmcgirr83_nationalflags_getflag_controller', array('flag_id' => $row['flag_id'])),
+				'FLAG' 				=> $this->nf_functions->get_user_flag($flag_id),
 				'FLAG_USER_COUNT'	=> $user_flag_count,
-				'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflagusers_controller', array('flag_name' => $row['flag_name'])),
+				'U_FLAG'			=> $this->helper->route('rmcgirr83_nationalflags_getflagusers', array('flag_name' => $row['flag_name'])),
 			));
 		}
 		$this->db->sql_freeresult($result);
@@ -190,7 +190,7 @@ class main_controller
 	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	* @access public
 	*/
-	public function getFlagUsers($flag_name)
+	public function getFlagUsers($flag_name, $page = 0)
 	{
 		// When flags are disabled, redirect users back to the forum index
 		if (empty($this->config['allow_flags']))
@@ -198,8 +198,20 @@ class main_controller
 			redirect(append_sid("{$this->root_path}index.{$this->php_ext}"));
 		}
 
-		$page = $this->request->variable('page', 0);
+		$page_title = $flag_name;
+		if ($page > 1)
+		{
+			$page_title .= ' - ' . $this->user->lang('PAGE_TITLE_NUMBER', $page);
+		}
 
+		$this->display_flags($flag_name, ($page - 1) * $this->config['posts_per_page'], $this->config['posts_per_page']);
+
+		// Send all data to the template file
+		return $this->helper->render('flag_users.html', $page_title);
+	}
+
+	protected function display_flags($flag_name, $start, $limit)
+	{
 		//let's get the flag requested
 		$sql = 'SELECT flag_id, flag_name, flag_image
 			FROM ' . $this->flags_table . "
@@ -219,7 +231,7 @@ class main_controller
 			WHERE user_flag = ' . (int) $row['flag_id'] . '
 				AND ' . $this->db->sql_in_set ('user_type', array(USER_NORMAL, USER_FOUNDER)) . '
 			ORDER BY username_clean';
-		$result = $this->db->sql_query_limit($sql, $this->config['posts_per_page'], $page);
+		$result = $this->db->sql_query_limit($sql, $limit, $start);
 		$rows = $this->db->sql_fetchrowset($result);
 		$this->db->sql_freeresult($result);
 
@@ -235,8 +247,6 @@ class main_controller
 			$user_id = $userrow['user_id'];
 
 			$username = ($this->auth->acl_get('u_viewprofile')) ? get_username_string('full', $user_id, $userrow['username'], $userrow['user_colour']) : get_username_string('no_profile', $user_id, $userrow['username'], $userrow['user_colour']);
-			$username = str_replace('./../../', generate_board_url() . '/', $username); // Fix paths
-			$username = str_replace('./../', generate_board_url() . '/', $username); // Fix paths
 
 			$this->template->assign_block_vars('user_row', array(
 				'JOINED'		=> $this->user->format_date($userrow['user_regdate']),
@@ -247,16 +257,18 @@ class main_controller
 			));
 		}
 		$this->db->sql_freeresult($result);
-		$this->pagination->generate_template_pagination(
-			$this->helper->route('rmcgirr83_nationalflags_getflagusers_controller', array('flag_name' => $flag_name)),
-			'pagination',
-			'page',
-			$total_users,
-			$this->config['posts_per_page'],
-			$page
-		);
 
-		$flag_image = $this->getFlag($row['flag_id']);
+		$this->pagination->generate_template_pagination(array(
+			'routes' => array(
+				'rmcgirr83_nationalflags_getflagusers',
+				'rmcgirr83_nationalflags_getflagusers_page',
+			),
+			'params' => array(
+				'flag_name' => $flag_name,
+			),
+		), 'pagination', 'page', $total_users, $limit, $start);
+
+		$flag_image = $this->nf_functions->get_user_flag($row['flag_id']);
 		$flag_image = str_replace('./', generate_board_url() . '/', $flag_image); // Fix paths
 
 		if ($total_users == 1)
@@ -282,14 +294,10 @@ class main_controller
 
 		// Assign breadcrumb template vars for the flags page
 		$this->template->assign_block_vars('navlinks', array(
-			'U_VIEW_FORUM'		=> $this->helper->route('rmcgirr83_nationalflags_getflagusers_controller', array('flag_name' => $flag_name)),
+			'U_VIEW_FORUM'		=> $this->helper->route('rmcgirr83_nationalflags_getflagusers', array('flag_name' => $flag_name)),
 			'FORUM_NAME'		=> $row['flag_name'],
 		));
-
-		// Send all data to the template file
-		return $this->helper->render('flag_users.html', $this->user->lang('FLAGS'));
 	}
-
 	/**
 	 * Display flag on change in ucp
 	 * Ajax function
@@ -311,45 +319,12 @@ class main_controller
 			}
 		}
 
-		$flag = $this->cacheFlags();
+		$flag = $this->cache->get('_user_flags');
 		$flag_img = $this->root_path . $this->flags_path . $flag[$flag_id]['flag_image'];
 		$flag_name = $flag[$flag_id]['flag_name'];
 
 		$return = '<img src="' . $flag_img . '" alt="' . $flag_name .'" title="' . $flag_name .'" style="vertical-align:middle;" />';
 
 		return new Response($return);
-	}
-
-	/**
-	 * Get cache flags
-	 *
-	 * Build the cache of the flags
-	 *
-	 * @return array $user_flags
-	 */
-	public function cacheFlags()
-	{
-		if (($user_flags = $this->cache->get('_user_flags')) === false)
-		{
-			$sql = 'SELECT flag_id, flag_name, flag_image
-				FROM ' . $this->flags_table . '
-			ORDER BY flag_id';
-			$result = $this->db->sql_query($sql);
-
-			$user_flags = array();
-			while ($row = $this->db->sql_fetchrow($result))
-			{
-				$user_flags[$row['flag_id']] = array(
-					'flag_id'		=> $row['flag_id'],
-					'flag_name'		=> $row['flag_name'],
-					'flag_image'	=> $row['flag_image'],
-				);
-			}
-			$this->db->sql_freeresult($result);
-
-			// cache this data for ever, can only change in ACP
-			$this->cache->put('_user_flags', $user_flags);
-		}
-		return $user_flags->getArrayResult();
 	}
 }

@@ -6,14 +6,14 @@
 	* TODO jQuery this
 	*/
 	function createRequestObject() {
-	    var ro;
+	    var flagro;
 	    var browser = navigator.appName;
 	    if(browser == "Microsoft Internet Explorer"){
-	        ro = new ActiveXObject("Microsoft.XMLHTTP");
+	        flagro = new ActiveXObject("Microsoft.XMLHTTP");
 	    } else {
-	        ro = new XMLHttpRequest();
+	        flagro = new XMLHttpRequest();
 	    }
-	    return ro;
+	    return flagro;
 	}
 
 	var flag = createRequestObject();

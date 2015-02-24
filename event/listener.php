@@ -98,19 +98,20 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.user_setup'						=> 'flag_setup',
-			'core.index_modify_page_title'			=> 'main',
-			'core.page_header_after'				=> 'display_message',
-			'core.ucp_profile_modify_profile_info'	=> 'user_flag_profile',
-			'core.ucp_profile_info_modify_sql_ary'	=> 'user_flag_profile_sql',
-			'core.ucp_register_data'				=> 'user_flag_registration',
-			'core.ucp_register_data_check'			=> 'user_flag_registration_check',
-			'core.ucp_register_user_row_after'		=> 'user_flag_registration_sql',
-			'core.viewonline_overwrite_location'	=> 'viewonline_page',
-			'core.viewtopic_cache_user_data'		=> 'viewtopic_cache_user_data',
-			'core.viewtopic_cache_guest_data'		=> 'viewtopic_cache_guest_data',
-			'core.viewtopic_modify_post_row'		=> 'viewtopic_modify_post_row',
-			'core.memberlist_view_profile'			=> 'memberlist_view_profile',
+			'core.user_setup'							=> 'user_setup',
+			'core.index_modify_page_title'				=> 'index_modify_page_title',
+			'core.page_header_after'					=> 'page_header_after',
+			'core.ucp_profile_modify_profile_info'		=> 'user_flag_profile',
+			'core.ucp_profile_info_validate_data'		=> 'user_flag_profile_validate',
+			'core.ucp_profile_info_modify_sql_ary'		=> 'user_flag_profile_sql',
+			'core.ucp_register_data'					=> 'user_flag_registration',
+			'core.ucp_register_data_check'				=> 'user_flag_registration_check',
+			'core.ucp_register_user_row_after'			=> 'user_flag_registration_sql',
+			'core.viewonline_overwrite_location'		=> 'viewonline_page',
+			'core.viewtopic_cache_user_data'			=> 'viewtopic_cache_user_data',
+			'core.viewtopic_cache_guest_data'			=> 'viewtopic_cache_guest_data',
+			'core.viewtopic_modify_post_row'			=> 'viewtopic_modify_post_row',
+			'core.memberlist_view_profile'				=> 'memberlist_view_profile',
 		);
 	}
 
@@ -121,12 +122,14 @@ class listener implements EventSubscriberInterface
 	* @return null
 	* @access public
 	*/
-	public function flag_setup($event)
+	public function user_setup($event)
 	{
 		if (empty($this->config['allow_flags']))
 		{
 			return;
 		}
+		// Need to ensure the flags are cached on page load
+		$this->nf_functions->cache_flags();
 
 		$this->template->assign_vars(array(
 			'S_FLAGS'	=> $this->config['allow_flags'],
@@ -146,7 +149,7 @@ class listener implements EventSubscriberInterface
 	* @return null
 	* @access public
 	*/
-	public function main($event)
+	public function index_modify_page_title($event)
 	{
 		if (empty($this->config['allow_flags']))
 		{
@@ -162,14 +165,18 @@ class listener implements EventSubscriberInterface
 	* @return null
 	* @access public
 	*/
-	public function display_message($event)
+	public function page_header_after($event)
 	{
-		// todo don't show this on the ucp mode profile page.
-		if (!$this->auth->acl_get('u_chgprofileinfo') || empty($this->config['allow_flags']))
+		if (!$this->auth->acl_get('u_chgprofileinfo'))
 		{
 			return;
 		}
 
+		$page_name = substr($this->user->page['page_name'], 0, strpos($this->user->page['page_name'], '.'));
+		if ($page_name == 'ucp')
+		{
+			return;
+		}
 		if ($this->config['flags_display_msg'] && $this->config['allow_flags'])
 		{
 			$this->template->assign_vars(array(
@@ -198,32 +205,30 @@ class listener implements EventSubscriberInterface
 			'user_flag'	=> $this->request->variable('user_flag', $this->user->data['user_flag']),
 		));
 
-		// Output the data vars to the template (except on form submit)
-		if (!$event['submit'])
+		$this->display_flag_options($event);
+
+	}
+	/**
+	* Validate users changes to their flag
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
+	public function user_flag_profile_validate($event)
+	{
+		if (empty($this->config['allow_flags']))
 		{
-			$flags = $this->helper->route('rmcgirr83_nationalflags_cacheflags_controller');
-			$flag_name = $flag_image = '';
-			$flag_id = 0;
-			if ($event['data']['user_flag'])
-			{
-				$flag_name = $flags[$event['data']['user_flag']]['flag_name'];
-				$flag_image = $flags[$event['data']['user_flag']]['flag_image'];
-				$flag_id = $flags[$event['data']['user_flag']]['flag_id'];
-			}
+			return;
+		}
 
-			$s_flag_options = $this->nf_functions->list_all_flags($event['data']['user_flag']);
-
-			$this->template->assign_vars(array(
-				'USER_FLAG'		=> $event['data']['user_flag'],
-				'FLAG_IMAGE'	=> ($flag_image) ? $this->flags_path . $flag_image : '',
-				'FLAG_NAME'		=> $flag_name,
-				'S_FLAGS_ENABLED'	=> true,
-				'S_FLAG_OPTIONS'	=> $s_flag_options,
-				'AJAX_FLAG_INFO' 	=> $this->helper->route('rmcgirr83_nationalflags_getflag_controller', array('flag_id' => 'FLAG_ID')),
-			));
+		if ($event['submit'] && empty($event['data']['user_flag']) && $this->config['flags_on_reg'])
+		{
+			$array = $event['error'];
+			$array[] = $this->user->lang['MUST_CHOOSE_FLAG'];
+			$event['error'] = $array;
 		}
 	}
-
 	/**
 	* User changed their flag so update the database
 	*
@@ -261,26 +266,7 @@ class listener implements EventSubscriberInterface
 			'user_flag'	=> $this->request->variable('user_flag', $this->user->data['user_flag']),
 		));
 
-		$flags = $this->helper->route('rmcgirr83_nationalflags_cacheflags_controller');
-		$flag_name = $flag_image = '';
-		$flag_id = 0;
-		if ($event['data']['user_flag'])
-		{
-			$flag_name = $flags[$event['data']['user_flag']]['flag_name'];
-			$flag_image = $flags[$event['data']['user_flag']]['flag_image'];
-			$flag_id = $flags[$event['data']['user_flag']]['flag_id'];
-		}
-
-		$s_flag_options = $this->nf_functions->list_all_flags($event['data']['user_flag']);
-
-		$this->template->assign_vars(array(
-			'USER_FLAG'		=> $event['data']['user_flag'],
-			'FLAG_IMAGE'	=> ($flag_image) ? $this->flags_path . $flag_image : '',
-			'FLAG_NAME'		=> $flag_name,
-			'S_FLAGS_ENABLED'	=> true,
-			'S_FLAG_OPTIONS'	=> $s_flag_options,
-			'AJAX_FLAG_INFO' 	=> $this->helper->route('rmcgirr83_nationalflags_getflag_controller', array('flag_id' => 'FLAG_ID')),
-		));
+		$this->display_flag_options($event);
 	}
 
 	/**
@@ -343,6 +329,13 @@ class listener implements EventSubscriberInterface
 		}
 	}
 
+	/**
+	* Update viewtopic user data
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
 	public function viewtopic_cache_user_data($event)
 	{
 		if (empty($this->config['allow_flags']))
@@ -351,11 +344,18 @@ class listener implements EventSubscriberInterface
 		}
 
 		$array = $event['user_cache_data'];
-		$flag = $this->helper->route('rmcgirr83_nationalflags_getflag_controller', array('flag_id' => $event['row']['user_flag']));
+		$flag = $this->nf_functions->get_user_flag($event['row']['user_flag']);
 		$array['user_flag'] = $flag;
 		$event['user_cache_data'] = $array;
 	}
 
+	/**
+	* Update viewtopic guest data
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
 	public function viewtopic_cache_guest_data($event)
 	{
 		if (empty($this->config['allow_flags']))
@@ -369,6 +369,13 @@ class listener implements EventSubscriberInterface
 		$event['user_cache_data'] = $array;
 	}
 
+	/**
+	* Modify the viewtopic post row
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
 	public function viewtopic_modify_post_row($event)
 	{
 		if (empty($this->config['allow_flags']))
@@ -379,18 +386,56 @@ class listener implements EventSubscriberInterface
 		$event['post_row'] = array_merge($event['post_row'], array('USER_FLAG' => $event['user_poster_data']['user_flag']));
 	}
 
+	/**
+	* Display flag on viewing user
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
 	public function memberlist_view_profile($event)
 	{
 		if (empty($this->config['allow_flags']))
 		{
 			return;
 		}
-
-		$flag = $this->helper->route('rmcgirr83_nationalflags_getflag_controller', array('flag_id' => $event['member']['user_flag']));
-		$flags = $this->helper->route('rmcgirr83_nationalflags_cacheflags_controller');
+		$flag = $this->nf_functions->get_user_flag($event['member']['user_flag']);
+		$flags = $this->cache->get('_user_flags');
 		$this->template->assign_vars(array(
 			'NATIONAL_FLAG'	=> $flag,
-			'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflagusers_controller', array('flag_name' => $flags[$event['member']['user_flag']]['flag_name'])),
+			'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflagusers', array('flag_name' => $flags[$event['member']['user_flag']]['flag_name'])),
+		));
+	}
+
+	/**
+	* Display flag for user selection
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
+	private function display_flag_options($event)
+	{
+
+		$flags = $this->cache->get('_user_flags');
+		$flag_name = $flag_image = '';
+		$flag_id = 0;
+		if ($event['data']['user_flag'])
+		{
+			$flag_name = $flags[$event['data']['user_flag']]['flag_name'];
+			$flag_image = $flags[$event['data']['user_flag']]['flag_image'];
+			$flag_id = $flags[$event['data']['user_flag']]['flag_id'];
+		}
+
+		$s_flag_options = $this->nf_functions->list_all_flags($event['data']['user_flag']);
+
+		$this->template->assign_vars(array(
+			'USER_FLAG'		=> $event['data']['user_flag'],
+			'FLAG_IMAGE'	=> ($flag_image) ? $this->flags_path . $flag_image : '',
+			'FLAG_NAME'		=> $flag_name,
+			'S_FLAGS_ENABLED'	=> true,
+			'S_FLAG_OPTIONS'	=> $s_flag_options,
+			'AJAX_FLAG_INFO' 	=> $this->helper->route('rmcgirr83_nationalflags_getflag', array('flag_id' => 'FLAG_ID')),
 		));
 	}
 }

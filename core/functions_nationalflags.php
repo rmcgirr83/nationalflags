@@ -75,10 +75,10 @@ class functions_nationalflags
 	 * @param int $row User's flag
 	 * @return string flag
 	 */
-/*
+
 	public function get_user_flag($flag_id = false)
 	{
-		$user_flags = $this->helper->route('rmcgirr83_nationalflags_cacheflags_controller');
+		$user_flags = $this->cache->get('_user_flags');
 
 		if ($flag_id)
 		{
@@ -87,7 +87,39 @@ class functions_nationalflags
 			return $flag;
 		}
 	}
-*/
+	/**
+	 * Get cache flags
+	 *
+	 * Build the cache of the flags
+	 *
+	 * @return null
+	 */
+
+	public function cache_flags()
+	{
+		if (($this->cache->get('_user_flags')) === false)
+		{
+			$sql = 'SELECT flag_id, flag_name, flag_image
+				FROM ' . $this->flags_table . '
+			ORDER BY flag_id';
+			$result = $this->db->sql_query($sql);
+
+			$user_flags = array();
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$user_flags[$row['flag_id']] = array(
+					'flag_id'		=> $row['flag_id'],
+					'flag_name'		=> $row['flag_name'],
+					'flag_image'	=> $row['flag_image'],
+				);
+			}
+			$this->db->sql_freeresult($result);
+
+			// cache this data for ever, can only change in ACP
+			$this->cache->put('_user_flags', $user_flags);
+		}
+	}
+
 	/**
 	 * Get list_all_flags
 	 *
@@ -126,15 +158,15 @@ class functions_nationalflags
 		$result = $this->db->sql_query_limit($sql, 15);
 
 		$count = 0;
-		$flags = $this->helper->route('rmcgirr83_nationalflags_cacheflags_controller');
+		$flags = $this->cache->get('_user_flags');
 
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			++$count;
 			$this->template->assign_block_vars('flag', array(
-				'FLAG' 			=> $this->helper->route('rmcgirr83_nationalflags_getflag_controller', array('flag_id' => $flags[$row['user_flag']]['flag_id'])),
+				'FLAG' 			=> $this->get_user_flag($row['user_flag']),
 				'L_FLAG_USERS'	=> ($row['fnum'] == 1) ? sprintf($this->user->lang['FLAG_USER'], $row['fnum']) : sprintf($this->user->lang['FLAG_USERS'], $row['fnum']),
-				'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflagusers_controller', array('flag_name' => $flags[$row['user_flag']]['flag_name'])),
+				'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflagusers', array('flag_name' => $flags[$row['user_flag']]['flag_name'])),
 			));
 		}
 		$this->db->sql_freeresult($result);
