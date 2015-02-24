@@ -8,6 +8,7 @@
 */
 
 namespace rmcgirr83\nationalflags;
+
 /**
 * Extension class for custom enable/disable/purge actions
 */
