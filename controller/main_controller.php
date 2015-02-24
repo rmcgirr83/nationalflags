@@ -155,7 +155,7 @@ class main_controller
 			$this->template->assign_block_vars('flag', array(
 				'FLAG' 				=> $this->nf_functions->get_user_flag($flag_id),
 				'FLAG_USER_COUNT'	=> $user_flag_count,
-				'U_FLAG'			=> $this->helper->route('rmcgirr83_nationalflags_getflagusers', array('flag_name' => $row['flag_name'])),
+				'U_FLAG'			=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $row['flag_name'])),
 			));
 		}
 		$this->db->sql_freeresult($result);
@@ -190,7 +190,7 @@ class main_controller
 	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	* @access public
 	*/
-	public function getFlagUsers($flag_name, $page = 0)
+	public function getFlags($flag_name, $page = 0)
 	{
 		// When flags are disabled, redirect users back to the forum index
 		if (empty($this->config['allow_flags']))
@@ -250,7 +250,7 @@ class main_controller
 
 			$this->template->assign_block_vars('user_row', array(
 				'JOINED'		=> $this->user->format_date($userrow['user_regdate']),
-				'VISITED'		=> (empty($row['user_lastvisit'])) ? ' - ' : $this->user->format_date($userrow['user_lastvisit']),
+				'VISITED'		=> (empty($userrow['user_lastvisit'])) ? ' - ' : $this->user->format_date($userrow['user_lastvisit']),
 				'POSTS'			=> ($userrow['user_posts']) ? $userrow['user_posts'] : 0,
 				'USERNAME_FULL'		=> $username,
 				'U_SEARCH_USER'		=> ($this->auth->acl_get('u_search')) ? append_sid("{$this->root_path}search.$this->php_ext", "author_id=$user_id&amp;sr=posts") : '',
@@ -260,8 +260,8 @@ class main_controller
 
 		$this->pagination->generate_template_pagination(array(
 			'routes' => array(
-				'rmcgirr83_nationalflags_getflagusers',
-				'rmcgirr83_nationalflags_getflagusers_page',
+				'rmcgirr83_nationalflags_getflags',
+				'rmcgirr83_nationalflags_getflags_page',
 			),
 			'params' => array(
 				'flag_name' => $flag_name,
@@ -294,10 +294,11 @@ class main_controller
 
 		// Assign breadcrumb template vars for the flags page
 		$this->template->assign_block_vars('navlinks', array(
-			'U_VIEW_FORUM'		=> $this->helper->route('rmcgirr83_nationalflags_getflagusers', array('flag_name' => $flag_name)),
+			'U_VIEW_FORUM'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $flag_name)),
 			'FORUM_NAME'		=> $row['flag_name'],
 		));
 	}
+
 	/**
 	 * Display flag on change in ucp
 	 * Ajax function
@@ -319,9 +320,9 @@ class main_controller
 			}
 		}
 
-		$flag = $this->cache->get('_user_flags');
-		$flag_img = $this->root_path . $this->flags_path . $flag[$flag_id]['flag_image'];
-		$flag_name = $flag[$flag_id]['flag_name'];
+		$flags = $this->cache->get('_user_flags');
+		$flag_img = $this->root_path . $this->flags_path . $flags[$flag_id]['flag_image'];
+		$flag_name = $flags[$flag_id]['flag_name'];
 
 		$return = '<img src="' . $flag_img . '" alt="' . $flag_name .'" title="' . $flag_name .'" style="vertical-align:middle;" />';
 

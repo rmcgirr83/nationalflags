@@ -78,11 +78,11 @@ class functions_nationalflags
 
 	public function get_user_flag($flag_id = false)
 	{
-		$user_flags = $this->cache->get('_user_flags');
+		$flags = $this->cache->get('_user_flags');
 
 		if ($flag_id)
 		{
-			$flag = '<img src="' . $this->root_path . $this->flags_path . $user_flags[$flag_id]['flag_image'] . '" alt="'. htmlspecialchars($user_flags[$flag_id]['flag_name']) . '" title="'. htmlspecialchars($user_flags[$flag_id]['flag_name']) . '" />';
+			$flag = '<img src="' . $this->root_path . $this->flags_path . $flags[$flag_id]['flag_image'] . '" alt="'. htmlspecialchars($flags[$flag_id]['flag_name']) . '" title="'. htmlspecialchars($flags[$flag_id]['flag_name']) . '" />';
 
 			return $flag;
 		}
@@ -121,13 +121,13 @@ class functions_nationalflags
 	}
 
 	/**
-	 * Get list_all_flags
+	 * Get list_flags
 	 *
 	 * @param int $flag_id
 	 * @return string flag_options
 	 */
 
-	public function list_all_flags($flag_id)
+	public function list_flags($flag_id)
 	{
 		$sql = 'SELECT flag_id, flag_name, flag_image
 			FROM ' . $this->flags_table . '
@@ -166,7 +166,7 @@ class functions_nationalflags
 			$this->template->assign_block_vars('flag', array(
 				'FLAG' 			=> $this->get_user_flag($row['user_flag']),
 				'L_FLAG_USERS'	=> ($row['fnum'] == 1) ? sprintf($this->user->lang['FLAG_USER'], $row['fnum']) : sprintf($this->user->lang['FLAG_USERS'], $row['fnum']),
-				'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflagusers', array('flag_name' => $flags[$row['user_flag']]['flag_name'])),
+				'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $flags[$row['user_flag']]['flag_name'])),
 			));
 		}
 		$this->db->sql_freeresult($result);

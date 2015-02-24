@@ -52,6 +52,9 @@ class admin_controller
 	*/
 	protected $flags_path;
 
+	/* @var \rmcgirr83\nationalflags\core\functions_nationalflags */
+	protected $nf_functions;
+
 	/** @var string phpBB root path */
 	protected $root_path;
 
@@ -60,9 +63,6 @@ class admin_controller
 
 	/** @var string Custom form action */
 	protected $u_action;
-
-	/** @var string Custom form action */
-	protected $action;
 
 	/**
 	* Constructor
@@ -91,6 +91,7 @@ class admin_controller
 			ContainerInterface $container,
 			$flags_table,
 			$flags_path,
+			\rmcgirr83\nationalflags\core\functions_nationalflags $functions,
 			$root_path,
 			$php_ext)
 	{
@@ -103,6 +104,7 @@ class admin_controller
 		$this->container = $container;
 		$this->flags_table = $flags_table;
 		$this->flags_path = $flags_path;
+		$this->nf_functions = $functions;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 	}
@@ -269,8 +271,10 @@ class admin_controller
 				$log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_FLAG_ADD', time(), array($flag_row['flag_name']));
 
 				$this->cache->destroy('_user_flags');
+				// cache this data for ever, can only change in ACP
+				$this->nf_functions->cache_flags();
 
-				trigger_error($this->user->lang['MSG_FLAG_ADDED'] . adm_back_link($this->u_action . '&amp;action=add'));
+				trigger_error($this->user->lang['MSG_FLAG_ADDED'] . adm_back_link($this->u_action));
 			}
 		}
 
@@ -319,7 +323,7 @@ class admin_controller
 
 			if (empty($flag_row['flag_name']))
 			{
-				$errors[] = $user->lang['FLAG_ERROR_NO_FLAG_NAME'];
+				$errors[] = $this->user->lang['FLAG_ERROR_NO_FLAG_NAME'];
 			}
 
 			if (!sizeof($errors))
@@ -333,8 +337,9 @@ class admin_controller
 				$log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_FLAG_EDIT', time(), array($flag_row['flag_name']));
 
 				$this->cache->destroy('_user_flags');
+				$this->nf_functions->cache_flags();
 
-				trigger_error($this->user->lang['MSG_FLAG_EDITED'] . adm_back_link($this->u_action . "&amp;flag_id=$flag_id&amp;action=edit"));
+				trigger_error($this->user->lang['MSG_FLAG_EDITED'] . adm_back_link($this->u_action));
 			}
 		}
 
@@ -352,7 +357,7 @@ class admin_controller
 
 		$this->template->assign_vars(array(
 			'L_TITLE'		=> $this->user->lang['FLAG_EDIT'],
-			'U_ACTION'		=> $this->u_action,
+			'U_ACTION'		=> $this->u_action . "&amp;flag_id=$flag_id&amp;action=edit",
 			'U_BACK'		=> $this->u_action . '&amp;mode=manage',
 			'ERROR_MSG'		=> (sizeof($errors)) ? implode('<br />', $errors) : '',
 
@@ -396,13 +401,11 @@ class admin_controller
 				WHERE user_flag = ' . (int) $flag_id;
 			$this->db->sql_query($sql);
 
-			// Delete the image
-			@unlink($this->root_path . $this->flags_path . $flag_row['flag_image']);
-
 			$log = $this->container->get('log');
 			$log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_FLAGS_DELETED', time(), array($flag_row['flag_name']));
 
 			$this->cache->destroy('_user_flags');
+			$this->nf_functions->cache_flags();
 
 			trigger_error($this->user->lang['MSG_FLAGS_DELETED'] . adm_back_link($this->u_action . "&amp;mode=manage"));
 		}

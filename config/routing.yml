@@ -6,10 +6,10 @@ rmcgirr83_nationalflags_getflag:
     pattern: /flag/{flag_id}
     defaults: { _controller: rmcgirr83.nationalflags.main.controller:getFlag }
 
-rmcgirr83_nationalflags_getflagusers:
+rmcgirr83_nationalflags_getflags:
     pattern: /flags/{flag_name}
-    defaults: { _controller: rmcgirr83.nationalflags.main.controller:getFlagUsers, page: 1}
+    defaults: { _controller: rmcgirr83.nationalflags.main.controller:getFlags, page: 1}
 
-rmcgirr83_nationalflags_getflagusers_page:
+rmcgirr83_nationalflags_getflags_page:
     pattern: /flags/{flag_name}/page/{page}
-    defaults: { _controller: rmcgirr83.nationalflags.main.controller:getFlagUsers}
+    defaults: { _controller: rmcgirr83.nationalflags.main.controller:getFlags}
