@@ -45,7 +45,7 @@ class functions_nationalflags
 	protected $flags_path;
 
 	/** @var string phpBB root path */
-	protected $phpbb_root_path;
+	protected $root_path;
 
 
 	public function __construct(
@@ -57,7 +57,7 @@ class functions_nationalflags
 			\phpbb\user $user,
 			$flags_table,
 			$flags_path,
-			$phpbb_root_path)
+			$root_path)
 	{
 		$this->config = $config;
 		$this->helper = $helper;
@@ -67,7 +67,7 @@ class functions_nationalflags
 		$this->user = $user;
 		$this->flags_table = $flags_table;
 		$this->flags_path = $flags_path;
-		$this->root_path = $phpbb_root_path;
+		$this->root_path = $root_path;
 	}
 	/**
 	 * Get user flag

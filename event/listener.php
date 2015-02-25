@@ -102,11 +102,11 @@ class listener implements EventSubscriberInterface
 			'core.index_modify_page_title'				=> 'index_modify_page_title',
 			'core.page_header_after'					=> 'page_header_after',
 			'core.ucp_profile_modify_profile_info'		=> 'user_flag_profile',
-			'core.ucp_profile_info_validate_data'		=> 'user_flag_profile_validate',
+			'core.ucp_profile_validate_profile_info'	=> 'user_flag_profile_validate',
 			'core.ucp_profile_info_modify_sql_ary'		=> 'user_flag_profile_sql',
-			'core.ucp_register_data'					=> 'user_flag_registration',
-			'core.ucp_register_data_check'				=> 'user_flag_registration_check',
-			'core.ucp_register_user_row_after'			=> 'user_flag_registration_sql',
+			'core.ucp_profile_reg_details_data'			=> 'user_flag_registration',
+			'core.ucp_profile_reg_details_validate'		=> 'user_flag_registration_validate',
+			'core.ucp_profile_reg_details_sql_ary'		=> 'user_flag_registration_sql',
 			'core.viewonline_overwrite_location'		=> 'viewonline_page',
 			'core.viewtopic_cache_user_data'			=> 'viewtopic_cache_user_data',
 			'core.viewtopic_cache_guest_data'			=> 'viewtopic_cache_guest_data',
@@ -270,13 +270,13 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* check registration data
+	* validate registration data
 	*
 	* @param object $event The event object
 	* @return null
 	* @access public
 	*/
-	public function user_flag_registration_check($event)
+	public function user_flag_registration_validate($event)
 	{
 		if (empty($this->config['allow_flags']) || empty($this->config['flags_on_reg']))
 		{
