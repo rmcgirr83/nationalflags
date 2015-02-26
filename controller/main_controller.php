@@ -151,9 +151,11 @@ class main_controller
 			{
 				$user_flag_count = sprintf($this->user->lang['FLAG_USERS'], $user_count);
 			}
+			$flag_image = $this->nf_functions->get_user_flag($row['flag_id']);
+			$flag_image = str_replace('./', generate_board_url() . '/', $flag_image); // Fix paths
 
 			$this->template->assign_block_vars('flag', array(
-				'FLAG' 				=> $this->nf_functions->get_user_flag($flag_id),
+				'FLAG' 				=> $flag_image,
 				'FLAG_USER_COUNT'	=> $user_flag_count,
 				'U_FLAG'			=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $row['flag_name'])),
 			));
@@ -169,18 +171,26 @@ class main_controller
 			$flag_users = sprintf($this->user->lang['FLAG_USERS'], $users_count);
 		}
 
+		if ($countries == 1)
+		{
+			$countries = sprintf($this->user->lang['FLAG'], $countries);
+		}
+		else
+		{
+			$countries = sprintf($this->user->lang['FLAGS'], $countries);
+		}
 		$this->template->assign_vars(array(
-			'L_FLAGS'	=> $countries . ' ' . $this->user->lang['FLAGS'] . '&nbsp;&nbsp;' . $flag_users,
+			'L_FLAGS'	=> $countries . '&nbsp;&nbsp;' . $flag_users,
 		));
 
 		// Assign breadcrumb template vars for the flags page
 		$this->template->assign_block_vars('navlinks', array(
 			'U_VIEW_FORUM'		=> $this->helper->route('rmcgirr83_nationalflags_main_controller'),
-			'FORUM_NAME'		=> $this->user->lang('FLAGS'),
+			'FORUM_NAME'		=> $this->user->lang('NATIONAL_FLAGS'),
 		));
 
 		// Send all data to the template file
-		return $this->helper->render('flags_list.html', $this->user->lang('FLAGS'));
+		return $this->helper->render('flags_list.html', $this->user->lang('NATIONAL_FLAGS'));
 	}
 
 	/**
@@ -289,7 +299,7 @@ class main_controller
 		// Assign breadcrumb template vars for the flags page
 		$this->template->assign_block_vars('navlinks', array(
 			'U_VIEW_FORUM'		=> $this->helper->route('rmcgirr83_nationalflags_main_controller'),
-			'FORUM_NAME'		=> $this->user->lang('FLAGS'),
+			'FORUM_NAME'		=> $this->user->lang('NATIONAL_FLAGS'),
 		));
 
 		// Assign breadcrumb template vars for the flags page
@@ -310,7 +320,7 @@ class main_controller
 	{
 		if (empty($flag_id))
 		{
-			if ($this->config['flags_on_reg'])
+			if ($this->config['flags_required'])
 			{
 				return new Response($this->user->lang['MUST_CHOOSE_FLAG']);
 			}

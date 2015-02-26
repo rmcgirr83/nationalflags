@@ -34,10 +34,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 
 $lang = array_merge($lang, array(
-
-	//A couple for the ACP User Profile
-	'FLAG'				=> 'Flag',
-	'FLAGS'				=> 'National Flags',
+	'FLAG'				=> '%s Flag',
+	'FLAGS'				=> '%s Flags',
+	'USER_FLAG'			=> 'Flag',
+	'NATIONAL_FLAGS'	=> 'Flags',
 	'FLAG_EXPLAIN'		=> 'Choose your Flag',
 	'USER_NEEDS_FLAG'	=> 'Please take a moment and %svisit your profile%s to choose a flag.',
 	'FLAGS_VIEWONLINE'	=> 'Viewing Flags',

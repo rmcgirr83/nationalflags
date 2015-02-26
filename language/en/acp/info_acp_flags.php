@@ -53,8 +53,8 @@ $lang = array_merge($lang, array(
 	'YES_FLAGS'							=> 'Enable Flags',
 	'YES_FLAGS_EXPLAIN'					=> 'Choose to disable or enable the Flags',
 	'FLAGS_VERSION'						=> 'National Flags Version',
-	'FLAGS_ON_REG'						=> 'Flags on Registration',
-	'FLAGS_ON_REG_EXPLAIN'				=> 'Choosing Yes here will force new registrants to choose a flag',
+	'FLAGS_REQUIRED'					=> 'Required field',
+	'FLAGS_REQUIRED_EXPLAIN'				=> 'Choosing Yes here will force new registrants as well as those that visit their user profile to choose a flag',
 	'FLAGS_DISPLAY_MSG'					=> 'Display a message',
 	'FLAGS_DISPLAY_MSG_EXPLAIN'			=> 'Choosing Yes here will display a message on the forum for a user to choose a flag.',
 

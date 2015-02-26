@@ -149,7 +149,7 @@ class admin_controller
 		$this->template->assign_vars(array(
 			'FLAGS_VERSION' 	=> $this->config['nationalflags_version'],
 			'ALLOW_FLAGS'		=> $this->config['allow_flags'] ? true : false,
-			'FLAGS_ON_REG'		=> $this->config['flags_on_reg'] ? true : false,
+			'FLAGS_REQUIRED'	=> $this->config['flags_required'] ? true : false,
 			'FLAGS_DISPLAY_MSG'	=> $this->config['flags_display_msg'] ? true : false,
 			'ERROR_MSG'			=> (!empty($error)) ? implode('<br />', $error) : '',
 
@@ -167,7 +167,7 @@ class admin_controller
 	protected function set_options()
 	{
 		$this->config->set('allow_flags', $this->request->variable('allow_flags', 0));
-		$this->config->set('flags_on_reg', $this->request->variable('flags_on_reg', 0));
+		$this->config->set('flags_required', $this->request->variable('flags_required', 0));
 		$this->config->set('flags_display_msg', $this->request->variable('flags_display_msg', 0));
 	}
 

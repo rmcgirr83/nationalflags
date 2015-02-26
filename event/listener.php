@@ -104,14 +104,16 @@ class listener implements EventSubscriberInterface
 			'core.ucp_profile_modify_profile_info'		=> 'user_flag_profile',
 			'core.ucp_profile_validate_profile_info'	=> 'user_flag_profile_validate',
 			'core.ucp_profile_info_modify_sql_ary'		=> 'user_flag_profile_sql',
-			'core.ucp_profile_reg_details_data'			=> 'user_flag_registration',
-			'core.ucp_profile_reg_details_validate'		=> 'user_flag_registration_validate',
-			'core.ucp_profile_reg_details_sql_ary'		=> 'user_flag_registration_sql',
+			'core.ucp_register_data_before'				=> 'user_flag_profile',
+			'core.ucp_register_data_after'				=> 'user_flag_profile_validate',
+			'core.ucp_register_user_row_after'			=> 'user_flag_registration_sql',
 			'core.viewonline_overwrite_location'		=> 'viewonline_page',
 			'core.viewtopic_cache_user_data'			=> 'viewtopic_cache_user_data',
 			'core.viewtopic_cache_guest_data'			=> 'viewtopic_cache_guest_data',
 			'core.viewtopic_modify_post_row'			=> 'viewtopic_modify_post_row',
 			'core.memberlist_view_profile'				=> 'memberlist_view_profile',
+			'core.search_get_posts_data'				=> 'search_get_posts_data',
+			'core.search_modify_tpl_ary'				=> 'search_modify_tpl_ary',
 		);
 	}
 
@@ -132,7 +134,7 @@ class listener implements EventSubscriberInterface
 		$this->nf_functions->cache_flags();
 
 		$this->template->assign_vars(array(
-			'S_FLAGS'	=> $this->config['allow_flags'],
+			'S_FLAGS'	=> true,
 		));
 
 		$lang_set_ext = $event['lang_set_ext'];
@@ -167,7 +169,7 @@ class listener implements EventSubscriberInterface
 	*/
 	public function page_header_after($event)
 	{
-		if (!$this->auth->acl_get('u_chgprofileinfo'))
+		if (!$this->auth->acl_get('u_chgprofileinfo') || empty($this->config['allow_flags']))
 		{
 			return;
 		}
@@ -217,12 +219,12 @@ class listener implements EventSubscriberInterface
 	*/
 	public function user_flag_profile_validate($event)
 	{
-		if (empty($this->config['allow_flags']))
+		if (empty($this->config['allow_flags']) || empty($this->config['flags_required']))
 		{
 			return;
 		}
 
-		if ($event['submit'] && empty($event['data']['user_flag']) && $this->config['flags_on_reg'])
+		if ($event['submit'] && empty($event['data']['user_flag']) && $this->config['flags_required'])
 		{
 			$array = $event['error'];
 			$array[] = $this->user->lang['MUST_CHOOSE_FLAG'];
@@ -248,50 +250,6 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Allow users to select a flag on registration
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
-	public function user_flag_registration($event)
-	{
-		if (empty($this->config['allow_flags']) || empty($this->config['flags_on_reg']))
-		{
-			return;
-		}
-
-		// Request the user option vars and add them to the data array
-		$event['data'] = array_merge($event['data'], array(
-			'user_flag'	=> $this->request->variable('user_flag', $this->user->data['user_flag']),
-		));
-
-		$this->display_flag_options($event);
-	}
-
-	/**
-	* validate registration data
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
-	public function user_flag_registration_validate($event)
-	{
-		if (empty($this->config['allow_flags']) || empty($this->config['flags_on_reg']))
-		{
-			return;
-		}
-
-		if ($event['submit'] && empty($event['data']['user_flag']))
-		{
-			$array = $event['error'];
-			$array[] = $this->user->lang['MUST_CHOOSE_FLAG'];
-			$event['error'] = $array;
-		}
-	}
-
-	/**
 	* Update registration data
 	*
 	* @param object $event The event object
@@ -300,7 +258,7 @@ class listener implements EventSubscriberInterface
 	*/
 	public function user_flag_registration_sql($event)
 	{
-		if (empty($this->config['allow_flags']) || empty($this->config['flags_on_reg']))
+		if (empty($this->config['allow_flags']))
 		{
 			return;
 		}
@@ -433,9 +391,59 @@ class listener implements EventSubscriberInterface
 			'USER_FLAG'		=> $event['data']['user_flag'],
 			'FLAG_IMAGE'	=> ($flag_image) ? $this->flags_path . $flag_image : '',
 			'FLAG_NAME'		=> $flag_name,
-			'S_FLAGS_ENABLED'	=> true,
 			'S_FLAG_OPTIONS'	=> $s_flag_options,
 			'AJAX_FLAG_INFO' 	=> $this->helper->route('rmcgirr83_nationalflags_getflag', array('flag_id' => 'FLAG_ID')),
 		));
+	}
+
+	/**
+	* Display flag on search
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
+	public function search_get_posts_data($event)
+	{
+		if (empty($this->config['allow_flags']))
+		{
+			return;
+		}
+
+		$array = $event['sql_array'];
+		$merge_array = $array['SELECT'];
+		// string to array
+		$merge_array = explode(',', $merge_array);
+		$merge_array[] = ' u.user_flag';
+		// array to string
+		$merge_array = implode(',', $merge_array);
+		$array['SELECT'] = $merge_array;
+		$event['sql_array'] = $array;
+	}
+
+	/**
+	* Display flag on search
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
+	public function search_modify_tpl_ary($event)
+	{
+		if (empty($this->config['allow_flags']) || $event['show_results'] == 'topics')
+		{
+			return;
+		}
+
+		$array = $event['tpl_ary'];
+
+		$flag = $this->nf_functions->get_user_flag($event['row']['user_flag']);
+		$flags = $this->cache->get('_user_flags');
+		$array = array_merge($array, array(
+			'USER_FLAG'	=> $flag,
+			'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $flags[$event['row']['user_flag']]['flag_name'])),
+		));
+
+		$event['tpl_ary'] = $array;
 	}
 }
