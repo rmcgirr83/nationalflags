@@ -16,12 +16,10 @@ ul.flags li {
 
 ul.flags li.flagslist {
     float: left;
-	padding-bottom:2px;
-	width: 6%;
 }
 
 div.flags {
-    background-color: #eef5f9;
+   background-color: #eef5f9;
    background-image: url("./images/gradient.gif");
 }
 
@@ -33,4 +31,8 @@ div.flags {
     font-size: 1.2em;
     line-height: 2.2em;
     padding: 4px 0;
+}
+
+#flag_image {
+	font-size: 16px;
 }
