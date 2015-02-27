@@ -412,11 +412,7 @@ class listener implements EventSubscriberInterface
 
 		$array = $event['sql_array'];
 		$merge_array = $array['SELECT'];
-		// string to array
-		$merge_array = explode(',', $merge_array);
-		$merge_array[] = ' u.user_flag';
-		// array to string
-		$merge_array = implode(',', $merge_array);
+		$merge_array .= ', u.user_flag';
 		$array['SELECT'] = $merge_array;
 		$event['sql_array'] = $array;
 	}
