@@ -18,3 +18,5 @@ git clone https://github.com/RMcGirr83/phpBB-3.1-nationalflags.git ext/rmcgirr83
 ### 2. activate
 Go to admin panel -> tab customise -> Manage extensions -> enable National Flags
 
+Within the Admin panel visit the Extensions tab and choose the settings (allow, require on registration, display message) for the extension.
+
