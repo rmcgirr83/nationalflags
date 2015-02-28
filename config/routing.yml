@@ -1,4 +1,4 @@
-rmcgirr83_nationalflags_main_controller:
+rmcgirr83_nationalflags_display:
     path: /flags
     defaults: { _controller: rmcgirr83.nationalflags.main.controller:displayFlags }
 

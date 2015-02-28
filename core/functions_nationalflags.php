@@ -174,7 +174,7 @@ class functions_nationalflags
 		if($count)
 		{
 			$this->template->assign_vars(array(
-				'U_FLAGS'		=> $this->helper->route('rmcgirr83_nationalflags_main_controller'),
+				'U_FLAGS'		=> $this->helper->route('rmcgirr83_nationalflags_display'),
 				'S_FLAGS_FOUND'	=> true,
 			));
 		}

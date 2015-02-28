@@ -144,6 +144,7 @@ class listener implements EventSubscriberInterface
 		);
 		$event['lang_set_ext'] = $lang_set_ext;
 	}
+
 	/**
 	* Set up the flags on the index page
 	*
@@ -157,9 +158,15 @@ class listener implements EventSubscriberInterface
 		{
 			return;
 		}
+
 		//display flags on the index page
 		$this->nf_functions->top_flags();
+
+		$this->template->assign_vars(array(
+			'S_FLAGS'	=> true,
+		));
 	}
+
 	/**
 	* Create URL and message to users if wanted.
 	*
@@ -210,6 +217,7 @@ class listener implements EventSubscriberInterface
 		$this->display_flag_options($event);
 
 	}
+
 	/**
 	* Validate users changes to their flag
 	*
@@ -231,6 +239,7 @@ class listener implements EventSubscriberInterface
 			$event['error'] = $array;
 		}
 	}
+
 	/**
 	* User changed their flag so update the database
 	*
@@ -282,7 +291,7 @@ class listener implements EventSubscriberInterface
 			if (strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/flags') === 0)
 			{
 				$event['location'] = $this->user->lang('FLAGS_VIEWONLINE');
-				$event['location_url'] = $this->helper->route('rmcgirr83_nationalflags_main_controller');
+				$event['location_url'] = $this->helper->route('rmcgirr83_nationalflags_display');
 			}
 		}
 	}
@@ -366,37 +375,6 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Display flag for user selection
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
-	private function display_flag_options($event)
-	{
-
-		$flags = $this->cache->get('_user_flags');
-		$flag_name = $flag_image = '';
-		$flag_id = 0;
-		if ($event['data']['user_flag'])
-		{
-			$flag_name = $flags[$event['data']['user_flag']]['flag_name'];
-			$flag_image = $flags[$event['data']['user_flag']]['flag_image'];
-			$flag_id = $flags[$event['data']['user_flag']]['flag_id'];
-		}
-
-		$s_flag_options = $this->nf_functions->list_flags($event['data']['user_flag']);
-
-		$this->template->assign_vars(array(
-			'USER_FLAG'		=> $event['data']['user_flag'],
-			'FLAG_IMAGE'	=> ($flag_image) ? $this->flags_path . $flag_image : '',
-			'FLAG_NAME'		=> $flag_name,
-			'S_FLAG_OPTIONS'	=> $s_flag_options,
-			'AJAX_FLAG_INFO' 	=> $this->helper->route('rmcgirr83_nationalflags_getflag', array('flag_id' => 'FLAG_ID')),
-		));
-	}
-
-	/**
 	* Display flag on search
 	*
 	* @param object $event The event object
@@ -441,5 +419,35 @@ class listener implements EventSubscriberInterface
 		));
 
 		$event['tpl_ary'] = $array;
+	}
+
+	/**
+	* Display flag for user selection
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
+	private function display_flag_options($event)
+	{
+		$flags = $this->cache->get('_user_flags');
+		$flag_name = $flag_image = '';
+		$flag_id = 0;
+		if ($event['data']['user_flag'])
+		{
+			$flag_name = $flags[$event['data']['user_flag']]['flag_name'];
+			$flag_image = $flags[$event['data']['user_flag']]['flag_image'];
+			$flag_id = $flags[$event['data']['user_flag']]['flag_id'];
+		}
+
+		$s_flag_options = $this->nf_functions->list_flags($event['data']['user_flag']);
+
+		$this->template->assign_vars(array(
+			'USER_FLAG'		=> $event['data']['user_flag'],
+			'FLAG_IMAGE'	=> ($flag_image) ? $this->flags_path . $flag_image : '',
+			'FLAG_NAME'		=> $flag_name,
+			'S_FLAG_OPTIONS'	=> $s_flag_options,
+			'AJAX_FLAG_INFO' 	=> $this->helper->route('rmcgirr83_nationalflags_getflag', array('flag_id' => 'FLAG_ID')),
+		));
 	}
 }
