@@ -9,7 +9,7 @@ jQuery( document ).ready(function() {
             url: AJAX_FLAG_INFO.replace("FLAG_ID", flagId),
 			dataType:'html',
 			success:function(html){
-				$('#flag_image').html(html);
+				$('#flag_image').html(html).show();
 			}
 		});
 	});

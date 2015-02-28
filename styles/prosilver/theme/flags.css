@@ -34,5 +34,6 @@ div.flags {
 }
 
 #flag_image {
-	font-size: 16px;
+	font-size: 12px;
+	height: 32px;
 }
