@@ -415,7 +415,7 @@ class listener implements EventSubscriberInterface
 		$flags = $this->cache->get('_user_flags');
 		$array = array_merge($array, array(
 			'USER_FLAG'	=> $flag,
-			'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $flags[$event['row']['user_flag']]['flag_name'])),
+			'U_FLAG'		=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $flags[$event['row']['user_flag']]['flag_name'])) : '',
 		));
 
 		$event['tpl_ary'] = $array;
