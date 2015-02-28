@@ -351,7 +351,7 @@ class listener implements EventSubscriberInterface
 		$flag = $this->nf_functions->get_user_flag($event['user_poster_data']['user_flag']);
 		$flags = $this->nf_functions->get_flag_cache();
 		$event['post_row'] = array_merge($event['post_row'],array(
-			'USER_FLAG' => $flag, 
+			'USER_FLAG' => $flag,
 			'U_FLAG'	=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $flags[$event['user_poster_data']['user_flag']]['flag_name'])) : '',
 		));
 	}
