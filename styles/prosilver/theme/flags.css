@@ -33,6 +33,10 @@ div.flags {
     padding: 4px 0;
 }
 
+.memberlist_flags {
+	margin-top: -6px;
+}
+	
 #flag_image {
 	font-size: 12px;
 	height: 32px;

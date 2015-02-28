@@ -179,4 +179,15 @@ class functions_nationalflags
 			));
 		}
 	}
+
+	/**
+	 * Get the cache of the flags
+	 *
+	 * @return string flag_cache
+	 */
+	public function get_flag_cache()
+	{
+		$flag_cache = $this->cache->get('_user_flags');
+		return $flag_cache;
+	}
 }

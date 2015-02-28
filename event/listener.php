@@ -215,7 +215,6 @@ class listener implements EventSubscriberInterface
 		));
 
 		$this->display_flag_options($event);
-
 	}
 
 	/**
@@ -311,7 +310,7 @@ class listener implements EventSubscriberInterface
 		}
 
 		$array = $event['user_cache_data'];
-		$flag = $this->nf_functions->get_user_flag($event['row']['user_flag']);
+		$flag = $event['row']['user_flag'];
 		$array['user_flag'] = $flag;
 		$event['user_cache_data'] = $array;
 	}
@@ -349,8 +348,12 @@ class listener implements EventSubscriberInterface
 		{
 			return;
 		}
-
-		$event['post_row'] = array_merge($event['post_row'], array('USER_FLAG' => $event['user_poster_data']['user_flag']));
+		$flag = $this->nf_functions->get_user_flag($event['user_poster_data']['user_flag']);
+		$flags = $this->nf_functions->get_flag_cache();
+		$event['post_row'] = array_merge($event['post_row'],array(
+			'USER_FLAG' => $flag, 
+			'U_FLAG'	=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $flags[$event['user_poster_data']['user_flag']]['flag_name'])) : '',
+		));
 	}
 
 	/**
@@ -367,10 +370,10 @@ class listener implements EventSubscriberInterface
 			return;
 		}
 		$flag = $this->nf_functions->get_user_flag($event['member']['user_flag']);
-		$flags = $this->cache->get('_user_flags');
+		$flags = $this->nf_functions->get_flag_cache();
 		$this->template->assign_vars(array(
-			'NATIONAL_FLAG'	=> $flag,
-			'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $flags[$event['member']['user_flag']]['flag_name'])),
+			'USER_FLAG'		=> $flag,
+			'U_FLAG'		=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $flags[$event['member']['user_flag']]['flag_name'])) : '',
 		));
 	}
 
@@ -412,7 +415,7 @@ class listener implements EventSubscriberInterface
 		$array = $event['tpl_ary'];
 
 		$flag = $this->nf_functions->get_user_flag($event['row']['user_flag']);
-		$flags = $this->cache->get('_user_flags');
+		$flags = $this->nf_functions->get_flag_cache();
 		$array = array_merge($array, array(
 			'USER_FLAG'	=> $flag,
 			'U_FLAG'		=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $flags[$event['row']['user_flag']]['flag_name'])) : '',
@@ -430,7 +433,7 @@ class listener implements EventSubscriberInterface
 	*/
 	private function display_flag_options($event)
 	{
-		$flags = $this->cache->get('_user_flags');
+		$flags = $this->nf_functions->get_flag_cache();
 		$flag_name = $flag_image = '';
 		$flag_id = 0;
 		if ($event['data']['user_flag'])
