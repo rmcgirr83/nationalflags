@@ -86,6 +86,7 @@ class functions_nationalflags
 
 			return $flag;
 		}
+		return false;
 	}
 	/**
 	 * Get cache flags

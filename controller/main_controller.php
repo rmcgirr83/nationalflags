@@ -181,6 +181,7 @@ class main_controller
 		}
 		$this->template->assign_vars(array(
 			'L_FLAGS'	=> $countries . '&nbsp;&nbsp;' . $flag_users,
+			'S_FLAGS'		=> true,
 		));
 
 		// Assign breadcrumb template vars for the flags page
@@ -196,7 +197,8 @@ class main_controller
 	/**
 	* Display the users of flags page
 	*
-	* @param $flag_name
+	* @param $flag_name	string	the name of the flag
+	* @param $page		int		page number we are on
 	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	* @access public
 	*/
@@ -220,6 +222,15 @@ class main_controller
 		return $this->helper->render('flag_users.html', $page_title);
 	}
 
+	/**
+	* Display flags
+	*
+	* @param $flag_name	string	the name of the flag
+	* @param $start		int		page number we start at
+	* @param $limit		int		limit to dipaly for pagination
+	* @return null
+	* @access public
+	*/
 	protected function display_flags($flag_name, $start, $limit)
 	{
 		//let's get the flag requested
@@ -232,6 +243,7 @@ class main_controller
 
 		if (!$row)
 		{
+			// A flag does not exist..this should never happen
 			trigger_error('NO_USER_HAS_FLAG');
 		}
 
@@ -289,11 +301,13 @@ class main_controller
 		{
 			$total_users = sprintf($this->user->lang['FLAG_USERS'], $total_users);
 		}
+
 		$this->template->assign_vars(array(
 			'FLAG'			=> $row['flag_name'],
 			'FLAG_IMAGE'	=> $flag_image,
 			'TOTAL_USERS'	=> $total_users,
 			'S_VIEWONLINE'	=> $this->auth->acl_get('u_viewonline'),
+			'S_FLAGS'		=> true,
 		));
 
 		// Assign breadcrumb template vars for the flags page
@@ -312,7 +326,7 @@ class main_controller
 	/**
 	 * Display flag on change in ucp
 	 * Ajax function
-	 * @param $id
+	 * @param $flag_id
 	 *
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */

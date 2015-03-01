@@ -43,7 +43,7 @@ $lang = array_merge($lang, array(
 	'FLAGS_VIEWONLINE'	=> 'Viewing Flags',
 	'FLAG_USER'			=> '%s User',
 	'FLAG_USERS'		=> '%s Users',
-	'MUST_CHOOSE_FLAG'	=> 'You must choose a flag',
-	'NO_SUCH_FLAG'		=> 'Please choose a flag',
+	'MUST_CHOOSE_FLAG'	=> 'You must choose a flag.',
+	'NO_SUCH_FLAG'		=> 'Please choose a flag.',
 	'NO_USER_HAS_FLAG'	=> 'No user has this flag',
 ));

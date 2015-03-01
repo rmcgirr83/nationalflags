@@ -133,10 +133,6 @@ class listener implements EventSubscriberInterface
 		// Need to ensure the flags are cached on page load
 		$this->nf_functions->cache_flags();
 
-		$this->template->assign_vars(array(
-			'S_FLAGS'	=> true,
-		));
-
 		$lang_set_ext = $event['lang_set_ext'];
 		$lang_set_ext[] = array(
 			'ext_name' => 'rmcgirr83/nationalflags',
@@ -182,6 +178,7 @@ class listener implements EventSubscriberInterface
 		}
 
 		$page_name = substr($this->user->page['page_name'], 0, strpos($this->user->page['page_name'], '.'));
+
 		if ($page_name == 'ucp')
 		{
 			return;
@@ -357,7 +354,7 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Display flag on viewing user
+	* Display flag on viewing user profile
 	*
 	* @param object $event The event object
 	* @return null
@@ -369,6 +366,7 @@ class listener implements EventSubscriberInterface
 		{
 			return;
 		}
+
 		$flag = $this->nf_functions->get_user_flag($event['member']['user_flag']);
 		$flags = $this->nf_functions->get_flag_cache();
 		$this->template->assign_vars(array(
@@ -392,9 +390,7 @@ class listener implements EventSubscriberInterface
 		}
 
 		$array = $event['sql_array'];
-		$merge_array = $array['SELECT'];
-		$merge_array .= ', u.user_flag';
-		$array['SELECT'] = $merge_array;
+		$array['SELECT'] .= ', u.user_flag';
 		$event['sql_array'] = $array;
 	}
 
@@ -417,7 +413,7 @@ class listener implements EventSubscriberInterface
 		$flag = $this->nf_functions->get_user_flag($event['row']['user_flag']);
 		$flags = $this->nf_functions->get_flag_cache();
 		$array = array_merge($array, array(
-			'USER_FLAG'	=> $flag,
+			'USER_FLAG'		=> $flag,
 			'U_FLAG'		=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $flags[$event['row']['user_flag']]['flag_name'])) : '',
 		));
 
