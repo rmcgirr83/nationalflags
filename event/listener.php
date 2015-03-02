@@ -449,7 +449,7 @@ class listener implements EventSubscriberInterface
 			'AJAX_FLAG_INFO' 	=> $this->helper->route('rmcgirr83_nationalflags_getflag', array('flag_id' => 'FLAG_ID')),
 		));
 	}
-	
+
 	/**
 	 * Get the cache of the flags
 	 *
@@ -460,5 +460,5 @@ class listener implements EventSubscriberInterface
 	{
 		$flag_cache = $this->cache->get('_user_flags');
 		return $flag_cache;
-	}	
+	}
 }
