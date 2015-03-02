@@ -327,7 +327,7 @@ class listener implements EventSubscriberInterface
 		}
 
 		$array = $event['user_cache_data'];
-		$flag = '';
+		$flag = 0;
 		$array['user_flag'] = $flag;
 		$event['user_cache_data'] = $array;
 	}
@@ -346,7 +346,7 @@ class listener implements EventSubscriberInterface
 			return;
 		}
 		$flag = $this->nf_functions->get_user_flag($event['user_poster_data']['user_flag']);
-		$flags = $this->nf_functions->get_flag_cache();
+		$flags = $this->get_flag_cache();
 		$event['post_row'] = array_merge($event['post_row'],array(
 			'USER_FLAG' => $flag,
 			'U_FLAG'	=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $flags[$event['user_poster_data']['user_flag']]['flag_name'])) : '',
@@ -368,7 +368,7 @@ class listener implements EventSubscriberInterface
 		}
 
 		$flag = $this->nf_functions->get_user_flag($event['member']['user_flag']);
-		$flags = $this->nf_functions->get_flag_cache();
+		$flags = $this->get_flag_cache();
 		$this->template->assign_vars(array(
 			'USER_FLAG'		=> $flag,
 			'U_FLAG'		=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $flags[$event['member']['user_flag']]['flag_name'])) : '',
@@ -411,7 +411,7 @@ class listener implements EventSubscriberInterface
 		$array = $event['tpl_ary'];
 
 		$flag = $this->nf_functions->get_user_flag($event['row']['user_flag']);
-		$flags = $this->nf_functions->get_flag_cache();
+		$flags = $this->get_flag_cache();
 		$array = array_merge($array, array(
 			'USER_FLAG'		=> $flag,
 			'U_FLAG'		=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $flags[$event['row']['user_flag']]['flag_name'])) : '',
@@ -425,11 +425,11 @@ class listener implements EventSubscriberInterface
 	*
 	* @param object $event The event object
 	* @return null
-	* @access public
+	* @access private
 	*/
 	private function display_flag_options($event)
 	{
-		$flags = $this->nf_functions->get_flag_cache();
+		$flags = $this->get_flag_cache();
 		$flag_name = $flag_image = '';
 		$flag_id = 0;
 		if ($event['data']['user_flag'])
@@ -449,4 +449,16 @@ class listener implements EventSubscriberInterface
 			'AJAX_FLAG_INFO' 	=> $this->helper->route('rmcgirr83_nationalflags_getflag', array('flag_id' => 'FLAG_ID')),
 		));
 	}
+	
+	/**
+	 * Get the cache of the flags
+	 *
+	 * @return string flag_cache
+	 * @access private	 
+	 */
+	private function get_flag_cache()
+	{
+		$flag_cache = $this->cache->get('_user_flags');
+		return $flag_cache;
+	}	
 }
