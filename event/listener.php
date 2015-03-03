@@ -425,7 +425,7 @@ class listener implements EventSubscriberInterface
 	private function display_flag_options($event)
 	{
 		$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
-		
+
 		$flags = $this->get_flag_cache();
 		$flag_name = $flag_image = '';
 		$flag_id = 0;
@@ -451,7 +451,7 @@ class listener implements EventSubscriberInterface
 	 * Get the cache of the flags
 	 *
 	 * @return string flag_cache
-	 * @access private	 
+	 * @access private
 	 */
 	private function get_flag_cache()
 	{
