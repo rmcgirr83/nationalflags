@@ -152,6 +152,9 @@ class functions_nationalflags
 	 */
 	public function top_flags()
 	{
+
+		$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
+
 		$sql = 'SELECT user_flag, COUNT(user_flag) AS fnum
 			FROM ' . USERS_TABLE . '
 		WHERE user_flag > 0
@@ -175,10 +178,9 @@ class functions_nationalflags
 
 		if($count)
 		{
-			$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
 			$this->template->assign_vars(array(
 				'U_FLAGS'		=> $this->helper->route('rmcgirr83_nationalflags_display'),
-				'S_FLAGS_FOUND'	=> true,
+				'S_FLAGS'	=> true,
 			));
 		}
 	}

@@ -338,6 +338,7 @@ class main_controller
 	{
 		if (empty($flag_id))
 		{
+			$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
 			if ($this->config['flags_required'])
 			{
 				return new Response($this->user->lang['MUST_CHOOSE_FLAG']);

@@ -358,15 +358,19 @@ class listener implements EventSubscriberInterface
 			return;
 		}
 
-		$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
-
+		if (!empty($event['member']['user_flag']))
+		{
 		$flag = $this->nf_functions->get_user_flag($event['member']['user_flag']);
 		$flags = $this->get_flag_cache();
 
+			$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
+
 		$this->template->assign_vars(array(
 			'USER_FLAG'		=> $flag,
+				'S_FLAGS'		=> true,
 			'U_FLAG'		=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $flags[$event['member']['user_flag']]['flag_name'])) : '',
 		));
+		}
 	}
 
 	/**
