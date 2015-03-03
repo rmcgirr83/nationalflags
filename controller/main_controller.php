@@ -126,6 +126,8 @@ class main_controller
 			redirect(append_sid("{$this->root_path}index.{$this->php_ext}"));
 		}
 
+		$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
+
 		//let's get the flags
 		$sql = 'SELECT f.flag_id, f.flag_name, f.flag_image, COUNT(u.user_flag) as user_count
 			FROM ' . $this->flags_table . ' f
@@ -209,6 +211,8 @@ class main_controller
 		{
 			redirect(append_sid("{$this->root_path}index.{$this->php_ext}"));
 		}
+
+		$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
 
 		$page_title = $flag_name;
 		if ($page > 1)

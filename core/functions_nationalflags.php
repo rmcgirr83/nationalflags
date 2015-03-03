@@ -89,7 +89,7 @@ class functions_nationalflags
 		return false;
 	}
 	/**
-	 * Get cache flags
+	 * cache_flags
 	 *
 	 * Build the cache of the flags
 	 *
@@ -148,6 +148,7 @@ class functions_nationalflags
 
 	/**
 	 * Get top_flags
+	 * displayed on the index page
 	 */
 	public function top_flags()
 	{
@@ -174,6 +175,7 @@ class functions_nationalflags
 
 		if($count)
 		{
+			$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
 			$this->template->assign_vars(array(
 				'U_FLAGS'		=> $this->helper->route('rmcgirr83_nationalflags_display'),
 				'S_FLAGS_FOUND'	=> true,
