@@ -1,6 +1,6 @@
 <!-- INCLUDE overall_header.html -->
 
-<h2 class="solo" id="flagusers">{FLAG_IMAGE} {FLAG} {TOTAL_USERS}</h2>
+<h2 class="solo" id="flagusers">{FLAG_IMAGE} {FLAG}</h2>
 		<div class="action-bar top">
 			<div class="pagination">
 				{TOTAL_USERS} 
@@ -42,5 +42,15 @@
 			<!-- END user_row -->
 			</ul>
 			<span class="corners-bottom"><span></span></span></div>
+		</div>
+		<div class="action-bar bottom">
+			<div class="pagination">
+				{TOTAL_USERS}
+				<!-- IF .pagination --> 
+					<!-- INCLUDE pagination.html -->
+				<!-- ELSE --> 
+					 &bull; {PAGE_NUMBER}
+				<!-- ENDIF -->
+			</div>
 		</div>
 <!-- INCLUDE overall_footer.html -->

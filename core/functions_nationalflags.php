@@ -155,12 +155,17 @@ class functions_nationalflags
 
 		$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
 
-		$sql = 'SELECT user_flag, COUNT(user_flag) AS fnum
-			FROM ' . USERS_TABLE . '
-		WHERE user_flag > 0
-		GROUP BY user_flag
-		ORDER BY fnum DESC';
-		$result = $this->db->sql_query_limit($sql, 15);
+		// grab all the flags
+		$sql_array = array(
+			'SELECT'	=> 'u.user_flag, COUNT(u.user_flag) AS fnum',
+			'FROM'		=> array(USERS_TABLE => 'u'),
+			'WHERE'		=> 'u.user_flag > 0',
+			'GROUP_BY'	=> 'u.user_flag',	
+			'ORDER_BY'	=> 'fnum DESC',
+		);
+
+		// cache the result for a few minutes
+		$result = $this->db->sql_query_limit($this->db->sql_build_query('SELECT', $sql_array), 15, 0, 120);
 
 		$count = 0;
 		$flags = $this->cache->get('_user_flags');
