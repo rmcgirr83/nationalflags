@@ -160,7 +160,7 @@ class functions_nationalflags
 			'SELECT'	=> 'u.user_flag, COUNT(u.user_flag) AS fnum',
 			'FROM'		=> array(USERS_TABLE => 'u'),
 			'WHERE'		=> 'u.user_flag > 0',
-			'GROUP_BY'	=> 'u.user_flag',	
+			'GROUP_BY'	=> 'u.user_flag',
 			'ORDER_BY'	=> 'fnum DESC',
 		);
 
