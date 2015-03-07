@@ -1,0 +1,19 @@
+<!-- IF AJAX_FLAG_INFO -->
+<script type="text/javascript">
+// <![CDATA[
+// Use full jQuery function name to reference jQuery.
+jQuery( document ).ready(function() {
+	$("#user_flag").change(function () {
+		var flagId = $(this).val();
+        $.ajax({
+            url: AJAX_FLAG_INFO.replace("FLAG_ID", flagId),
+			dataType:'html',
+			success:function(html){
+				$('#flag_image').html(html).show();
+			}
+		});
+	});
+});
+// ]]>
+</script>
+<!-- ENDIF -->
