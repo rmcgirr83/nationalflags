@@ -367,7 +367,7 @@ class listener implements EventSubscriberInterface
 
 		$this->template->assign_vars(array(
 			'USER_FLAG'		=> $flag,
-				'S_FLAGS'		=> true,
+			'S_FLAGS'		=> true,
 			'U_FLAG'		=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $flags[$event['member']['user_flag']]['flag_name'])) : '',
 		));
 		}

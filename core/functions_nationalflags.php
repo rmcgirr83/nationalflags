@@ -82,7 +82,7 @@ class functions_nationalflags
 
 		if ($flag_id)
 		{
-			$flag = '<img src="' . $this->root_path . $this->flags_path . $flags[$flag_id]['flag_image'] . '" alt="'. htmlspecialchars($flags[$flag_id]['flag_name']) . '" title="'. htmlspecialchars($flags[$flag_id]['flag_name']) . '" />';
+			$flag = '<img src="' . $this->root_path . $this->flags_path . $flags[$flag_id]['flag_image'] . '" alt="'. htmlspecialchars($flags[$flag_id]['flag_name']) . '" title="'. htmlspecialchars($flags[$flag_id]['flag_name']) . '" style="vertical-align:middle;" />';
 
 			return $flag;
 		}
