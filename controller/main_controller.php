@@ -351,6 +351,7 @@ class main_controller
 
 		$flags = $this->cache->get('_user_flags');
 		$flag_img = $this->root_path . $this->flags_path . $flags[$flag_id]['flag_image'];
+		$flag_img = str_replace('./', generate_board_url() . '/', $flag_img); //fix paths
 		$flag_name = $flags[$flag_id]['flag_name'];
 
 		$return = '<img src="' . $flag_img . '" alt="' . $flag_name .'" title="' . $flag_name .'" style="vertical-align:middle;" />';
