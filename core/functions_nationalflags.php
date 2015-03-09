@@ -69,6 +69,7 @@ class functions_nationalflags
 		$this->flags_path = $flags_path;
 		$this->root_path = $root_path;
 	}
+
 	/**
 	 * Get user flag
 	 *

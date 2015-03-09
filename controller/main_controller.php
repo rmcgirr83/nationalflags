@@ -154,7 +154,6 @@ class main_controller
 				$user_flag_count = sprintf($this->user->lang['FLAG_USERS'], $user_count);
 			}
 			$flag_image = $this->nf_functions->get_user_flag($row['flag_id']);
-			$flag_image = str_replace('./', generate_board_url() . '/', $flag_image); // Fix paths
 
 			$this->template->assign_block_vars('flag', array(
 				'FLAG' 				=> $flag_image,
@@ -350,8 +349,10 @@ class main_controller
 		}
 
 		$flags = $this->cache->get('_user_flags');
+
 		$flag_img = $this->root_path . $this->flags_path . $flags[$flag_id]['flag_image'];
 		$flag_img = str_replace('./', generate_board_url() . '/', $flag_img); //fix paths
+
 		$flag_name = $flags[$flag_id]['flag_name'];
 
 		$return = '<img src="' . $flag_img . '" alt="' . $flag_name .'" title="' . $flag_name .'" style="vertical-align:middle;" />';
