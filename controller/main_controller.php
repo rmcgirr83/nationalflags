@@ -35,6 +35,12 @@ class main_controller
 	/** @var \phpbb\controller\helper */
 	protected $helper;
 
+	/**
+	* Path Helper
+	* @var \phpbb\path_helper
+	*/
+	protected $path_helper;
+
 	/* @var \phpbb\request\request */
 	protected $request;
 
@@ -87,6 +93,7 @@ class main_controller
 			\phpbb\db\driver\driver_interface $db,
 			\phpbb\pagination $pagination,
 			\phpbb\controller\helper $helper,
+			\phpbb\path_helper $path_helper,
 			\phpbb\request\request $request,
 			\phpbb\template\template $template,
 			\phpbb\user $user,
@@ -102,6 +109,7 @@ class main_controller
 		$this->db = $db;
 		$this->pagination = $pagination;
 		$this->helper = $helper;
+		$this->path_helper = $path_helper;
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
