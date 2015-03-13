@@ -142,7 +142,7 @@ class main_controller
 			LEFT JOIN ' . USERS_TABLE . " u on f.flag_id = u.user_flag
 		WHERE u.user_type IN (" . USER_NORMAL . ', ' . USER_FOUNDER . ") AND u.user_flag > 0
 		GROUP BY f.flag_id
-		ORDER BY user_count DESC";
+		ORDER BY user_count DESC, f.flag_name ASC";
 		$result = $this->db->sql_query($sql);
 
 		$flags = array();
