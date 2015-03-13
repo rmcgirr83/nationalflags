@@ -430,7 +430,7 @@ class admin_controller
 				'action'	=> 'delete'))
 			);
 			// Use a redirect to take the user back to the previous page
-			// if the user chose not delete the rule from the confirmation page.
+			// if the user chose not delete the flag from the confirmation page.
 			redirect("{$this->u_action}");
 		}
 	}
