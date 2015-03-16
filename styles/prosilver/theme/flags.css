@@ -2,7 +2,6 @@ ul.flags {
     width:100%;
     text-align:center;
     background-color: #eef5f9;
-    background-image: url("./images/gradient.gif");
 	list-style-type: none;
 }
 
@@ -20,7 +19,6 @@ ul.flags li.flagslist {
 
 div.flags {
    background-color: #eef5f9;
-   background-image: url("./images/gradient.gif");
 }
 
 #flagusers img {
