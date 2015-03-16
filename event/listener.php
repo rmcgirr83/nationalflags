@@ -366,7 +366,7 @@ class listener implements EventSubscriberInterface
 		$flag = $this->nf_functions->get_user_flag($event['member']['user_flag']);
 		$flags = $this->get_flag_cache();
 
-			$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
+		$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
 
 		$this->template->assign_vars(array(
 			'USER_FLAG'		=> $flag,
