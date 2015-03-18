@@ -35,12 +35,6 @@ class main_controller
 	/** @var \phpbb\controller\helper */
 	protected $helper;
 
-	/**
-	* Path Helper
-	* @var \phpbb\path_helper
-	*/
-	protected $path_helper;
-
 	/* @var \phpbb\request\request */
 	protected $request;
 
@@ -93,7 +87,6 @@ class main_controller
 			\phpbb\db\driver\driver_interface $db,
 			\phpbb\pagination $pagination,
 			\phpbb\controller\helper $helper,
-			\phpbb\path_helper $path_helper,
 			\phpbb\request\request $request,
 			\phpbb\template\template $template,
 			\phpbb\user $user,
@@ -109,7 +102,6 @@ class main_controller
 		$this->db = $db;
 		$this->pagination = $pagination;
 		$this->helper = $helper;
-		$this->path_helper = $path_helper;
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
@@ -255,7 +247,7 @@ class main_controller
 		if (!$row)
 		{
 			// A flag does not exist..this should never happen
-			trigger_error('NO_USER_HAS_FLAG');
+			trigger_error('NO_USER_HAS_FLAG', E_USER_ERROR);
 		}
 
 		// now users that have the flag
@@ -275,7 +267,7 @@ class main_controller
 		$this->db->sql_freeresult($result);
 		unset($row2);
 
-		foreach($rows as $userrow)
+		foreach ($rows as $userrow)
 		{
 			$user_id = $userrow['user_id'];
 
@@ -289,7 +281,6 @@ class main_controller
 				'U_SEARCH_USER'		=> ($this->auth->acl_get('u_search')) ? append_sid("{$this->root_path}search.$this->php_ext", "author_id=$user_id&amp;sr=posts") : '',
 			));
 		}
-		$this->db->sql_freeresult($result);
 
 		$this->pagination->generate_template_pagination(array(
 			'routes' => array(
