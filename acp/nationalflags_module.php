@@ -59,7 +59,7 @@ class nationalflags_module
 						// Set the page title for our ACP page
 						$this->page_title = $user->lang('FLAG_ADD');
 
-						// Load the add rule handle in the admin controller
+						// Load the add flag handle in the admin controller
 						$admin_controller->add_flag();
 
 						// Return to stop execution of this script
@@ -70,7 +70,7 @@ class nationalflags_module
 						// Set the page title for our ACP page
 						$this->page_title = $user->lang('FLAG_EDIT');
 
-						// Load the edit rule handle in the admin controller
+						// Load the edit flag handle in the admin controller
 						$admin_controller->edit_flag($flag_id);
 
 						// Return to stop execution of this script
@@ -78,7 +78,7 @@ class nationalflags_module
 					break;
 
 					case 'delete':
-						// Delete a rule
+						// Delete a flag
 						$admin_controller->delete_flag($flag_id);
 					break;
 
