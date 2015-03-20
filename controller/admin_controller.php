@@ -222,46 +222,8 @@ class admin_controller
 
 		if ($this->request->is_set_post('submit'))
 		{
-			if (!check_form_key('add_flag'))
-			{
-				$errors[] = $user->lang['FORM_INVALID'];
-			}
+			$errors = $this->check_flag($flag_row['flag_image'], $flag_row['flag_name'], $errors, 'add_flag');
 
-			if (empty($flag_row['flag_name']))
-			{
-				$errors[] = $this->user->lang['FLAG_ERROR_NO_FLAG_NAME'];
-			}
-
-			if (empty($flag_row['flag_image']))
-			{
-				$errors[] = $this->user->lang['FLAG_ERROR_NO_FLAG_IMG'];
-			}
-
-			//we don't want two flags with the same name...right?
-			$sql = 'SELECT *
-				FROM ' . $this->flags_table;
-			$result = $this->db->sql_query($sql);
-
-			$flag_name_arry = array();
-
-			while($row = $this->db->sql_fetchrow($result))
-			{
-				$flag_name_arry[] = $row['flag_name'];
-			}
-			$this->db->sql_freeresult($result);
-
-			// convert the array to string
-			$flag_name_arry = implode(',', $flag_name_arry);
-			$flag_name_arry = strtoupper($flag_name_arry);
-
-			// convert the string back into an array
-			$flag_name_arry = explode(',', $flag_name_arry);
-
-			//check to make sure the flag name is different
-			if (in_array(strtoupper($flag_row['flag_name']), $flag_name_arry))
-			{
-				$errors[] = $this->user->lang['FLAG_NAME_EXISTS'];
-			}
 			if (!sizeof($errors))
 			{
 				$sql = 'INSERT INTO ' . $this->flags_table . ' ' . $this->db->sql_build_array('INSERT', $flag_row);
@@ -311,20 +273,7 @@ class admin_controller
 
 		if ($this->request->is_set_post('submit'))
 		{
-			if (!check_form_key('edit_flag'))
-			{
-				$errors[] = 'FORM_INVALID';
-			}
-
-			if (empty($flag_row['flag_image']))
-			{
-				$errors[] = $this->user->lang['FLAG_ERROR_NO_FLAG_IMG'];
-			}
-
-			if (empty($flag_row['flag_name']))
-			{
-				$errors[] = $this->user->lang['FLAG_ERROR_NO_FLAG_NAME'];
-			}
+			$errors = $this->check_flag($flag_row['flag_image'], $flag_row['flag_name'], $errors, 'edit_flag');
 
 			if (!sizeof($errors))
 			{
@@ -433,6 +382,51 @@ class admin_controller
 			// if the user chose not delete the flag from the confirmation page.
 			redirect("{$this->u_action}");
 		}
+	}
+
+	/* check flag
+	*
+	* a function to run flag validation on
+	* @param string	$form_key	The forum key add_flag/edit_flag
+	* @param string	$flag_image	The flag image
+	* @param string	$flag_name	The flag name
+	* @param array	$errors		The possible generated errors
+	* @return array
+	* @access private
+	*/
+	private function check_flag($flag_image, $flag_name, $errors, $form_key = '')
+	{
+		if (!check_form_key($form_key))
+		{
+			$errors[] = $this->user->lang['FORM_INVALID'];
+		}
+
+		if (empty($flag_name))
+		{
+			$errors[] = $this->user->lang['FLAG_ERROR_NO_FLAG_NAME'];
+		}
+
+		if (empty($flag_image))
+		{
+			$errors[] = $this->user->lang['FLAG_ERROR_NO_FLAG_IMG'];
+		}
+
+		if ($form_key == 'add_flag')
+		{
+			//we don't want two flags with the same name...right?
+			$sql = 'SELECT flag_name
+				FROM ' . $this->flags_table . "
+				WHERE upper(flag_name) = '" . $this->db->sql_escape(strtoupper($flag_name)) . "'";
+			$result = $this->db->sql_query($sql);
+
+			if ($this->db->sql_fetchrow($result))
+			{
+				$errors[] = $this->user->lang['FLAG_NAME_EXISTS'];
+			}
+			$this->db->sql_freeresult($result);
+		}
+
+		return $errors;
 	}
 
 	/**
