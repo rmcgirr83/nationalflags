@@ -230,7 +230,7 @@ class main_controller
 	*
 	* @param $flag_name	string	the name of the flag
 	* @param $start		int		page number we start at
-	* @param $limit		int		limit to dipaly for pagination
+	* @param $limit		int		limit to display for pagination
 	* @return null
 	* @access public
 	*/

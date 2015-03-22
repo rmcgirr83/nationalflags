@@ -31,7 +31,7 @@
 
 <!-- ELSEIF S_FLAGS -->
 
-<h1>{L_ACP_FLAGS}</h1>
+<h1>{TOTAL_FLAGS} {L_ACP_FLAGS}</h1>
 
 <p>{L_ACP_FLAGS_EXPLAIN}</p>
 
@@ -39,7 +39,14 @@
 	<fieldset class="quick">
 		<input class="button2" name="add" type="submit" value="{L_FLAG_ADD}" />
 	</fieldset>
-	<table cellspacing="1">
+	
+	<!-- IF .pagination -->
+	<div class="pagination top-pagination">
+		<!-- INCLUDE pagination.html -->
+	</div>
+	<!-- ENDIF -->
+
+	<table class="table1 fixed-width-table">
 		<thead>
 			<tr>
 				<th>{L_FLAG_NAME}</th>
@@ -59,6 +66,13 @@
 		<!-- END flags -->
 		</tbody>
 	</table>
+
+	<!-- IF .pagination -->
+		<div class="pagination">
+			<!-- INCLUDE pagination.html -->
+		</div>
+	<!-- ENDIF -->
+
 	<fieldset class="quick">
 		<input class="button2" name="add" type="submit" value="{L_FLAG_ADD}" />
 		{S_FORM_TOKEN}

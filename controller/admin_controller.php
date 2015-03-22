@@ -26,6 +26,9 @@ class admin_controller
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
+	/** @var \phpbb\pagination */
+	protected $pagination;
+
 	/** @var \phpbb\request\request */
 	protected $request;
 
@@ -85,6 +88,7 @@ class admin_controller
 			\phpbb\cache\service $cache,
 			\phpbb\config\config $config,
 			\phpbb\db\driver\driver_interface $db,
+			\phpbb\pagination $pagination,
 			\phpbb\request\request $request,
 			\phpbb\template\template $template,
 			\phpbb\user $user,
@@ -98,6 +102,7 @@ class admin_controller
 		$this->cache = $cache;
 		$this->config = $config;
 		$this->db = $db;
+		$this->pagination = $pagination;
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
@@ -179,10 +184,20 @@ class admin_controller
 	*/
 	public function display_flags()
 	{
+		$start = $this->request->variable('start', 0);
+		$pagination_url = $this->u_action;
+
 		$sql = 'SELECT *
 			FROM ' . $this->flags_table . '
 			ORDER BY flag_name ASC';
-		$result = $this->db->sql_query($sql);
+		$result = $this->db->sql_query_limit($sql, $this->config['topics_per_page'], $start);
+
+		// for counting of total flag users
+		$result2 = $this->db->sql_query($sql);
+		$row2 = $this->db->sql_fetchrowset($result2);
+		$total_count = (int) count($row2);
+		$this->db->sql_freeresult($result2);
+		unset($row2);
 
 		while ($row = $this->db->sql_fetchrow($result))
 		{
@@ -197,7 +212,12 @@ class admin_controller
 		}
 		$this->db->sql_freeresult($result);
 
+		if ($total_count)
+		{
+			$this->pagination->generate_template_pagination($pagination_url, 'pagination', 'start', $total_count, $this->config['topics_per_page'], $start);
+		}
 		$this->template->assign_vars(array(
+			'TOTAL_FLAGS'	=> $total_count,
 			'S_FLAGS'	=> true,
 		));
 	}
