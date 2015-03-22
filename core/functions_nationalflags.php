@@ -37,17 +37,27 @@ class functions_nationalflags
 	*/
 	protected $flags_table;
 
+	/** @var \phpbb\extension\manager "Extension Manager" */
+	protected $ext_manager;
+
+	/** @var \phpbb\path_helper */
+	protected $path_helper;
+
 	/**
-	* the path to the flags directory
+	* Constructor
 	*
-	*@var string
+	* @param \phpbb\config\config               $config         Config object
+	* @param \phpbb\controller\helper           $helper         Controller helper object
+	* @param \phpbb\cache\service				$cache			Cache object
+	* @param \phpbb\db\driver\driver			$db				Database object
+	* @param \phpbb\template\template           $template       Template object
+	* @param \phpbb\user                        $user           User object
+	* @param string								$flags_table	Name of the table used to store flag data
+	* @param \phpbb\extension\manager			$manager		Extension manager object
+	* @param \phpbb\path_helper					$path_helper	Path helper object
+	* @param \rmcgirr83\nationalflags\functions	$nf_functions	functions to be used by class
+	* @access public
 	*/
-	protected $flags_path;
-
-	/** @var string phpBB root path */
-	protected $root_path;
-
-
 	public function __construct(
 			\phpbb\config\config $config,
 			\phpbb\controller\helper $helper,
@@ -56,8 +66,8 @@ class functions_nationalflags
 			\phpbb\template\template $template,
 			\phpbb\user $user,
 			$flags_table,
-			$flags_path,
-			$root_path)
+			\phpbb\extension\manager $ext_manager,
+			\phpbb\path_helper $path_helper)
 	{
 		$this->config = $config;
 		$this->helper = $helper;
@@ -66,8 +76,11 @@ class functions_nationalflags
 		$this->template = $template;
 		$this->user = $user;
 		$this->flags_table = $flags_table;
-		$this->flags_path = $flags_path;
-		$this->root_path = $root_path;
+		$this->ext_manager	 = $ext_manager;
+		$this->path_helper	 = $path_helper;
+
+		$this->ext_path		 = $this->ext_manager->get_extension_path('rmcgirr83/nationalflags', true);
+		$this->ext_path_web	 = $this->path_helper->update_web_root_path($this->ext_path);
 	}
 
 	/**
@@ -83,7 +96,7 @@ class functions_nationalflags
 
 		if ($flag_id)
 		{
-			$flag = '<img src="' . $this->root_path . $this->flags_path . $flags[$flag_id]['flag_image'] . '" alt="'. htmlspecialchars($flags[$flag_id]['flag_name']) . '" title="'. htmlspecialchars($flags[$flag_id]['flag_name']) . '" style="vertical-align:middle;" />';
+			$flag = '<img src="' . $this->ext_path_web . 'flags/' . $flags[$flag_id]['flag_image'] . '" alt="'. htmlspecialchars($flags[$flag_id]['flag_name']) . '" title="'. htmlspecialchars($flags[$flag_id]['flag_name']) . '" style="vertical-align:middle;" />';
 
 			return $flag;
 		}
@@ -165,8 +178,8 @@ class functions_nationalflags
 			'ORDER_BY'	=> 'fnum DESC',
 		);
 
-		// cache the result for a few minutes
-		$result = $this->db->sql_query_limit($this->db->sql_build_query('SELECT', $sql_array), 15, 0, 120);
+		// we limit the number of flags to display to 15
+		$result = $this->db->sql_query_limit($this->db->sql_build_query('SELECT', $sql_array), 15);
 
 		$count = 0;
 		$flags = $this->cache->get('_user_flags');

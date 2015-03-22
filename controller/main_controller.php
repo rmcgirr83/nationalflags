@@ -38,6 +38,12 @@ class main_controller
 	/* @var \phpbb\request\request */
 	protected $request;
 
+	/** @var \phpbb\extension\manager "Extension Manager" */
+	protected $ext_manager;
+
+	/** @var \phpbb\path_helper */
+	protected $path_helper;
+
 	/** @var \phpbb\template\template */
 	protected $template;
 
@@ -57,26 +63,26 @@ class main_controller
 	*/
 	protected $flags_table;
 
-	/**
-	* the path to the flags directory
-	*
-	*@var string
-	*/
-	protected $flags_path;
-
 	/* @var \rmcgirr83\nationalflags\core\functions_nationalflags */
 	protected $nf_functions;
+
 	/**
 	* Constructor
 	*
+	* @param \phpbb\auth\auth					$auth			Auth object
 	* @param \phpbb\cache\service				$cache			Cache object
 	* @param \phpbb\config\config               $config         Config object
+	* @param \phpbb\db\driver\driver			$db				Database object
+	* @param \phpbb\pagination					$pagination		Pagination object
 	* @param \phpbb\controller\helper           $helper         Controller helper object
+	* @param \phpbb\request\request				$request		Request object
+	* @param \phpbb\extension\manager			$manager		Extension manager object
+	* @param \phpbb\path_helper					$path_helper	Path helper object
 	* @param \phpbb\template\template           $template       Template object
 	* @param \phpbb\user                        $user           User object
 	* @param string                             $root_path      phpBB root path
 	* @param string                             $php_ext        phpEx
-	* @param string								$flags_path		path to flags directory
+	* @param string								$flags_table	Name of the table used to store flag data
 	* @param \rmcgirr83\nationalflags\functions	$nf_functions	functions to be used by class
 	* @access public
 	*/
@@ -88,12 +94,13 @@ class main_controller
 			\phpbb\pagination $pagination,
 			\phpbb\controller\helper $helper,
 			\phpbb\request\request $request,
+			\phpbb\extension\manager $ext_manager,
+			\phpbb\path_helper $path_helper,
 			\phpbb\template\template $template,
 			\phpbb\user $user,
 			$root_path,
 			$php_ext,
 			$flags_table,
-			$flags_path,
 			\rmcgirr83\nationalflags\core\functions_nationalflags $functions)
 	{
 		$this->auth = $auth;
@@ -103,13 +110,16 @@ class main_controller
 		$this->pagination = $pagination;
 		$this->helper = $helper;
 		$this->request = $request;
+		$this->ext_manager	 = $ext_manager;
+		$this->path_helper	 = $path_helper;
 		$this->template = $template;
 		$this->user = $user;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 		$this->flags_table = $flags_table;
-		$this->flags_path = $flags_path;
 		$this->nf_functions = $functions;
+
+		$this->ext_path		 = $this->ext_manager->get_extension_path('rmcgirr83/nationalflags', true);
 	}
 
 	/**
@@ -293,7 +303,7 @@ class main_controller
 		), 'pagination', 'page', $total_users, $limit, $start);
 
 		$flag_image = $this->nf_functions->get_user_flag($row['flag_id']);
-		$flag_image = str_replace('./', generate_board_url() . '/', $flag_image); // Fix paths
+		//$flag_image = str_replace('./', generate_board_url() . '/', $flag_image); // Fix paths
 
 		if ($total_users == 1)
 		{
@@ -349,8 +359,7 @@ class main_controller
 
 		$flags = $this->cache->get('_user_flags');
 
-		$flag_img = $this->root_path . $this->flags_path . $flags[$flag_id]['flag_image'];
-		$flag_img = str_replace('./', generate_board_url() . '/', $flag_img); //fix paths
+		$flag_img = $this->ext_path . 'flags/' . $flags[$flag_id]['flag_image'];
 
 		$flag_name = $flags[$flag_id]['flag_name'];
 

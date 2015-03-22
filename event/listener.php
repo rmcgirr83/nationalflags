@@ -44,22 +44,39 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\user */
 	protected $user;
 
+	/** @var \phpbb\extension\manager "Extension Manager" */
+	protected $ext_manager;
+
+	/** @var \phpbb\path_helper */
+	protected $path_helper;
+
 	/** @var string phpBB root path */
 	protected $phpbb_root_path;
 
 	/** @var string phpEx */
 	protected $php_ext;
 
-	/**
-	* the path to the flags directory
-	*
-	*@var string
-	*/
-	protected $flags_path;
-
 	/* @var \rmcgirr83\nationalflags\core\functions_nationalflags */
 	protected $nf_functions;
 
+	/**
+	* Constructor
+	*
+	* @param \phpbb\auth\auth					$auth			Auth object
+	* @param \phpbb\cache\service				$cache			Cache object
+	* @param \phpbb\config\config               $config         Config object
+	* @param \phpbb\controller\helper           $helper         Controller helper object
+	* @param \phpbb\db\driver\driver			$db				Database object
+	* @param \phpbb\request\request				$request		Request object
+	* @param \phpbb\template\template           $template       Template object
+	* @param \phpbb\user                        $user           User object
+	* @param \phpbb\extension\manager			$manager		Extension manager object
+	* @param \phpbb\path_helper					$path_helper	Path helper object
+	* @param string                             $root_path      phpBB root path
+	* @param string                             $php_ext        phpEx
+	* @param \rmcgirr83\nationalflags\functions	$nf_functions	functions to be used by class
+	* @access public
+	*/
 	public function __construct(
 			\phpbb\auth\auth $auth,
 			\phpbb\cache\service $cache,
@@ -69,9 +86,10 @@ class listener implements EventSubscriberInterface
 			\phpbb\request\request $request,
 			\phpbb\template\template $template,
 			\phpbb\user $user,
+			\phpbb\extension\manager $ext_manager,
+			\phpbb\path_helper $path_helper,
 			$phpbb_root_path,
 			$php_ext,
-			$flags_path,
 			\rmcgirr83\nationalflags\core\functions_nationalflags $functions)
 	{
 		$this->auth = $auth;
@@ -82,10 +100,13 @@ class listener implements EventSubscriberInterface
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
+		$this->ext_manager	 = $ext_manager;
+		$this->path_helper	 = $path_helper;
 		$this->root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
-		$this->flags_path = $flags_path;
 		$this->nf_functions = $functions;
+
+		$this->ext_path		 = $this->ext_manager->get_extension_path('rmcgirr83/nationalflags', true);
 	}
 
 	/**
@@ -447,7 +468,7 @@ class listener implements EventSubscriberInterface
 
 		$this->template->assign_vars(array(
 			'USER_FLAG'		=> $event['data']['user_flag'],
-			'FLAG_IMAGE'	=> ($flag_image) ? $this->root_path . $this->flags_path . $flag_image : '',
+			'FLAG_IMAGE'	=> ($flag_image) ? $this->ext_path . 'flags/' . $flag_image : '',
 			'FLAG_NAME'		=> $flag_name,
 			'S_FLAG_OPTIONS'	=> $s_flag_options,
 			'AJAX_FLAG_INFO' 	=> $this->helper->route('rmcgirr83_nationalflags_getflag', array('flag_id' => 'FLAG_ID')),

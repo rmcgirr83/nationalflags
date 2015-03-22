@@ -41,28 +41,21 @@ class admin_controller
 	/** @var ContainerInterface */
 	protected $container;
 
-	/**
+	/** @var \phpbb\extension\manager "Extension Manager" */
+	protected $ext_manager;
+
+	/** @var \phpbb\path_helper */
+	protected $path_helper;
+	
+/**
 	* The database table the flags are stored in
 	*
 	* @var string
 	*/
 	protected $flags_table;
 
-	/**
-	* the path to the flags directory
-	*
-	*@var string
-	*/
-	protected $flags_path;
-
 	/* @var \rmcgirr83\nationalflags\core\functions_nationalflags */
 	protected $nf_functions;
-
-	/** @var string phpBB root path */
-	protected $root_path;
-
-	/** @var string phpEx */
-	protected $php_ext;
 
 	/** @var string Custom form action */
 	protected $u_action;
@@ -70,17 +63,18 @@ class admin_controller
 	/**
 	* Constructor
 	*
-	* @param \phpbb\cache\service					$cache					Cache object
-	* @param \phpbb\config\config					$config					Config object
-	* @param \phpbb\db\driver\driver_interface		$db						Database object
-	* @param \phpbb\request\request					$request				Request object
-	* @param \phpbb\template\template				$template				Template object
-	* @param \phpbb\user							$user					User object
-	* @param ContainerInterface						$container				Service container interface
-	* @param string									$nationalflags_table	Name of the table used to store flag data
-	* @param string									$flags_path				The path to the flags directory where the images are stored
-	* @param string									$root_path				phpBB root path
-	* @param string									$php_ext				phpEx
+	* @param \phpbb\cache\service					$cache				Cache object
+	* @param \phpbb\config\config					$config				Config object
+	* @param \phpbb\db\driver\driver_interface		$db					Database object
+	* @param \phpbb\pagination						$pagination			Pagination object
+	* @param \phpbb\request\request					$request			Request object
+	* @param \phpbb\template\template				$template			Template object
+	* @param \phpbb\user							$user				User object
+	* @param ContainerInterface						$container			Service container interface
+	* @param \phpbb\extension\manager				$manager			Extension manager object
+	* @param \phpbb\path_helper						$path_helper		Path helper object
+	* @param string									$flags_table		Name of the table used to store flag data
+	* @param \rmcgirr83\nationalflage\core\functions_nationalflags	$nf_functions	Functions for the extension
 	* @return \rmcgirr83\nationalflags\controller\admin_controller
 	* @access public
 	*/
@@ -93,11 +87,10 @@ class admin_controller
 			\phpbb\template\template $template,
 			\phpbb\user $user,
 			ContainerInterface $container,
+			\phpbb\extension\manager $ext_manager,
+			\phpbb\path_helper $path_helper,
 			$flags_table,
-			$flags_path,
-			\rmcgirr83\nationalflags\core\functions_nationalflags $functions,
-			$root_path,
-			$php_ext)
+			\rmcgirr83\nationalflags\core\functions_nationalflags $functions)
 	{
 		$this->cache = $cache;
 		$this->config = $config;
@@ -107,11 +100,13 @@ class admin_controller
 		$this->template = $template;
 		$this->user = $user;
 		$this->container = $container;
+		$this->ext_manager	 = $ext_manager;
+		$this->path_helper	 = $path_helper;
 		$this->flags_table = $flags_table;
-		$this->flags_path = $flags_path;
 		$this->nf_functions = $functions;
-		$this->root_path = $root_path;
-		$this->php_ext = $php_ext;
+
+		$this->ext_path		 = $this->ext_manager->get_extension_path('rmcgirr83/nationalflags', true);
+		$this->ext_path_web	 = $this->path_helper->update_web_root_path($this->ext_path);
 	}
 
 	/**
@@ -203,7 +198,7 @@ class admin_controller
 		{
 			$this->template->assign_block_vars('flags', array(
 				'FLAG_NAME'		=> $row['flag_name'],
-				'FLAG_IMG'		=> $this->root_path . $this->flags_path . strtolower($row['flag_image']),
+				'FLAG_IMG'		=> $this->ext_path_web . 'flags/' . strtolower($row['flag_image']),
 				'FLAG_ID'		=> $row['flag_id'],
 
 				'U_EDIT'		=> $this->u_action . "&amp;flag_id={$row['flag_id']}&amp;action=edit",

@@ -1,6 +1,5 @@
 imports:
     - { resource: tables.yml }
-    - { resource: flagspath.yml }
 
 services:
     rmcgirr83.nationalflags.admin.controller:
@@ -14,11 +13,10 @@ services:
             - @template
             - @user
             - @service_container
+            - @ext.manager
+            - @path_helper
             - %rmcgirr83.nationalflags.table.nationalflags%
-            - %rmcgirr83.nationalflags.flagpath.nationalflags%
             - @rmcgirr83.nationalflags.functions
-            - %core.root_path%
-            - %core.php_ext%
 
     rmcgirr83.nationalflags.main.controller:
         class: rmcgirr83\nationalflags\controller\main_controller
@@ -30,12 +28,13 @@ services:
             - @pagination
             - @controller.helper
             - @request
+            - @ext.manager
+            - @path_helper
             - @template
             - @user
             - %core.root_path%
             - %core.php_ext%
             - %rmcgirr83.nationalflags.table.nationalflags%
-            - %rmcgirr83.nationalflags.flagpath.nationalflags%
             - @rmcgirr83.nationalflags.functions
 
     rmcgirr83.nationalflags.listener:
@@ -49,9 +48,10 @@ services:
             - @request
             - @template
             - @user
+            - @ext.manager
+            - @path_helper
             - %core.root_path%
             - %core.php_ext%
-            - %rmcgirr83.nationalflags.flagpath.nationalflags%
             - @rmcgirr83.nationalflags.functions
         tags:
             - { name: event.listener }
@@ -66,5 +66,5 @@ services:
             - @template
             - @user
             - %rmcgirr83.nationalflags.table.nationalflags%
-            - %rmcgirr83.nationalflags.flagpath.nationalflags%
-            - %core.root_path%
+            - @ext.manager
+            - @path_helper
