@@ -46,7 +46,7 @@ class admin_controller
 
 	/** @var \phpbb\path_helper */
 	protected $path_helper;
-	
+
 /**
 	* The database table the flags are stored in
 	*
