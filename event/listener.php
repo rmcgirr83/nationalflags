@@ -128,8 +128,7 @@ class listener implements EventSubscriberInterface
 			'core.ucp_register_data_before'				=> 'user_flag_profile',
 			'core.ucp_register_data_after'				=> 'user_flag_profile_validate',
 			'core.ucp_register_user_row_after'			=> 'user_flag_registration_sql',
-			'core.acp_users_modify_profile'				=> 'user_flag_profile',
-			'core.acp_users_profile_validate'			=> 'user_flag_profile_validate',
+			'core.acp_users_modify_profile'				=> 'acp_user_flag_profile',
 			'core.acp_users_profile_modify_sql_ary'		=> 'user_flag_profile_sql',
 			'core.viewonline_overwrite_location'		=> 'viewonline_page',
 			'core.viewtopic_cache_user_data'			=> 'viewtopic_cache_user_data',
@@ -287,6 +286,28 @@ class listener implements EventSubscriberInterface
 		$event['user_row'] = array_merge($event['user_row'], array(
 				'user_flag' => $this->request->variable('user_flag', 0),
 		));
+	}
+
+	/**
+	* Allow admins to change user flags
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
+	public function acp_user_flag_profile($event)
+	{
+		if (empty($this->config['allow_flags']))
+		{
+			return;
+		}
+
+		// Request the user option vars and add them to the data array
+		$event['data'] = array_merge($event['data'], array(
+			'user_flag'	=> $this->request->variable('user_flag',$event['user_row']['user_flag']),
+		));
+
+		$this->display_flag_options($event);
 	}
 
 	/**
