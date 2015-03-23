@@ -187,7 +187,8 @@ class admin_controller
 			ORDER BY flag_name ASC';
 		$result = $this->db->sql_query_limit($sql, $this->config['topics_per_page'], $start);
 
-		// for counting of total flag users
+		// for counting of all the flags
+		// used for pagination
 		$result2 = $this->db->sql_query($sql);
 		$row2 = $this->db->sql_fetchrowset($result2);
 		$total_count = (int) count($row2);
