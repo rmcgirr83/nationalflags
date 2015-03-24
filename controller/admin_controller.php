@@ -29,6 +29,9 @@ class admin_controller
 	/** @var \phpbb\pagination */
 	protected $pagination;
 
+	/** @var \phpbb\controller\helper */
+	protected $helper;
+
 	/** @var \phpbb\request\request */
 	protected $request;
 
@@ -67,6 +70,7 @@ class admin_controller
 	* @param \phpbb\config\config					$config				Config object
 	* @param \phpbb\db\driver\driver_interface		$db					Database object
 	* @param \phpbb\pagination						$pagination			Pagination object
+	* @param \phpbb\controller\helper           $helper         Controller helper object
 	* @param \phpbb\request\request					$request			Request object
 	* @param \phpbb\template\template				$template			Template object
 	* @param \phpbb\user							$user				User object
@@ -83,6 +87,7 @@ class admin_controller
 			\phpbb\config\config $config,
 			\phpbb\db\driver\driver_interface $db,
 			\phpbb\pagination $pagination,
+			\phpbb\controller\helper $helper,
 			\phpbb\request\request $request,
 			\phpbb\template\template $template,
 			\phpbb\user $user,
@@ -96,6 +101,7 @@ class admin_controller
 		$this->config = $config;
 		$this->db = $db;
 		$this->pagination = $pagination;
+		$this->helper = $helper;
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
@@ -182,9 +188,13 @@ class admin_controller
 		$start = $this->request->variable('start', 0);
 		$pagination_url = $this->u_action;
 
-		$sql = 'SELECT *
-			FROM ' . $this->flags_table . '
-			ORDER BY flag_name ASC';
+		$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
+
+		$sql = 'SELECT f.*, COUNT(u.user_flag) as user_count
+			FROM ' . $this->flags_table . ' f
+				LEFT JOIN ' . USERS_TABLE . " u on f.flag_id = u.user_flag
+			GROUP BY f.flag_id
+			ORDER BY f.flag_name ASC";
 		$result = $this->db->sql_query_limit($sql, $this->config['topics_per_page'], $start);
 
 		// for counting of all the flags
@@ -197,21 +207,23 @@ class admin_controller
 
 		while ($row = $this->db->sql_fetchrow($result))
 		{
+			$user_count = ($row['user_count'] <> 1) ? sprintf($this->user->lang['FLAG_USERS'], $row['user_count']) : sprintf($this->user->lang['FLAG_USER'], $row['user_count']);
+
 			$this->template->assign_block_vars('flags', array(
 				'FLAG_NAME'		=> $row['flag_name'],
 				'FLAG_IMG'		=> $this->ext_path_web . 'flags/' . strtolower($row['flag_image']),
 				'FLAG_ID'		=> $row['flag_id'],
-
+				'USER_COUNT'	=> $user_count,
+				'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $row['flag_name'])),
 				'U_EDIT'		=> $this->u_action . "&amp;flag_id={$row['flag_id']}&amp;action=edit",
 				'U_DELETE'		=> $this->u_action . "&amp;flag_id={$row['flag_id']}&amp;action=delete",)
 			);
 		}
 		$this->db->sql_freeresult($result);
 
-		if ($total_count)
-		{
-			$this->pagination->generate_template_pagination($pagination_url, 'pagination', 'start', $total_count, $this->config['topics_per_page'], $start);
-		}
+		$start = $this->pagination->validate_start($start, $this->config['topics_per_page'], $total_count);
+		$this->pagination->generate_template_pagination($pagination_url, 'pagination', 'start', $total_count, $this->config['topics_per_page'], $start);
+
 		$this->template->assign_vars(array(
 			'TOTAL_FLAGS'	=> $total_count,
 			'S_FLAGS'	=> true,

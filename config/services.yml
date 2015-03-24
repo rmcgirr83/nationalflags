@@ -9,6 +9,7 @@ services:
             - @config
             - @dbal.conn
             - @pagination
+            - @controller.helper
             - @request
             - @template
             - @user

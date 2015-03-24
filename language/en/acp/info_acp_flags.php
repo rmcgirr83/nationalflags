@@ -38,6 +38,7 @@ $lang = array_merge($lang, array(
 	'ACP_CAT_FLAGS'						=> 'National Flags',
 	'ACP_FLAGS'							=> 'National Flags',
 	'ACP_FLAGS_EXPLAIN'					=> 'Here you can add/edit and delete the different Flags. <strong>If you want to use images you should upload them to ext/rmcgirr83/nationalflags/flags before you add the new Flag.</strong>',
+	'ACP_FLAG_USERS'					=> 'Number of Users',
 
 	//Add/Edit Flags
 	'FLAG_EDIT'							=> 'Edit Flag',
@@ -54,7 +55,7 @@ $lang = array_merge($lang, array(
 	'YES_FLAGS_EXPLAIN'					=> 'Choose to disable or enable the Flags',
 	'FLAGS_VERSION'						=> 'National Flags Version',
 	'FLAGS_REQUIRED'					=> 'Required field',
-	'FLAGS_REQUIRED_EXPLAIN'				=> 'Choosing Yes here will force new registrants as well as those that visit their user profile to choose a flag',
+	'FLAGS_REQUIRED_EXPLAIN'			=> 'Choosing Yes here will force new registrants as well as those that visit their user profile to choose a flag',
 	'FLAGS_DISPLAY_MSG'					=> 'Display a message',
 	'FLAGS_DISPLAY_MSG_EXPLAIN'			=> 'Choosing Yes here will display a message on the forum for a user to choose a flag.',
 

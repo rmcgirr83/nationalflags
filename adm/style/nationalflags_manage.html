@@ -50,6 +50,7 @@
 		<thead>
 			<tr>
 				<th>{L_FLAG_NAME}</th>
+				<th>{L_ACP_FLAG_USERS}</th>
 				<th style="text-align: center;">{L_FLAG_IMG}</th>
 				<th style="text-align: center;">{L_OPTIONS}</th>
 			</tr>
@@ -57,8 +58,9 @@
 		<tbody>
 		<!-- BEGIN flags -->
 			<!-- IF flags.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-				<td style="width: 15%;">{flags.FLAG_NAME}</td>
-				<td style="text-align: center;"><img src="{flags.FLAG_IMG}" alt="{flags.FLAG_NAME}" title="{flags.FLAG_NAME}" /></td>
+				<td>{flags.FLAG_NAME}</td>
+				<td>{flags.USER_COUNT}</td>
+				<td style="text-align: center;"><a href="{flags.U_FLAG}"><img src="{flags.FLAG_IMG}" alt="{flags.FLAG_NAME}" title="{flags.FLAG_NAME}" /></a></td>
 				<td style="text-align: center; white-space: nowrap;">
 					&nbsp;<a href="{flags.U_EDIT}">{ICON_EDIT}</a> <a href="{flags.U_DELETE}">{ICON_DELETE}</a>
 				</td>
