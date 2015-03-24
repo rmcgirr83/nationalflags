@@ -141,10 +141,10 @@ class main_controller
 		//let's get the flags
 		$sql = 'SELECT f.flag_id, f.flag_name, f.flag_image, COUNT(u.user_flag) as user_count
 			FROM ' . $this->flags_table . ' f
-			LEFT JOIN ' . USERS_TABLE . " u on f.flag_id = u.user_flag
-		WHERE u.user_type IN (" . USER_NORMAL . ', ' . USER_FOUNDER . ") AND u.user_flag > 0
+			LEFT JOIN ' . USERS_TABLE . ' u on f.flag_id = u.user_flag
+		WHERE ' . $this->db->sql_in_set('u.user_type', array(USER_NORMAL, USER_FOUNDER)) . ' AND u.user_flag > 0
 		GROUP BY f.flag_id
-		ORDER BY user_count DESC, f.flag_name ASC";
+		ORDER BY user_count DESC, f.flag_name ASC';
 		$result = $this->db->sql_query($sql);
 
 		$flags = array();
