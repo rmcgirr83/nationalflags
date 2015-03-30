@@ -50,7 +50,7 @@ class admin_controller
 	/** @var \phpbb\path_helper */
 	protected $path_helper;
 
-/**
+	/**
 	* The database table the flags are stored in
 	*
 	* @var string
@@ -70,7 +70,7 @@ class admin_controller
 	* @param \phpbb\config\config					$config				Config object
 	* @param \phpbb\db\driver\driver_interface		$db					Database object
 	* @param \phpbb\pagination						$pagination			Pagination object
-	* @param \phpbb\controller\helper           $helper         Controller helper object
+	* @param \phpbb\controller\helper           	$helper         Controller helper object
 	* @param \phpbb\request\request					$request			Request object
 	* @param \phpbb\template\template				$template			Template object
 	* @param \phpbb\user							$user				User object
@@ -135,20 +135,16 @@ class admin_controller
 				trigger_error($this->user->lang['FORM_INVALID'] . adm_back_link($this->u_action));
 			}
 
-			// If no errors, process the form data
-			if (empty($error))
-			{
-				// Set the options the user configured
-				$this->set_options();
+			// Set the options the user configured
+			$this->set_options();
 
-				// Add option settings change action to the admin log
-				$log = $this->container->get('log');
-				$log->add('admin', $this->user->data['user_id'], $this->user->ip, 'FLAG_CONFIG_SAVED');
+			// Add option settings change action to the admin log
+			$log = $this->container->get('log');
+			$log->add('admin', $this->user->data['user_id'], $this->user->ip, 'FLAG_CONFIG_SAVED');
 
-				// Option settings have been updated and logged
-				// Confirm this to the user and provide link back to previous page
-				trigger_error($this->user->lang('FLAG_SETTINGS_CHANGED') . adm_back_link($this->u_action));
-			}
+			// Option settings have been updated and logged
+			// Confirm this to the user and provide link back to previous page
+			trigger_error($this->user->lang('FLAG_SETTINGS_CHANGED') . adm_back_link($this->u_action));
 		}
 
 		// Set output vars for display in the template
@@ -157,9 +153,7 @@ class admin_controller
 			'ALLOW_FLAGS'		=> $this->config['allow_flags'] ? true : false,
 			'FLAGS_REQUIRED'	=> $this->config['flags_required'] ? true : false,
 			'FLAGS_DISPLAY_MSG'	=> $this->config['flags_display_msg'] ? true : false,
-			'ERROR_MSG'			=> (!empty($error)) ? implode('<br />', $error) : '',
 
-			'S_ERROR'			=> (!empty($error)) ? true : false,
 			'U_ACTION'			=> $this->u_action,
 		));
 	}
