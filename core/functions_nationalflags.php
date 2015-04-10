@@ -190,7 +190,7 @@ class functions_nationalflags
 			$this->template->assign_block_vars('flag', array(
 				'FLAG' 			=> $this->get_user_flag($row['user_flag']),
 				'L_FLAG_USERS'	=> ($row['fnum'] == 1) ? sprintf($this->user->lang['FLAG_USER'], $row['fnum']) : sprintf($this->user->lang['FLAG_USERS'], $row['fnum']),
-				'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $flags[$row['user_flag']]['flag_name'])),
+				'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $flags[$row['user_flag']]['flag_id'])),
 			));
 		}
 		$this->db->sql_freeresult($result);

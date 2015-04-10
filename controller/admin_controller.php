@@ -208,7 +208,7 @@ class admin_controller
 				'FLAG_IMG'		=> $this->ext_path_web . 'flags/' . strtolower($row['flag_image']),
 				'FLAG_ID'		=> $row['flag_id'],
 				'USER_COUNT'	=> $user_count,
-				'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $row['flag_name'])),
+				'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $row['flag_id'])),
 				'U_EDIT'		=> $this->u_action . "&amp;flag_id={$row['flag_id']}&amp;action=edit",
 				'U_DELETE'		=> $this->u_action . "&amp;flag_id={$row['flag_id']}&amp;action=delete",)
 			);

@@ -385,7 +385,7 @@ class listener implements EventSubscriberInterface
 
 		$event['post_row'] = array_merge($event['post_row'],array(
 			'USER_FLAG' => $flag,
-			'U_FLAG'	=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $flags[$event['user_poster_data']['user_flag']]['flag_name'])) : '',
+			'U_FLAG'	=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $flags[$event['user_poster_data']['user_flag']]['flag_id'])) : '',
 		));
 	}
 
@@ -413,7 +413,7 @@ class listener implements EventSubscriberInterface
 		$this->template->assign_vars(array(
 			'USER_FLAG'		=> $flag,
 			'S_FLAGS'		=> true,
-			'U_FLAG'		=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $flags[$event['member']['user_flag']]['flag_name'])) : '',
+			'U_FLAG'		=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $flags[$event['member']['user_flag']]['flag_id'])) : '',
 		));
 		}
 	}
@@ -458,7 +458,7 @@ class listener implements EventSubscriberInterface
 
 		$array = array_merge($array, array(
 			'USER_FLAG'		=> $flag,
-			'U_FLAG'		=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $flags[$event['row']['user_flag']]['flag_name'])) : '',
+			'U_FLAG'		=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $flags[$event['row']['user_flag']]['flag_id'])) : '',
 		));
 
 		$event['tpl_ary'] = $array;

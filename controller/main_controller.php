@@ -168,7 +168,7 @@ class main_controller
 			$this->template->assign_block_vars('flag', array(
 				'FLAG' 				=> $flag_image,
 				'FLAG_USER_COUNT'	=> $user_flag_count,
-				'U_FLAG'			=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $row['flag_name'])),
+				'U_FLAG'			=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $row['flag_id'])),
 			));
 		}
 		$this->db->sql_freeresult($result);
@@ -213,7 +213,7 @@ class main_controller
 	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	* @access public
 	*/
-	public function getFlags($flag_name, $page = 0)
+	public function getFlags($flag_id, $page = 0)
 	{
 		// When flags are disabled, redirect users back to the forum index
 		if (empty($this->config['allow_flags']))
@@ -223,13 +223,15 @@ class main_controller
 
 		$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
 
+		$flags = $this->cache->get('_user_flags');
+		$flag_name = $flags[$flag_id]['flag_name'];
 		$page_title = $flag_name;
 		if ($page > 1)
 		{
 			$page_title .= ' - ' . $this->user->lang('PAGE_TITLE_NUMBER', $page);
 		}
 
-		$this->display_flags($flag_name, ($page - 1) * $this->config['posts_per_page'], $this->config['posts_per_page']);
+		$this->display_flags($flag_id, ($page - 1) * $this->config['posts_per_page'], $this->config['posts_per_page']);
 
 		// Send all data to the template file
 		return $this->helper->render('flag_users.html', $page_title);
@@ -244,12 +246,13 @@ class main_controller
 	* @return null
 	* @access public
 	*/
-	protected function display_flags($flag_name, $start, $limit)
+	protected function display_flags($flag_id, $start, $limit)
 	{
+
 		//let's get the flag requested
 		$sql = 'SELECT flag_id, flag_name, flag_image
-			FROM ' . $this->flags_table . "
-			WHERE flag_name = '" . $this->db->sql_escape($flag_name) . "'";
+			FROM ' . $this->flags_table . '
+			WHERE flag_id = ' . (int) $flag_id;
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
@@ -257,7 +260,7 @@ class main_controller
 		if (!$row)
 		{
 			// A flag does not exist..this should never happen
-			trigger_error('NO_USER_HAS_FLAG', E_USER_ERROR);
+			trigger_error('NO_USER_HAS_FLAG');
 		}
 
 		// now users that have the flag
@@ -298,7 +301,7 @@ class main_controller
 				'rmcgirr83_nationalflags_getflags_page',
 			),
 			'params' => array(
-				'flag_name' => $flag_name,
+				'flag_id' => $flag_id,
 			),
 		), 'pagination', 'page', $total_users, $limit, $start);
 
@@ -315,7 +318,7 @@ class main_controller
 		}
 
 		$this->template->assign_vars(array(
-			'FLAG'			=> $row['flag_name'],
+			'FLAG'			=> html_entity_decode($row['flag_name']),
 			'FLAG_IMAGE'	=> $flag_image,
 			'TOTAL_USERS'	=> $total_users,
 			'S_VIEWONLINE'	=> $this->auth->acl_get('u_viewonline'),
@@ -330,7 +333,7 @@ class main_controller
 
 		// Assign breadcrumb template vars for the flags page
 		$this->template->assign_block_vars('navlinks', array(
-			'U_VIEW_FORUM'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_name' => $flag_name)),
+			'U_VIEW_FORUM'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $flag_id)),
 			'FORUM_NAME'		=> $row['flag_name'],
 		));
 	}

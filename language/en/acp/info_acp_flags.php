@@ -43,7 +43,7 @@ $lang = array_merge($lang, array(
 	//Add/Edit Flags
 	'FLAG_EDIT'							=> 'Edit Flag',
 	'FLAG_NAME'							=> 'Flag Name',
-	'FLAG_NAME_EXPLAIN'					=> 'The name of the Flag. The flag title is displayed as it is here.',
+	'FLAG_NAME_EXPLAIN'					=> 'The name of the Flag. The flag will title is displayed as it is here.',
 	'FLAG_IMG'							=> 'Image Name',
 	'FLAG_IMG_EXPLAIN'					=> 'The name of the image. Example: UK.gif. New images should be uploaded to ext/rmcgirr83/nationalflags/flags.',
 	'FLAG_IMAGE'						=> 'Flag Image',
