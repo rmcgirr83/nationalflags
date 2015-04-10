@@ -359,7 +359,7 @@ class main_controller
 
 		$flags = $this->cache->get('_user_flags');
 
-		$flag_img = $this->ext_path . 'flags/' . $flags[$flag_id]['flag_image'];
+		$flag_img = $this->ext_path . 'flags/' . strtolower($flags[$flag_id]['flag_image']);
 		$flag_img = str_replace('./', generate_board_url() . '/', $flag_img); //fix paths
 
 		$flag_name = $flags[$flag_id]['flag_name'];
