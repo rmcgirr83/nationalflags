@@ -18,7 +18,7 @@
 					<dl class="icon">
 						<dt><div class="list-inner">{L_USERNAME}</div></dt>
 						<dd class="topics">{L_POSTS}</dd>
-						<dd class="posts">{L_JOINED}</dd>
+						<dd class="lastpost"><span>{L_JOINED}</span></dd>
 					</dl>
 				</li>
 			</ul>
@@ -34,8 +34,8 @@
 						<dd class="topics">
 							<!-- IF user_row.POSTS and S_DISPLAY_SEARCH --><a href="{user_row.U_SEARCH_USER}" title="{L_SEARCH_USER_POSTS}">{user_row.POSTS}</a><!-- ELSE -->{user_row.POSTS}<!-- ENDIF -->
 						</dd>
-						<dd class="posts" style="width:200px;">
-							{user_row.JOINED}
+						<dd class="lastpost">
+							<span style="margin-top:5px;font-size: 1.2em;">{user_row.JOINED}</span>
 						</dd>
 					</dl>
 				</li>
