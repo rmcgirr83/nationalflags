@@ -208,7 +208,7 @@ class main_controller
 	/**
 	* Display the users of flags page
 	*
-	* @param $flag_name	string	the name of the flag
+	* @param $flag_id	int		the id of the flag
 	* @param $page		int		page number we are on
 	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	* @access public
@@ -231,22 +231,22 @@ class main_controller
 			$page_title .= ' - ' . $this->user->lang('PAGE_TITLE_NUMBER', $page);
 		}
 
-		$this->display_flags($flag_id, ($page - 1) * $this->config['posts_per_page'], $this->config['posts_per_page']);
+		$this->display_flag($flag_id, ($page - 1) * $this->config['posts_per_page'], $this->config['posts_per_page']);
 
 		// Send all data to the template file
 		return $this->helper->render('flag_users.html', $page_title);
 	}
 
 	/**
-	* Display flags
+	* Display flag
 	*
-	* @param $flag_name	string	the name of the flag
+	* @param $flag_id	int		the id of the flag
 	* @param $start		int		page number we start at
 	* @param $limit		int		limit to display for pagination
 	* @return null
 	* @access public
 	*/
-	protected function display_flags($flag_id, $start, $limit)
+	protected function display_flag($flag_id, $start, $limit)
 	{
 
 		//let's get the flag requested
