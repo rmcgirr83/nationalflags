@@ -29,13 +29,13 @@ if (empty($lang) || !is_array($lang))
 // Some characters you may want to copy&paste:
 // ’ » “ ” …
 $lang = array_merge($lang, array(
-	'FLAG'				=> '%s Vlag',
-	'FLAGS'				=> '%s Vlaggen',
-	'USER_FLAG'			=> 'Flag',
+	'FLAG'				=> '%s vlag',
+	'FLAGS'				=> '%s vlaggen',
+	'USER_FLAG'			=> 'Vlag',
 	'NATIONAL_FLAGS'	=> 'Vlaggen',
 	'FLAG_EXPLAIN'		=> 'Kies uw vlag',
 	'USER_NEEDS_FLAG'	=> 'Neem een moment en %svisit your profile%s om een vlag te kiezen.',
-	'FLAGS_VIEWONLINE'	=> 'Bekijk Vlaggen',
+	'FLAGS_VIEWONLINE'	=> 'Bekijk vlaggen',
 	'FLAG_USER'			=> '%s Gebruiker',
 	'FLAG_USERS'		=> '%s Gebruikers',
 	'MUST_CHOOSE_FLAG'	=> 'U moet een vlag kiezen.',
