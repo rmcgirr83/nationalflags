@@ -31,16 +31,16 @@ if (empty($lang) || !is_array($lang))
 // equally where a string contains only two placeholders which are used to wrap text
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 // Some characters you may want to copy&paste:
-// ’ » “ ” …
+// â€™ Â» â€œ â€ â€¦
 
 $lang = array_merge($lang, array(
-	'FLAG'				=> '%s Flag',
-	'FLAGS'				=> '%s Flags',
+	'FLAG'				=> '%s flag',
+	'FLAGS'				=> '%s flags',
 	'USER_FLAG'			=> 'Flag',
 	'NATIONAL_FLAGS'	=> 'Flags',
-	'FLAG_EXPLAIN'		=> 'Choose your Flag',
+	'FLAG_EXPLAIN'		=> 'Choose your flag',
 	'USER_NEEDS_FLAG'	=> 'Please take a moment and %svisit your profile%s to choose a flag.',
-	'FLAGS_VIEWONLINE'	=> 'Viewing Flags',
+	'FLAGS_VIEWONLINE'	=> 'Viewing flags',
 	'FLAG_USER'			=> '%s User',
 	'FLAG_USERS'		=> '%s Users',
 	'MUST_CHOOSE_FLAG'	=> 'You must choose a flag.',
