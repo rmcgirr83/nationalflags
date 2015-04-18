@@ -221,7 +221,7 @@ class listener implements EventSubscriberInterface
 
 		// Request the user option vars and add them to the data array
 		$event['data'] = array_merge($event['data'], array(
-			'user_flag'	=> $this->request->variable('user_flag', $this->user->data['user_flag']),
+			'user_flag'	=> $this->request->variable('user_flag', (int) $this->user->data['user_flag']),
 		));
 
 		$this->display_flag_options($event);
