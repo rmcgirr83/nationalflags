@@ -190,6 +190,7 @@ class main_controller
 		{
 			$countries = sprintf($this->user->lang['FLAGS'], $countries);
 		}
+
 		$this->template->assign_vars(array(
 			'L_FLAGS'	=> $countries . '&nbsp;&nbsp;' . $flag_users,
 			'S_FLAGS'		=> true,
@@ -224,6 +225,13 @@ class main_controller
 		$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
 
 		$flags = $this->cache->get('_user_flags');
+		
+		// ensure our flag id passed actually exists in the cache
+		if (!isset($flags[$flag_id]))
+		{
+			trigger_error('FLAG_NOT_EXIST');
+		}
+		
 		$flag_name = $flags[$flag_id]['flag_name'];
 		$page_title = $flag_name;
 		if ($page > 1)
@@ -307,7 +315,7 @@ class main_controller
 
 		$flag_image = $this->nf_functions->get_user_flag($row['flag_id']);
 		//$flag_image = str_replace('./', generate_board_url() . '/', $flag_image); // Fix paths
-
+		$users_count = $total_users;
 		if ($total_users == 1)
 		{
 			$total_users = sprintf($this->user->lang['FLAG_USER'], $total_users);
@@ -323,6 +331,8 @@ class main_controller
 			'TOTAL_USERS'	=> $total_users,
 			'S_VIEWONLINE'	=> $this->auth->acl_get('u_viewonline'),
 			'S_FLAGS'		=> true,
+			'S_FLAG_USERS'	=> (!empty($users_count)) ? true : false,
+			'MESSAGE_TEXT'	=> (empty($users_count)) ?  $this->user->lang['NO_USER_HAS_FLAG'] : '',
 		));
 
 		// Assign breadcrumb template vars for the flags page
