@@ -11,6 +11,7 @@
 				<!-- ENDIF -->
 			</div>
 		</div>
+		<!-- IF S_FLAG_USERS -->		
 		<div class="forabg">
 			<div class="inner"><span class="corners-top"><span></span></span>
 			<ul class="topiclist">
@@ -43,6 +44,7 @@
 			</ul>
 			<span class="corners-bottom"><span></span></span></div>
 		</div>
+	
 		<div class="action-bar bottom">
 			<div class="pagination">
 				{TOTAL_USERS}
@@ -53,4 +55,11 @@
 				<!-- ENDIF -->
 			</div>
 		</div>
+	<!-- ELSE -->
+	<div id="information" class="rules">
+		<div class="inner">
+			<strong>{L_INFORMATION}{L_COLON}</strong> {MESSAGE_TEXT}
+		</div>
+	</div>
+	<!-- ENDIF -->
 <!-- INCLUDE overall_footer.html -->

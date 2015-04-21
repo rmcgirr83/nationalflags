@@ -323,6 +323,7 @@ class listener implements EventSubscriberInterface
 		{
 			if (strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/flags') === 0)
 			{
+				$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
 				$event['location'] = $this->user->lang('FLAGS_VIEWONLINE');
 				$event['location_url'] = $this->helper->route('rmcgirr83_nationalflags_display');
 			}
@@ -383,6 +384,7 @@ class listener implements EventSubscriberInterface
 		$flag = $this->nf_functions->get_user_flag($event['user_poster_data']['user_flag']);
 		$flags = $this->get_flag_cache();
 
+		$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
 		$event['post_row'] = array_merge($event['post_row'],array(
 			'USER_FLAG' => $flag,
 			'U_FLAG'	=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $flags[$event['user_poster_data']['user_flag']]['flag_id'])) : '',
