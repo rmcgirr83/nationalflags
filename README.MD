@@ -9,6 +9,9 @@ Index Page
 Custom Flag Page
 ![Screenshot](all_flags_of_users.jpg)
 
+Users of a Flag
+![Screenshot](users_of_flag.jpg)
+
 [![Build Status](https://travis-ci.org/RMcGirr83/phpBB-3.1-nationalflags.svg?branch=master)](https://travis-ci.org/RMcGirr83/phpBB-3.1-nationalflags)
 ## Installation
 
