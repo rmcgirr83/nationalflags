@@ -261,12 +261,6 @@ class main_controller
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
 
-		if (!$row)
-		{
-			// A flag does not exist..this should never happen
-			trigger_error('NO_USER_HAS_FLAG');
-		}
-
 		// now users that have the flag
 		$sql = 'SELECT *
 			FROM ' . USERS_TABLE . '
