@@ -221,13 +221,13 @@ class main_controller
 		}
 
 		$flags = $this->cache->get('_user_flags');
-		
+
 		// ensure our flag id passed actually exists in the cache
 		if (!isset($flags[$flag_id]))
 		{
 			trigger_error('FLAG_NOT_EXIST');
 		}
-		
+
 		$flag_name = $flags[$flag_id]['flag_name'];
 		$page_title = $flag_name;
 		if ($page > 1)
