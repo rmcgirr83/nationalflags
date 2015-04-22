@@ -167,8 +167,6 @@ class functions_nationalflags
 	public function top_flags()
 	{
 
-		$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
-
 		// grab all the flags
 		$sql_array = array(
 			'SELECT'	=> 'u.user_flag, COUNT(u.user_flag) AS fnum',

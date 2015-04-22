@@ -155,6 +155,7 @@ class listener implements EventSubscriberInterface
 		}
 		// Need to ensure the flags are cached on page load
 		$this->nf_functions->cache_flags();
+		$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
 	}
 
 	/**
@@ -196,8 +197,6 @@ class listener implements EventSubscriberInterface
 		}
 		if ($this->config['flags_display_msg'] && $this->config['allow_flags'])
 		{
-			$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
-
 			$this->template->assign_vars(array(
 				'S_FLAG_MESSAGE'	=> (empty($this->user->data['user_flag'])) ? true : false,
 				'L_FLAG_PROFILE'	=> $this->user->lang('USER_NEEDS_FLAG', '<a href="' . append_sid("{$this->root_path}ucp.$this->php_ext", 'i=profile') . '">', '</a>'),
@@ -243,8 +242,6 @@ class listener implements EventSubscriberInterface
 
 		if ($event['submit'] && empty($event['data']['user_flag']) && $this->config['flags_required'])
 		{
-			$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
-
 			$array = $event['error'];
 			$array[] = $this->user->lang['MUST_CHOOSE_FLAG'];
 			$event['error'] = $array;
@@ -323,7 +320,6 @@ class listener implements EventSubscriberInterface
 		{
 			if (strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/flags') === 0)
 			{
-				$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
 				$event['location'] = $this->user->lang('FLAGS_VIEWONLINE');
 				$event['location_url'] = $this->helper->route('rmcgirr83_nationalflags_display');
 			}
@@ -384,7 +380,6 @@ class listener implements EventSubscriberInterface
 		$flag = $this->nf_functions->get_user_flag($event['user_poster_data']['user_flag']);
 		$flags = $this->get_flag_cache();
 
-		$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
 		$event['post_row'] = array_merge($event['post_row'],array(
 			'USER_FLAG' => $flag,
 			'U_FLAG'	=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $flags[$event['user_poster_data']['user_flag']]['flag_id'])) : '',
@@ -409,8 +404,6 @@ class listener implements EventSubscriberInterface
 		{
 		$flag = $this->nf_functions->get_user_flag($event['member']['user_flag']);
 		$flags = $this->get_flag_cache();
-
-		$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
 
 		$this->template->assign_vars(array(
 			'USER_FLAG'		=> $flag,
@@ -475,8 +468,6 @@ class listener implements EventSubscriberInterface
 	*/
 	private function display_flag_options($event)
 	{
-		$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
-
 		$flags = $this->get_flag_cache();
 		$flag_name = $flag_image = '';
 		$flag_id = 0;

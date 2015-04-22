@@ -136,8 +136,6 @@ class main_controller
 			redirect(append_sid("{$this->root_path}index.{$this->php_ext}"));
 		}
 
-		$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
-
 		//let's get the flags
 		$sql = 'SELECT f.flag_id, f.flag_name, f.flag_image, COUNT(u.user_flag) as user_count
 			FROM ' . $this->flags_table . ' f
@@ -221,8 +219,6 @@ class main_controller
 		{
 			redirect(append_sid("{$this->root_path}index.{$this->php_ext}"));
 		}
-
-		$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
 
 		$flags = $this->cache->get('_user_flags');
 		
@@ -359,7 +355,6 @@ class main_controller
 	{
 		if (empty($flag_id))
 		{
-			$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
 			if ($this->config['flags_required'])
 			{
 				return new Response($this->user->lang['MUST_CHOOSE_FLAG']);
