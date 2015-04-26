@@ -28,3 +28,10 @@ Go to admin panel -> tab customise -> Manage extensions -> enable National Flags
 
 Within the Admin panel visit the Extensions tab and choose the settings (allow, require on registration, display message) for the extension.
 
+## Update instructions:
+1. Go to you phpBB-Board > Admin Control Panel > Customise > Manage extensions > National Flags: disable
+2. Delete all files of the extension from ext/rmcgirr83/nationalflags
+3. Upload all the new files to the same locations
+4. Go to you phpBB-Board > Admin Control Panel > Customise > Manage extensions > National Flags: enable
+5. Purge the board cache
+
