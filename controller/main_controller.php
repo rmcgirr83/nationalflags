@@ -225,7 +225,7 @@ class main_controller
 		// ensure our flag id passed actually exists in the cache
 		if (!isset($flags[$flag_id]))
 		{
-			trigger_error('FLAG_NOT_EXIST');
+			throw new \RunTimeException($this->user->lang('FLAG_NOT_EXIST'));
 		}
 
 		$flag_name = $flags[$flag_id]['flag_name'];
