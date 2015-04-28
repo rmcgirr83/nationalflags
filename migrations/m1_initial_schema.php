@@ -36,7 +36,8 @@ class m1_initial_schema extends \phpbb\db\migration\migration
 						'flag_name' => array('VCHAR_UNI:255', ''),
 						'flag_image' => array('VCHAR', ''),
 					),
-					'PRIMARY_KEY'        => 'flag_id',
+					'PRIMARY_KEY'	=> array('flag_id'),
+					'KEYS'			=> array('UNIQUE', array('flag_id')),
 					),
 			),
 		);

@@ -1,6 +1,7 @@
 <!-- INCLUDE overall_header.html -->
 
 <h2 class="solo" id="flagusers">{FLAG_IMAGE} {FLAG}</h2>
+		<!-- IF S_FLAG_USERS -->
 		<div class="action-bar top">
 			<div class="pagination">
 				{TOTAL_USERS} 
@@ -11,7 +12,7 @@
 				<!-- ENDIF -->
 			</div>
 		</div>
-		<!-- IF S_FLAG_USERS -->		
+		
 		<div class="forabg">
 			<div class="inner"><span class="corners-top"><span></span></span>
 			<ul class="topiclist">
@@ -56,9 +57,10 @@
 			</div>
 		</div>
 	<!-- ELSE -->
-	<div id="information" class="rules">
+	<div class="panel" id="message">
 		<div class="inner">
-			<strong>{L_INFORMATION}{L_COLON}</strong> {MESSAGE_TEXT}
+			<h2 class="message-title">{L_INFORMATION}</h2>
+			<p>{MESSAGE_TEXT}</p>
 		</div>
 	</div>
 	<!-- ENDIF -->
