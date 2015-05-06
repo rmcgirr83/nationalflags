@@ -238,7 +238,7 @@ class admin_controller
 		$errors = array();
 
 		$flag_row = array(
-			'flag_name'			=> utf8_normalize_nfc($this->request->variable('flag_name', '', true)),
+			'flag_name'			=> ucfirst(utf8_normalize_nfc($this->request->variable('flag_name', '', true))),
 			'flag_image'		=> $this->request->variable('flag_image', ''),
 		);
 
