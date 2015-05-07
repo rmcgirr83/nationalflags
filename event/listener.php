@@ -131,12 +131,14 @@ class listener implements EventSubscriberInterface
 			'core.acp_users_modify_profile'				=> 'acp_user_flag_profile',
 			'core.acp_users_profile_modify_sql_ary'		=> 'user_flag_profile_sql',
 			'core.viewonline_overwrite_location'		=> 'viewonline_page',
+			'core.viewtopic_assign_template_vars_before'	=> 'viewtopic_template_vars_before',
 			'core.viewtopic_cache_user_data'			=> 'viewtopic_cache_user_data',
 			'core.viewtopic_cache_guest_data'			=> 'viewtopic_cache_guest_data',
 			'core.viewtopic_modify_post_row'			=> 'viewtopic_modify_post_row',
 			'core.memberlist_view_profile'				=> 'memberlist_view_profile',
 			'core.search_get_posts_data'				=> 'search_get_posts_data',
 			'core.search_modify_tpl_ary'				=> 'search_modify_tpl_ary',
+			'core.search_results_modify_search_title'	=> 'search_modify_search_title',
 		);
 	}
 
@@ -327,6 +329,24 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
+	* Load the css file
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
+	public function viewtopic_template_vars_before($event)
+	{
+		if (empty($this->config['allow_flags']))
+		{
+			return;
+		}
+
+		$this->template->assign_vars(array(
+			'S_FLAGS'		=> true,
+		));
+	}
+	/**
 	* Update viewtopic user data
 	*
 	* @param object $event The event object
@@ -459,6 +479,24 @@ class listener implements EventSubscriberInterface
 		$event['tpl_ary'] = $array;
 	}
 
+	/**
+	* Search modify search title
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
+	public function search_modify_search_title($event)
+	{
+		if (empty($this->config['allow_flags']) || $event['show_results'] == 'topics')
+		{
+			return;
+		}
+
+		$this->template->assign_vars(array(
+			'S_FLAGS'		=> true,
+		));
+	}
 	/**
 	* Display flag for user selection
 	*
