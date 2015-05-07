@@ -22,10 +22,6 @@ div.flags {
    background-color: #eef5f9;
 }
 
-#flagusers img {
-	vertical-align: middle;
-}
-
 .flagusers {
     font-size: 1.2em;
     line-height: 2.2em;
@@ -36,7 +32,8 @@ div.flags {
 	margin-top: -6px;
 }
 	
-#flag_image {
+.flag_image {
 	font-size: 12px;
 	height: 32px;
+	vertical-align:middle;
 }

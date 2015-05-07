@@ -366,7 +366,7 @@ class main_controller
 
 		$flag_name = $flags[$flag_id]['flag_name'];
 
-		$return = '<img src="' . $flag_img . '" alt="' . $flag_name .'" title="' . $flag_name .'" style="vertical-align:middle;" />';
+		$return = '<img class="flag_image" src="' . $flag_img . '" alt="' . $flag_name .'" title="' . $flag_name .'" />';
 
 		return new Response($return);
 	}
