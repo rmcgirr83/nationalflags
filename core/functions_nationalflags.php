@@ -167,6 +167,8 @@ class functions_nationalflags
 	public function top_flags()
 	{
 
+		$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
+
 		// grab all the flags
 		$sql_array = array(
 			'SELECT'	=> 'u.user_flag, COUNT(u.user_flag) AS fnum',
@@ -177,7 +179,7 @@ class functions_nationalflags
 		);
 
 		// we limit the number of flags to display to 15
-		$result = $this->db->sql_query_limit($this->db->sql_build_query('SELECT', $sql_array), 15);
+		$result = $this->db->sql_query_limit($this->db->sql_build_query('SELECT', $sql_array), 10);
 
 		$count = 0;
 		$flags = $this->cache->get('_user_flags');

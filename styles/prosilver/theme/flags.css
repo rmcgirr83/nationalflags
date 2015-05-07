@@ -10,7 +10,8 @@ ul.flags li {
     font-size: inherit;
     line-height: inherit;
 	padding-bottom: 2px;
-	width: 6%;
+	width: 8%;
+	white-space: nowrap;
 }
 
 ul.flags li.flagslist {
