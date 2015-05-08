@@ -33,5 +33,3 @@ Within the Admin panel visit the Extensions tab and choose the settings (allow, 
 2. Delete all files of the extension from ext/rmcgirr83/nationalflags
 3. Upload all the new files to the same locations
 4. Go to you phpBB-Board > Admin Control Panel > Customise > Manage extensions > National Flags: enable
-5. Purge the board cache
-
