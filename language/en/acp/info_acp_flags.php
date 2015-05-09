@@ -37,7 +37,7 @@ $lang = array_merge($lang, array(
 	//Module and page titles
 	'ACP_CAT_FLAGS'						=> 'National Flags',
 	'ACP_FLAGS'							=> 'National Flags',
-	'ACP_FLAGS_EXPLAIN'					=> 'Here you can add/edit and delete the different flags. <strong>If you want to use images you should upload them to ext/rmcgirr83/nationalflags/flags before you add the new Flag.</strong>',
+	'ACP_FLAGS_EXPLAIN'					=> 'Here you can add/edit and delete the different flags. <strong>If you want to use images you should upload them to ext/rmcgirr83/nationalflags/flags before you add the new Flag.  The flag must have a lower case name, ie uk.gif</strong>',
 	'ACP_FLAGS_DONATE'					=> 'Please consider a <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=S4UTZ9YNKEDDN" onclick="window.open(this.href); return false;"><strong>Donation</strong></a> if you like the Extension',
 	'ACP_FLAG_USERS'					=> 'Number of Users',
 
