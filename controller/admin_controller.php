@@ -51,10 +51,10 @@ class admin_controller
 	protected $path_helper;
 
 	/**
-	* The database table the flags are stored in
-	*
-	* @var string
-	*/
+	 * The database table the flags are stored in
+	 *
+	 * @var string
+	 */
 	protected $flags_table;
 
 	/* @var \rmcgirr83\nationalflags\core\functions_nationalflags */
@@ -75,10 +75,10 @@ class admin_controller
 	* @param \phpbb\template\template				$template			Template object
 	* @param \phpbb\user							$user				User object
 	* @param ContainerInterface						$container			Service container interface
-	* @param \phpbb\extension\manager				$manager			Extension manager object
+	* @param \phpbb\extension\manager				$ext_manager			Extension manager object
 	* @param \phpbb\path_helper						$path_helper		Path helper object
 	* @param string									$flags_table		Name of the table used to store flag data
-	* @param \rmcgirr83\nationalflage\core\functions_nationalflags	$nf_functions	Functions for the extension
+	* @param \rmcgirr83\nationalflage\core\functions_nationalflags	$functions	Functions for the extension
 	* @return \rmcgirr83\nationalflags\controller\admin_controller
 	* @access public
 	*/
@@ -111,16 +111,16 @@ class admin_controller
 		$this->flags_table = $flags_table;
 		$this->nf_functions = $functions;
 
-		$this->ext_path		 = $this->ext_manager->get_extension_path('rmcgirr83/nationalflags', true);
-		$this->ext_path_web	 = $this->path_helper->update_web_root_path($this->ext_path);
+		$this->ext_path = $this->ext_manager->get_extension_path('rmcgirr83/nationalflags', true);
+		$this->ext_path_web = $this->path_helper->update_web_root_path($this->ext_path);
 	}
 
 	/**
-	* Display the options a user can configure for this extension
-	*
-	* @return null
-	* @access public
-	*/
+	 * Display the options a user can configure for this extension
+	 *
+	 * @return null
+	 * @access public
+	 */
 	public function display_options()
 	{
 		// Create a form key for preventing CSRF attacks
@@ -159,11 +159,11 @@ class admin_controller
 	}
 
 	/**
-	* Set the options a user can configure
-	*
-	* @return null
-	* @access protected
-	*/
+	 * Set the options a user can configure
+	 *
+	 * @return null
+	 * @access protected
+	 */
 	protected function set_options()
 	{
 		$this->config->set('allow_flags', $this->request->variable('allow_flags', 0));
@@ -172,11 +172,11 @@ class admin_controller
 	}
 
 	/**
-	* Display the flags
-	*
-	* @return null
-	* @access public
-	*/
+	 * Display the flags
+	 *
+	 * @return null
+	 * @access public
+	 */
 	public function display_flags()
 	{
 		$start = $this->request->variable('start', 0);
@@ -225,11 +225,11 @@ class admin_controller
 	}
 
 	/**
-	* Add a flag
-	*
-	* @return null
-	* @access public
-	*/
+	 * Add a flag
+	 *
+	 * @return null
+	 * @access public
+	 */
 	public function add_flag()
 	{
 		// Add form key
@@ -275,12 +275,12 @@ class admin_controller
 	}
 
 	/**
-	* Edit a flag
-	*
-	* @param int $flag_id The flag identifier to edit
-	* @return null
-	* @access public
-	*/
+	 * Edit a flag
+	 *
+	 * @param int $flag_id The flag identifier to edit
+	 * @return null
+	 * @access public
+	 */
 	public function edit_flag($flag_id)
 	{
 		// Add form key
@@ -343,12 +343,12 @@ class admin_controller
 	}
 
 	/**
-	* Delete a flag
-	*
-	* @param int $flag_id The flag identifier to delete
-	* @return null
-	* @access public
-	*/
+	 * Delete a flag
+	 *
+	 * @param int $flag_id The flag identifier to delete
+	 * @return null
+	 * @access public
+	 */
 	public function delete_flag($flag_id)
 	{
 		if (confirm_box(true))
@@ -452,12 +452,12 @@ class admin_controller
 	}
 
 	/**
-	* Set page url
-	*
-	* @param string $u_action Custom form action
-	* @return null
-	* @access public
-	*/
+	 * Set page url
+	 *
+	 * @param string $u_action Custom form action
+	 * @return null
+	 * @access public
+	 */
 	public function set_page_url($u_action)
 	{
 		$this->u_action = $u_action;

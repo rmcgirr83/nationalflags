@@ -76,14 +76,14 @@ class main_controller
 	* @param \phpbb\pagination					$pagination		Pagination object
 	* @param \phpbb\controller\helper           $helper         Controller helper object
 	* @param \phpbb\request\request				$request		Request object
-	* @param \phpbb\extension\manager			$manager		Extension manager object
+	* @param \phpbb\extension\manager			$ext_manager		Extension manager object
 	* @param \phpbb\path_helper					$path_helper	Path helper object
 	* @param \phpbb\template\template           $template       Template object
 	* @param \phpbb\user                        $user           User object
 	* @param string                             $root_path      phpBB root path
 	* @param string                             $php_ext        phpEx
 	* @param string								$flags_table	Name of the table used to store flag data
-	* @param \rmcgirr83\nationalflags\functions	$nf_functions	functions to be used by class
+	* @param \rmcgirr83\nationalflags\functions	$functions	functions to be used by class
 	* @access public
 	*/
 	public function __construct(
@@ -119,15 +119,15 @@ class main_controller
 		$this->flags_table = $flags_table;
 		$this->nf_functions = $functions;
 
-		$this->ext_path		 = $this->ext_manager->get_extension_path('rmcgirr83/nationalflags', true);
+		$this->ext_path = $this->ext_manager->get_extension_path('rmcgirr83/nationalflags', true);
 	}
 
 	/**
-	* Display the flags page
-	*
-	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
-	* @access public
-	*/
+	 * Display the flags page
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 * @access public
+	 */
 	public function displayFlags()
 	{
 		// When flags are disabled, redirect users back to the forum index
@@ -205,13 +205,13 @@ class main_controller
 	}
 
 	/**
-	* Display the users of flags page
-	*
-	* @param $flag_id	int		the id of the flag
-	* @param $page		int		page number we are on
-	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
-	* @access public
-	*/
+	 * Display the users of flags page
+	 *
+	 * @param $flag_id	int		the id of the flag
+	 * @param $page		int		page number we are on
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 * @access public
+	 */
 	public function getFlags($flag_id, $page = 0)
 	{
 		// When flags are disabled, redirect users back to the forum index
@@ -242,14 +242,14 @@ class main_controller
 	}
 
 	/**
-	* Display flag
-	*
-	* @param $flag_id	int		the id of the flag
-	* @param $start		int		page number we start at
-	* @param $limit		int		limit to display for pagination
-	* @return null
-	* @access public
-	*/
+	 * Display flag
+	 *
+	 * @param $flag_id	int		the id of the flag
+	 * @param $start		int		page number we start at
+	 * @param $limit		int		limit to display for pagination
+	 * @return null
+	 * @access public
+	 */
 	protected function display_flag($flag_id, $start, $limit)
 	{
 
@@ -265,7 +265,7 @@ class main_controller
 		$sql = 'SELECT *
 			FROM ' . USERS_TABLE . '
 			WHERE user_flag = ' . (int) $row['flag_id'] . '
-				AND ' . $this->db->sql_in_set ('user_type', array(USER_NORMAL, USER_FOUNDER)) . '
+				AND ' . $this->db->sql_in_set('user_type', array(USER_NORMAL, USER_FOUNDER)) . '
 			ORDER BY username_clean';
 		$result = $this->db->sql_query_limit($sql, $limit, $start);
 		$rows = $this->db->sql_fetchrowset($result);
@@ -322,7 +322,7 @@ class main_controller
 			'S_VIEWONLINE'	=> $this->auth->acl_get('u_viewonline'),
 			'S_FLAGS'		=> true,
 			'S_FLAG_USERS'	=> (!empty($users_count)) ? true : false,
-			'MESSAGE_TEXT'	=> (empty($users_count)) ?  $this->user->lang['NO_USER_HAS_FLAG'] : '',
+			'MESSAGE_TEXT'	=> (empty($users_count)) ? $this->user->lang['NO_USER_HAS_FLAG'] : '',
 		));
 
 		// Assign breadcrumb template vars for the flags page
@@ -366,7 +366,7 @@ class main_controller
 
 		$flag_name = $flags[$flag_id]['flag_name'];
 
-		$return = '<img class="flag_image" src="' . $flag_img . '" alt="' . $flag_name .'" title="' . $flag_name .'" />';
+		$return = '<img class="flag_image" src="' . $flag_img . '" alt="' . $flag_name . '" title="' . $flag_name . '" />';
 
 		return new Response($return);
 	}
