@@ -83,7 +83,7 @@ class main_controller
 	* @param string                             $root_path      phpBB root path
 	* @param string                             $php_ext        phpEx
 	* @param string								$flags_table	Name of the table used to store flag data
-	* @param \rmcgirr83\nationalflags\functions	$functions	functions to be used by class
+	* @param \rmcgirr83\nationalflags\core\functions_nationalflags	$functions	functions to be used by class
 	* @access public
 	*/
 	public function __construct(
