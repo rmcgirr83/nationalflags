@@ -78,7 +78,7 @@ class admin_controller
 	* @param \phpbb\extension\manager				$ext_manager			Extension manager object
 	* @param \phpbb\path_helper						$path_helper		Path helper object
 	* @param string									$flags_table		Name of the table used to store flag data
-	* @param \rmcgirr83\nationalflage\core\functions_nationalflags	$functions	Functions for the extension
+	* @param \rmcgirr83\nationalflags\core\functions_nationalflags	$functions	Functions for the extension
 	* @return \rmcgirr83\nationalflags\controller\admin_controller
 	* @access public
 	*/

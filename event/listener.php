@@ -70,11 +70,11 @@ class listener implements EventSubscriberInterface
 	* @param \phpbb\request\request				$request		Request object
 	* @param \phpbb\template\template           $template       Template object
 	* @param \phpbb\user                        $user           User object
-	* @param \phpbb\extension\manager			$manager		Extension manager object
+	* @param \phpbb\extension\manager			$ext_manager		Extension manager object
 	* @param \phpbb\path_helper					$path_helper	Path helper object
-	* @param string                             $root_path      phpBB root path
+	* @param string                             $phpbb_root_path      phpBB root path
 	* @param string                             $php_ext        phpEx
-	* @param \rmcgirr83\nationalflags\functions	$nf_functions	functions to be used by class
+	* @param \rmcgirr83\nationalflags\functions	$functions	functions to be used by class
 	* @access public
 	*/
 	public function __construct(
@@ -106,16 +106,16 @@ class listener implements EventSubscriberInterface
 		$this->php_ext = $php_ext;
 		$this->nf_functions = $functions;
 
-		$this->ext_path		 = $this->ext_manager->get_extension_path('rmcgirr83/nationalflags', true);
+		$this->ext_path = $this->ext_manager->get_extension_path('rmcgirr83/nationalflags', true);
 	}
 
 	/**
-	* Assign functions defined in this class to event listeners in the core
-	*
-	* @return array
-	* @static
-	* @access public
-	*/
+	 * Assign functions defined in this class to event listeners in the core
+	 *
+	 * @return array
+	 * @static
+	 * @access public
+	 */
 	static public function getSubscribedEvents()
 	{
 		return array(
@@ -143,12 +143,12 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Set up the flags and add the lang vars
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
+	 * Set up the flags and add the lang vars
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
 	public function user_setup($event)
 	{
 		if (empty($this->config['allow_flags']))
@@ -161,12 +161,12 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Set up the flags on the index page
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
+	 * Set up the flags on the index page
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
 	public function index_modify_page_title($event)
 	{
 		if (empty($this->config['allow_flags']))
@@ -178,12 +178,12 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Create URL and message to users if wanted.
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
+	 * Create URL and message to users if wanted.
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
 	public function page_header_after($event)
 	{
 		if (!$this->auth->acl_get('u_chgprofileinfo') || empty($this->config['allow_flags']))
@@ -207,12 +207,12 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Allow users to change their flag
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
+	 * Allow users to change their flag
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
 	public function user_flag_profile($event)
 	{
 		if (empty($this->config['allow_flags']))
@@ -229,12 +229,12 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Validate users changes to their flag
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
+	 * Validate users changes to their flag
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
 	public function user_flag_profile_validate($event)
 	{
 		if (empty($this->config['allow_flags']) || empty($this->config['flags_required']))
@@ -251,12 +251,12 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* User changed their flag so update the database
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
+	 * User changed their flag so update the database
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
 	public function user_flag_profile_sql($event)
 	{
 		if (empty($this->config['allow_flags']))
@@ -269,12 +269,12 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Update registration data
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
+	 * Update registration data
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
 	public function user_flag_registration_sql($event)
 	{
 		if (empty($this->config['allow_flags']))
@@ -288,12 +288,12 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Allow admins to change user flags
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
+	 * Allow admins to change user flags
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
 	public function acp_user_flag_profile($event)
 	{
 		if (empty($this->config['allow_flags']))
@@ -303,19 +303,19 @@ class listener implements EventSubscriberInterface
 
 		// Request the user option vars and add them to the data array
 		$event['data'] = array_merge($event['data'], array(
-			'user_flag'	=> $this->request->variable('user_flag',$event['user_row']['user_flag']),
+			'user_flag'	=> $this->request->variable('user_flag', $event['user_row']['user_flag']),
 		));
 
 		$this->display_flag_options($event);
 	}
 
 	/**
-	* Show users as viewing the flags on Who Is Online page
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
+	 * Show users as viewing the flags on Who Is Online page
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
 	public function viewonline_page($event)
 	{
 		if ($event['on_page'][1] == 'app')
@@ -329,12 +329,12 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Load the css file
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
+	 * Load the css file
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
 	public function viewtopic_template_vars_before($event)
 	{
 		if (empty($this->config['allow_flags']))
@@ -347,12 +347,12 @@ class listener implements EventSubscriberInterface
 		));
 	}
 	/**
-	* Update viewtopic user data
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
+	 * Update viewtopic user data
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
 	public function viewtopic_cache_user_data($event)
 	{
 		if (empty($this->config['allow_flags']))
@@ -366,12 +366,12 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Update viewtopic guest data
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
+	 * Update viewtopic guest data
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
 	public function viewtopic_cache_guest_data($event)
 	{
 		if (empty($this->config['allow_flags']))
@@ -385,12 +385,12 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Modify the viewtopic post row
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
+	 * Modify the viewtopic post row
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
 	public function viewtopic_modify_post_row($event)
 	{
 		if (empty($this->config['allow_flags']))
@@ -400,19 +400,19 @@ class listener implements EventSubscriberInterface
 		$flag = $this->nf_functions->get_user_flag($event['user_poster_data']['user_flag']);
 		$flags = $this->get_flag_cache();
 
-		$event['post_row'] = array_merge($event['post_row'],array(
+		$event['post_row'] = array_merge($event['post_row'], array(
 			'USER_FLAG' => $flag,
 			'U_FLAG'	=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $flags[$event['user_poster_data']['user_flag']]['flag_id'])) : '',
 		));
 	}
 
 	/**
-	* Display flag on viewing user profile
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
+	 * Display flag on viewing user profile
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
 	public function memberlist_view_profile($event)
 	{
 		if (empty($this->config['allow_flags']))
@@ -434,12 +434,12 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Display flag on search
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
+	 * Display flag on search
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
 	public function search_get_posts_data($event)
 	{
 		if (empty($this->config['allow_flags']))
@@ -453,12 +453,12 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Display flag on search
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
+	 * Display flag on search
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
 	public function search_modify_tpl_ary($event)
 	{
 		if (empty($this->config['allow_flags']) || $event['show_results'] == 'topics')
@@ -480,12 +480,12 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Search modify search title
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
+	 * Search modify search title
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
 	public function search_modify_search_title($event)
 	{
 		if (empty($this->config['allow_flags']) || $event['show_results'] == 'topics')
@@ -498,12 +498,12 @@ class listener implements EventSubscriberInterface
 		));
 	}
 	/**
-	* Display flag for user selection
-	*
-	* @param object $event The event object
-	* @return null
-	* @access private
-	*/
+	 * Display flag for user selection
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access private
+	 */
 	private function display_flag_options($event)
 	{
 		$flags = $this->get_flag_cache();
