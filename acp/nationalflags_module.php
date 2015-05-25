@@ -32,7 +32,7 @@ class nationalflags_module
 		$admin_controller->set_page_url($this->u_action);
 
 		// Load the "settings" or "manage" module modes
-		switch($mode)
+		switch ($mode)
 		{
 			case 'config':
 				// Load a template from adm/style for our ACP page
@@ -53,7 +53,7 @@ class nationalflags_module
 				$this->page_title = $user->lang('ACP_FLAGS');
 
 				// Perform any actions submitted by the user
-				switch($action)
+				switch ($action)
 				{
 					case 'add':
 						// Set the page title for our ACP page

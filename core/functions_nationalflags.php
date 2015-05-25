@@ -31,10 +31,10 @@ class functions_nationalflags
 	protected $user;
 
 	/**
-	* The database table the rules are stored in
-	*
-	* @var string
-	*/
+	 * The database table the rules are stored in
+	 *
+	 * @var string
+	 */
 	protected $flags_table;
 
 	/** @var \phpbb\extension\manager "Extension Manager" */
@@ -53,10 +53,8 @@ class functions_nationalflags
 	* @param \phpbb\template\template           $template       Template object
 	* @param \phpbb\user                        $user           User object
 	* @param string								$flags_table	Name of the table used to store flag data
-	* @param \phpbb\extension\manager			$manager		Extension manager object
+	* @param \phpbb\extension\manager			$ext_manager		Extension manager object
 	* @param \phpbb\path_helper					$path_helper	Path helper object
-	* @param \rmcgirr83\nationalflags\functions	$nf_functions	functions to be used by class
-	* @access public
 	*/
 	public function __construct(
 			\phpbb\config\config $config,
@@ -79,14 +77,13 @@ class functions_nationalflags
 		$this->ext_manager	 = $ext_manager;
 		$this->path_helper	 = $path_helper;
 
-		$this->ext_path		 = $this->ext_manager->get_extension_path('rmcgirr83/nationalflags', true);
-		$this->ext_path_web	 = $this->path_helper->update_web_root_path($this->ext_path);
+		$this->ext_path = $this->ext_manager->get_extension_path('rmcgirr83/nationalflags', true);
+		$this->ext_path_web = $this->path_helper->update_web_root_path($this->ext_path);
 	}
 
 	/**
 	 * Get user flag
 	 *
-	 * @param int $row User's flag
 	 * @return string flag
 	 */
 
@@ -96,7 +93,7 @@ class functions_nationalflags
 
 		if ($flag_id)
 		{
-			$flag = '<img class="flag_image" src="' . $this->ext_path_web . 'flags/' . strtolower($flags[$flag_id]['flag_image']) . '" alt="'. htmlspecialchars($flags[$flag_id]['flag_name']) . '" title="'. htmlspecialchars($flags[$flag_id]['flag_name']) . '" />';
+			$flag = '<img class="flag_image" src="' . $this->ext_path_web . 'flags/' . strtolower($flags[$flag_id]['flag_image']) . '" alt="' . htmlspecialchars($flags[$flag_id]['flag_name']) . '" title="' . htmlspecialchars($flags[$flag_id]['flag_name']) . '" />';
 
 			return $flag;
 		}
@@ -192,7 +189,7 @@ class functions_nationalflags
 		}
 		$this->db->sql_freeresult($result);
 
-		if($count)
+		if ($count)
 		{
 			$this->template->assign_vars(array(
 				'U_FLAGS'		=> $this->helper->route('rmcgirr83_nationalflags_display'),
