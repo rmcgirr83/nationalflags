@@ -58,7 +58,7 @@ services:
             - { name: event.listener }
 
     rmcgirr83.nationalflags.functions:
-        class: rmcgirr83\nationalflags\core\functions_nationalflags
+        class: rmcgirr83\nationalflags\core\nationalflags
         arguments:
             - @config
             - @controller.helper

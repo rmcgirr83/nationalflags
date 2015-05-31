@@ -57,8 +57,8 @@ class admin_controller
 	 */
 	protected $flags_table;
 
-	/* @var \rmcgirr83\nationalflags\core\functions_nationalflags */
-	protected $nf_functions;
+	/* @var \rmcgirr83\nationalflags\core\nationalflags */
+	protected $functions;
 
 	/** @var string Custom form action */
 	protected $u_action;
@@ -78,7 +78,7 @@ class admin_controller
 	* @param \phpbb\extension\manager				$ext_manager			Extension manager object
 	* @param \phpbb\path_helper						$path_helper		Path helper object
 	* @param string									$flags_table		Name of the table used to store flag data
-	* @param \rmcgirr83\nationalflags\core\functions_nationalflags	$functions	Functions for the extension
+	* @param \rmcgirr83\nationalflags\core\nationalflags	$functions	Functions for the extension
 	* @return \rmcgirr83\nationalflags\controller\admin_controller
 	* @access public
 	*/
@@ -95,7 +95,7 @@ class admin_controller
 			\phpbb\extension\manager $ext_manager,
 			\phpbb\path_helper $path_helper,
 			$flags_table,
-			\rmcgirr83\nationalflags\core\functions_nationalflags $functions)
+			\rmcgirr83\nationalflags\core\nationalflags $functions)
 	{
 		$this->cache = $cache;
 		$this->config = $config;
@@ -109,7 +109,7 @@ class admin_controller
 		$this->ext_manager	 = $ext_manager;
 		$this->path_helper	 = $path_helper;
 		$this->flags_table = $flags_table;
-		$this->nf_functions = $functions;
+		$this->functions = $functions;
 
 		$this->ext_path = $this->ext_manager->get_extension_path('rmcgirr83/nationalflags', true);
 		$this->ext_path_web = $this->path_helper->update_web_root_path($this->ext_path);
@@ -256,7 +256,7 @@ class admin_controller
 
 				$this->cache->destroy('_user_flags');
 				// cache this data for ever, can only change in ACP
-				$this->nf_functions->cache_flags();
+				$this->functions->cache_flags();
 
 				trigger_error($this->user->lang['MSG_FLAG_ADDED'] . adm_back_link($this->u_action));
 			}
@@ -308,7 +308,7 @@ class admin_controller
 				$log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_FLAG_EDIT', time(), array($flag_row['flag_name']));
 
 				$this->cache->destroy('_user_flags');
-				$this->nf_functions->cache_flags();
+				$this->functions->cache_flags();
 
 				trigger_error($this->user->lang['MSG_FLAG_EDITED'] . adm_back_link($this->u_action));
 			}
@@ -376,7 +376,7 @@ class admin_controller
 			$log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_FLAGS_DELETED', time(), array($flag_row['flag_name']));
 
 			$this->cache->destroy('_user_flags');
-			$this->nf_functions->cache_flags();
+			$this->functions->cache_flags();
 
 			trigger_error($this->user->lang['MSG_FLAGS_DELETED'] . adm_back_link($this->u_action . "&amp;mode=manage"));
 		}

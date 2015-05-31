@@ -9,7 +9,7 @@
 
 namespace rmcgirr83\nationalflags\core;
 
-class functions_nationalflags
+class nationalflags
 {
 
 	/** @var \phpbb\config\config */

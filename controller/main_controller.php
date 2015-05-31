@@ -63,8 +63,8 @@ class main_controller
 	*/
 	protected $flags_table;
 
-	/* @var \rmcgirr83\nationalflags\core\functions_nationalflags */
-	protected $nf_functions;
+	/* @var \rmcgirr83\nationalflags\core\nationalflags */
+	protected $functions;
 
 	/**
 	* Constructor
@@ -83,7 +83,7 @@ class main_controller
 	* @param string                             $root_path      phpBB root path
 	* @param string                             $php_ext        phpEx
 	* @param string								$flags_table	Name of the table used to store flag data
-	* @param \rmcgirr83\nationalflags\core\functions_nationalflags	$functions	functions to be used by class
+	* @param \rmcgirr83\nationalflags\core\nationalflags	$functions	functions to be used by class
 	* @access public
 	*/
 	public function __construct(
@@ -101,7 +101,7 @@ class main_controller
 			$root_path,
 			$php_ext,
 			$flags_table,
-			\rmcgirr83\nationalflags\core\functions_nationalflags $functions)
+			\rmcgirr83\nationalflags\core\nationalflags $functions)
 	{
 		$this->auth = $auth;
 		$this->cache = $cache;
@@ -117,7 +117,7 @@ class main_controller
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 		$this->flags_table = $flags_table;
-		$this->nf_functions = $functions;
+		$this->functions = $functions;
 
 		$this->ext_path = $this->ext_manager->get_extension_path('rmcgirr83/nationalflags', true);
 	}
@@ -161,7 +161,7 @@ class main_controller
 			{
 				$user_flag_count = sprintf($this->user->lang['FLAG_USERS'], $user_count);
 			}
-			$flag_image = $this->nf_functions->get_user_flag($row['flag_id']);
+			$flag_image = $this->functions->get_user_flag($row['flag_id']);
 
 			$this->template->assign_block_vars('flag', array(
 				'FLAG' 				=> $flag_image,
@@ -303,7 +303,7 @@ class main_controller
 			),
 		), 'pagination', 'page', $total_users, $limit, $start);
 
-		$flag_image = $this->nf_functions->get_user_flag($row['flag_id']);
+		$flag_image = $this->functions->get_user_flag($row['flag_id']);
 		//$flag_image = str_replace('./', generate_board_url() . '/', $flag_image); // Fix paths
 		$users_count = $total_users;
 		if ($total_users == 1)

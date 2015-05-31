@@ -56,8 +56,8 @@ class listener implements EventSubscriberInterface
 	/** @var string phpEx */
 	protected $php_ext;
 
-	/* @var \rmcgirr83\nationalflags\core\functions_nationalflags */
-	protected $nf_functions;
+	/* @var \rmcgirr83\nationalflags\core\nationalflags */
+	protected $functions;
 
 	/**
 	* Constructor
@@ -74,7 +74,7 @@ class listener implements EventSubscriberInterface
 	* @param \phpbb\path_helper					$path_helper	Path helper object
 	* @param string                             $phpbb_root_path      phpBB root path
 	* @param string                             $php_ext        phpEx
-	* @param \rmcgirr83\nationalflags\functions	$functions	functions to be used by class
+	* @param \rmcgirr83\nationalflags\core\nationalflags	$functions	functions to be used by class
 	* @access public
 	*/
 	public function __construct(
@@ -90,7 +90,7 @@ class listener implements EventSubscriberInterface
 			\phpbb\path_helper $path_helper,
 			$phpbb_root_path,
 			$php_ext,
-			\rmcgirr83\nationalflags\core\functions_nationalflags $functions)
+			\rmcgirr83\nationalflags\core\nationalflags $functions)
 	{
 		$this->auth = $auth;
 		$this->cache = $cache;
@@ -104,7 +104,7 @@ class listener implements EventSubscriberInterface
 		$this->path_helper	 = $path_helper;
 		$this->root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
-		$this->nf_functions = $functions;
+		$this->functions = $functions;
 
 		$this->ext_path = $this->ext_manager->get_extension_path('rmcgirr83/nationalflags', true);
 	}
@@ -156,7 +156,7 @@ class listener implements EventSubscriberInterface
 			return;
 		}
 		// Need to ensure the flags are cached on page load
-		$this->nf_functions->cache_flags();
+		$this->functions->cache_flags();
 		$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
 	}
 
@@ -174,7 +174,7 @@ class listener implements EventSubscriberInterface
 			return;
 		}
 		//display flags on the index page
-		$this->nf_functions->top_flags();
+		$this->functions->top_flags();
 	}
 
 	/**
@@ -397,7 +397,7 @@ class listener implements EventSubscriberInterface
 		{
 			return;
 		}
-		$flag = $this->nf_functions->get_user_flag($event['user_poster_data']['user_flag']);
+		$flag = $this->functions->get_user_flag($event['user_poster_data']['user_flag']);
 		$flags = $this->get_flag_cache();
 
 		$event['post_row'] = array_merge($event['post_row'], array(
@@ -422,7 +422,7 @@ class listener implements EventSubscriberInterface
 
 		if (!empty($event['member']['user_flag']))
 		{
-		$flag = $this->nf_functions->get_user_flag($event['member']['user_flag']);
+		$flag = $this->functions->get_user_flag($event['member']['user_flag']);
 		$flags = $this->get_flag_cache();
 
 		$this->template->assign_vars(array(
@@ -468,7 +468,7 @@ class listener implements EventSubscriberInterface
 
 		$array = $event['tpl_ary'];
 
-		$flag = $this->nf_functions->get_user_flag($event['row']['user_flag']);
+		$flag = $this->functions->get_user_flag($event['row']['user_flag']);
 		$flags = $this->get_flag_cache();
 
 		$array = array_merge($array, array(
@@ -516,7 +516,7 @@ class listener implements EventSubscriberInterface
 			$flag_id = $flags[$event['data']['user_flag']]['flag_id'];
 		}
 
-		$s_flag_options = $this->nf_functions->list_flags($event['data']['user_flag']);
+		$s_flag_options = $this->functions->list_flags($event['data']['user_flag']);
 
 		$this->template->assign_vars(array(
 			'USER_FLAG'		=> $event['data']['user_flag'],
