@@ -167,7 +167,7 @@ class nationalflags
 		$sql_array = array(
 			'SELECT'	=> 'user_flag, COUNT(user_flag) AS fnum',
 			'FROM'		=> array(USERS_TABLE => 'u'),
-			'WHERE'		=> 'user_flag > 0',
+			'WHERE'		=> $this->db->sql_in_set('user_type', array(USER_NORMAL, USER_FOUNDER)) . ' AND user_flag > 0',
 			'GROUP_BY'	=> 'user_flag',
 			'ORDER_BY'	=> 'fnum DESC',
 		);
