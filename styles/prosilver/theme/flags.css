@@ -18,6 +18,10 @@ ul.flags li.flagslist {
     float: left;
 }
 
+.rtl ul.flags li.flagslist {
+    float: right;
+}
+
 div.flags {
    background-color: #eef5f9;
 }
