@@ -150,6 +150,7 @@ class admin_controller
 		// Set output vars for display in the template
 		$this->template->assign_vars(array(
 			'FLAGS_VERSION' 	=> $this->config['nationalflags_version'],
+			'FLAGS_NUM_DISPLAY'	=> $this->config['flags_num_display'],
 			'ALLOW_FLAGS'		=> $this->config['allow_flags'] ? true : false,
 			'FLAGS_REQUIRED'	=> $this->config['flags_required'] ? true : false,
 			'FLAGS_DISPLAY_MSG'	=> $this->config['flags_display_msg'] ? true : false,
@@ -166,6 +167,7 @@ class admin_controller
 	 */
 	protected function set_options()
 	{
+		$this->config->set('flags_num_display', $this->request->variable('flags_num_display', 0));
 		$this->config->set('allow_flags', $this->request->variable('allow_flags', 0));
 		$this->config->set('flags_required', $this->request->variable('flags_required', 0));
 		$this->config->set('flags_display_msg', $this->request->variable('flags_display_msg', 0));

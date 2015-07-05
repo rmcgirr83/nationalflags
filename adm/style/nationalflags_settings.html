@@ -10,6 +10,10 @@
 			<label><input type="radio" class="radio" name="allow_flags" value="0" <!-- IF not ALLOW_FLAGS -->id="allow_flags" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
 		<dl>
+			<dt><label id="flags_num_display" for="flags_num_display">{L_FLAGS_NUM_DISPLAY}</label><br />{L_FLAGS_NUM_DISPLAY_EXPLAIN}</dt>
+			<dd><input type="text" name="flags_num_display" id="flags_num_display" size="10" value="{FLAGS_NUM_DISPLAY}" /></dd>
+		</dl>
+		<dl>
 			<dt><label for="flags_required">{L_FLAGS_REQUIRED}{L_COLON}</label><br />{L_FLAGS_REQUIRED_EXPLAIN}</dt>
 			<dd><label><input type="radio" class="radio" name="flags_required" value="1" <!-- IF FLAGS_REQUIRED -->id="flags_required" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
 			<label><input type="radio" class="radio" name="flags_required" value="0" <!-- IF not FLAGS_REQUIRED -->id="flags_required" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>

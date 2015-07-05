@@ -172,8 +172,8 @@ class nationalflags
 			'ORDER_BY'	=> 'fnum DESC',
 		);
 
-		// we limit the number of flags to display to 10
-		$result = $this->db->sql_query_limit($this->db->sql_build_query('SELECT', $sql_array), 10);
+		// we limit the number of flags to display to the number set in the ACP settings
+		$result = $this->db->sql_query_limit($this->db->sql_build_query('SELECT', $sql_array), $this->config['flags_num_display']);
 
 		$count = 0;
 		$flags = $this->cache->get('_user_flags');

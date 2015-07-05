@@ -58,7 +58,9 @@ $lang = array_merge($lang, array(
 	'FLAGS_REQUIRED'					=> 'Required field',
 	'FLAGS_REQUIRED_EXPLAIN'			=> 'Choosing Yes here will force new registrants as well as those that visit their user profile to choose a flag',
 	'FLAGS_DISPLAY_MSG'					=> 'Display a message',
-	'FLAGS_DISPLAY_MSG_EXPLAIN'			=> 'Choosing Yes here will display a message on the forum for a user to choose a flag.',
+	'FLAGS_DISPLAY_MSG_EXPLAIN'			=> 'Choosing Yes here will display a message on the forum for a user to choose a flag',
+	'FLAGS_NUM_DISPLAY'					=> 'Number of flags',
+	'FLAGS_NUM_DISPLAY_EXPLAIN'			=> 'The number of flags to display on the index page of the forum',
 
 	//Logs, messages and errors
 	'LOG_FLAGS_DELETED'					=> 'Deleted flag: %1$s',
