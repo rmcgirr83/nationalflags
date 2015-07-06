@@ -84,7 +84,7 @@ class admin_controller
 	* @param \phpbb\extension\manager				$ext_manager		Extension manager object
 	* @param \phpbb\path_helper						$path_helper		Path helper object
 	* @param string                             	$root_path      	phpBB root path
-	* @param string                             	$php_ext        	phpEx	
+	* @param string                             	$php_ext        	phpEx
 	* @param string									$flags_table		Name of the table used to store flag data
 	* @param \rmcgirr83\nationalflags\core\nationalflags	$functions	Functions for the extension
 	* @return \rmcgirr83\nationalflags\controller\admin_controller
@@ -103,7 +103,7 @@ class admin_controller
 			\phpbb\extension\manager $ext_manager,
 			\phpbb\path_helper $path_helper,
 			$root_path,
-			$php_ext,			
+			$php_ext,
 			$flags_table,
 			\rmcgirr83\nationalflags\core\nationalflags $functions)
 	{
@@ -119,7 +119,7 @@ class admin_controller
 		$this->ext_manager	 = $ext_manager;
 		$this->path_helper	 = $path_helper;
 		$this->root_path = $root_path;
-		$this->php_ext = $php_ext;		
+		$this->php_ext = $php_ext;
 		$this->flags_table = $flags_table;
 		$this->functions = $functions;
 
@@ -146,7 +146,7 @@ class admin_controller
 			{
 				trigger_error($this->user->lang['FORM_INVALID'] . adm_back_link($this->u_action));
 			}
-			
+
 			if (!function_exists('validate_data'))
 			{
 				include($this->root_path . 'includes/functions_user.' . $this->php_ext);
@@ -159,7 +159,7 @@ class admin_controller
 			$error = array_map(array($this->user, 'lang'), $error);
 
 			if (!sizeof($error))
-			{			
+			{
 				// Set the options the user configured
 				$this->set_options();
 
@@ -175,7 +175,7 @@ class admin_controller
 
 		// Set output vars for display in the template
 		$this->template->assign_vars(array(
-			'ERROR'				=> isset($error) ? ((sizeof($error)) ? implode('<br />', $error) : '') : '',		
+			'ERROR'				=> isset($error) ? ((sizeof($error)) ? implode('<br />', $error) : '') : '',
 			'FLAGS_VERSION' 	=> $this->config['nationalflags_version'],
 			'FLAGS_NUM_DISPLAY'	=> $this->config['flags_num_display'],
 			'ALLOW_FLAGS'		=> $this->config['allow_flags'] ? true : false,
