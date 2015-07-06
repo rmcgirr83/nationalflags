@@ -2,6 +2,12 @@
 <h1>{L_ACP_FLAG_SETTINGS}</h1>
 <p>{L_FLAGS_VERSION} {FLAGS_VERSION}<br />{L_ACP_FLAGS_DONATE}</p>
 
+<!-- IF ERROR -->
+	<div class="errorbox"><h3>{L_WARNING}</h3>
+		<p>{ERROR}</p>
+	</div>
+<!-- ENDIF -->
+
 <form id="acp_flags_config" method="post" action="{U_ACTION}">
 	<fieldset>
 		<dl>

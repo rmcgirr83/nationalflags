@@ -16,6 +16,8 @@ services:
             - @service_container
             - @ext.manager
             - @path_helper
+            - %core.root_path%
+            - %core.php_ext%			
             - %rmcgirr83.nationalflags.table.nationalflags%
             - @rmcgirr83.nationalflags.functions
 

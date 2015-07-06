@@ -50,6 +50,12 @@ class admin_controller
 	/** @var \phpbb\path_helper */
 	protected $path_helper;
 
+	/** @var string phpBB root path */
+	protected $root_path;
+
+	/** @var string phpEx */
+	protected $php_ext;
+
 	/**
 	 * The database table the flags are stored in
 	 *
@@ -70,13 +76,15 @@ class admin_controller
 	* @param \phpbb\config\config					$config				Config object
 	* @param \phpbb\db\driver\driver_interface		$db					Database object
 	* @param \phpbb\pagination						$pagination			Pagination object
-	* @param \phpbb\controller\helper           	$helper         Controller helper object
+	* @param \phpbb\controller\helper           	$helper         	Controller helper object
 	* @param \phpbb\request\request					$request			Request object
 	* @param \phpbb\template\template				$template			Template object
 	* @param \phpbb\user							$user				User object
 	* @param ContainerInterface						$container			Service container interface
-	* @param \phpbb\extension\manager				$ext_manager			Extension manager object
+	* @param \phpbb\extension\manager				$ext_manager		Extension manager object
 	* @param \phpbb\path_helper						$path_helper		Path helper object
+	* @param string                             	$root_path      	phpBB root path
+	* @param string                             	$php_ext        	phpEx	
 	* @param string									$flags_table		Name of the table used to store flag data
 	* @param \rmcgirr83\nationalflags\core\nationalflags	$functions	Functions for the extension
 	* @return \rmcgirr83\nationalflags\controller\admin_controller
@@ -94,6 +102,8 @@ class admin_controller
 			ContainerInterface $container,
 			\phpbb\extension\manager $ext_manager,
 			\phpbb\path_helper $path_helper,
+			$root_path,
+			$php_ext,			
 			$flags_table,
 			\rmcgirr83\nationalflags\core\nationalflags $functions)
 	{
@@ -108,6 +118,8 @@ class admin_controller
 		$this->container = $container;
 		$this->ext_manager	 = $ext_manager;
 		$this->path_helper	 = $path_helper;
+		$this->root_path = $root_path;
+		$this->php_ext = $php_ext;		
 		$this->flags_table = $flags_table;
 		$this->functions = $functions;
 
@@ -134,21 +146,36 @@ class admin_controller
 			{
 				trigger_error($this->user->lang['FORM_INVALID'] . adm_back_link($this->u_action));
 			}
+			
+			if (!function_exists('validate_data'))
+			{
+				include($this->root_path . 'includes/functions_user.' . $this->php_ext);
+			}
 
-			// Set the options the user configured
-			$this->set_options();
+			$check_row = array('flags_num_display' => $this->request->variable('flags_num_display', 0));
+			$validate_row = array('flags_num_display' => array('num', false, 1, 1000));
+			$error = validate_data($check_row, $validate_row);
+			// Replace "error" strings with their real, localised form
+			$error = array_map(array($this->user, 'lang'), $error);
 
-			// Add option settings change action to the admin log
-			$log = $this->container->get('log');
-			$log->add('admin', $this->user->data['user_id'], $this->user->ip, 'FLAG_CONFIG_SAVED');
+			if (!sizeof($error))
+			{			
+				// Set the options the user configured
+				$this->set_options();
 
-			// Option settings have been updated and logged
-			// Confirm this to the user and provide link back to previous page
-			trigger_error($this->user->lang('FLAG_SETTINGS_CHANGED') . adm_back_link($this->u_action));
+				// Add option settings change action to the admin log
+				$log = $this->container->get('log');
+				$log->add('admin', $this->user->data['user_id'], $this->user->ip, 'FLAG_CONFIG_SAVED');
+
+				// Option settings have been updated and logged
+				// Confirm this to the user and provide link back to previous page
+				trigger_error($this->user->lang('FLAG_SETTINGS_CHANGED') . adm_back_link($this->u_action));
+			}
 		}
 
 		// Set output vars for display in the template
 		$this->template->assign_vars(array(
+			'ERROR'				=> isset($error) ? ((sizeof($error)) ? implode('<br />', $error) : '') : '',		
 			'FLAGS_VERSION' 	=> $this->config['nationalflags_version'],
 			'FLAGS_NUM_DISPLAY'	=> $this->config['flags_num_display'],
 			'ALLOW_FLAGS'		=> $this->config['allow_flags'] ? true : false,
