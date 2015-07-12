@@ -139,6 +139,7 @@ class listener implements EventSubscriberInterface
 			'core.search_get_posts_data'				=> 'search_get_posts_data',
 			'core.search_modify_tpl_ary'				=> 'search_modify_tpl_ary',
 			'core.search_results_modify_search_title'	=> 'search_modify_search_title',
+			'core.ucp_pm_view_messsage'					=> 'ucp_pm_view_messsage',
 		);
 	}
 
@@ -497,6 +498,36 @@ class listener implements EventSubscriberInterface
 			'S_FLAGS'		=> true,
 		));
 	}
+
+	/**
+	 * Display flag on viewing PM's
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
+	public function ucp_pm_view_messsage($event)
+	{
+		if (empty($this->config['allow_flags']))
+		{
+			return;
+		}
+
+		if (!empty($event['user_info']['user_flag']))
+		{
+			$flag = $this->functions->get_user_flag($event['user_info']['user_flag']);
+
+			$array = $event['msg_data'];
+			$array['USER_FLAG'] = $flag;
+			$array['U_FLAG'] = ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $event['user_info']['user_flag'])) : '';
+			$event['msg_data'] = $array;
+
+			$this->template->assign_vars(array(
+				'S_FLAGS'		=> true,
+			));
+		}
+	}
+
 	/**
 	 * Display flag for user selection
 	 *
