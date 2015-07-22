@@ -1,4 +1,4 @@
-sudo: required
+sudo: false
 
 language: php
 
@@ -45,11 +45,11 @@ branches:
     - /^develop-.*$/
 
 before_install:
-  - sudo mkdir travis
+  - mkdir travis
   - git clone "https://github.com/nickvergessen/phpbb-ext-acme-demo.git"
-  - sudo cp phpbb-ext-acme-demo/phpunit.xml.dist ./
-  - sudo cp phpbb-ext-acme-demo/travis/prepare-phpbb.sh travis
-  - sudo rm -rf phpbb-ext-acme-demo
+  - cp phpbb-ext-acme-demo/phpunit.xml.dist ./
+  - cp phpbb-ext-acme-demo/travis/prepare-phpbb.sh travis
+  - rm -rf phpbb-ext-acme-demo
   - composer self-update  
 
 install:
