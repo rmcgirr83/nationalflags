@@ -50,10 +50,10 @@ before_install:
   - sudo cp phpbb-ext-acme-demo/phpunit.xml.dist ./
   - sudo cp phpbb-ext-acme-demo/travis/prepare-phpbb.sh travis
   - sudo rm -rf phpbb-ext-acme-demo
+  - composer self-update  
 
 install:
-  - composer self-update
-  - composer install --no-interaction --prefer-source --dev
+  - composer install --no-interaction --prefer-source
   - travis/prepare-phpbb.sh $EXTNAME $PHPBB_BRANCH
   - cd ../../phpBB3
   - travis/prepare-extension.sh $EXTNAME $PHPBB_BRANCH
