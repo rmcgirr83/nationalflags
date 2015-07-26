@@ -52,7 +52,6 @@ services:
             - @template
             - @user
             - @ext.manager
-            - @path_helper
             - %core.root_path%
             - %core.php_ext%
             - @rmcgirr83.nationalflags.functions

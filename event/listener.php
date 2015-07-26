@@ -47,9 +47,6 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\extension\manager "Extension Manager" */
 	protected $ext_manager;
 
-	/** @var \phpbb\path_helper */
-	protected $path_helper;
-
 	/** @var string phpBB root path */
 	protected $phpbb_root_path;
 
@@ -71,7 +68,6 @@ class listener implements EventSubscriberInterface
 	* @param \phpbb\template\template           $template       Template object
 	* @param \phpbb\user                        $user           User object
 	* @param \phpbb\extension\manager			$ext_manager		Extension manager object
-	* @param \phpbb\path_helper					$path_helper	Path helper object
 	* @param string                             $phpbb_root_path      phpBB root path
 	* @param string                             $php_ext        phpEx
 	* @param \rmcgirr83\nationalflags\core\nationalflags	$functions	functions to be used by class
@@ -87,7 +83,6 @@ class listener implements EventSubscriberInterface
 			\phpbb\template\template $template,
 			\phpbb\user $user,
 			\phpbb\extension\manager $ext_manager,
-			\phpbb\path_helper $path_helper,
 			$phpbb_root_path,
 			$php_ext,
 			\rmcgirr83\nationalflags\core\nationalflags $functions)
@@ -101,7 +96,6 @@ class listener implements EventSubscriberInterface
 		$this->template = $template;
 		$this->user = $user;
 		$this->ext_manager	 = $ext_manager;
-		$this->path_helper	 = $path_helper;
 		$this->root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
 		$this->functions = $functions;
@@ -555,6 +549,7 @@ class listener implements EventSubscriberInterface
 			'FLAG_NAME'		=> $flag_name,
 			'S_FLAG_OPTIONS'	=> $s_flag_options,
 			'S_FLAGS'			=> true,
+			'S_FLAG_REQUIRED'	=> !empty($this->config['flags_required']) ? true : false,
 			'AJAX_FLAG_INFO' 	=> $this->helper->route('rmcgirr83_nationalflags_getflag', array('flag_id' => 'FLAG_ID')),
 		));
 	}
