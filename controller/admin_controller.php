@@ -76,12 +76,12 @@ class admin_controller
 	* @param \phpbb\config\config					$config				Config object
 	* @param \phpbb\db\driver\driver_interface		$db					Database object
 	* @param \phpbb\pagination						$pagination			Pagination object
-	* @param \phpbb\controller\helper           	$helper         	Controller helper object
+	* @param \phpbb\controller\helper           	$helper         Controller helper object
 	* @param \phpbb\request\request					$request			Request object
 	* @param \phpbb\template\template				$template			Template object
 	* @param \phpbb\user							$user				User object
 	* @param ContainerInterface						$container			Service container interface
-	* @param \phpbb\extension\manager				$ext_manager		Extension manager object
+	* @param \phpbb\extension\manager				$ext_manager			Extension manager object
 	* @param \phpbb\path_helper						$path_helper		Path helper object
 	* @param string                             	$root_path      	phpBB root path
 	* @param string                             	$php_ext        	phpEx
@@ -178,6 +178,7 @@ class admin_controller
 			'ERROR'				=> isset($error) ? ((sizeof($error)) ? implode('<br />', $error) : '') : '',
 			'FLAGS_VERSION' 	=> $this->config['nationalflags_version'],
 			'FLAGS_NUM_DISPLAY'	=> $this->config['flags_num_display'],
+			'FLAGS_DISPLAY_INDEX'	=> $this->config['flags_display_index'] ? true : false,
 			'ALLOW_FLAGS'		=> $this->config['allow_flags'] ? true : false,
 			'FLAGS_REQUIRED'	=> $this->config['flags_required'] ? true : false,
 			'FLAGS_DISPLAY_MSG'	=> $this->config['flags_display_msg'] ? true : false,
@@ -198,6 +199,7 @@ class admin_controller
 		$this->config->set('allow_flags', $this->request->variable('allow_flags', 0));
 		$this->config->set('flags_required', $this->request->variable('flags_required', 0));
 		$this->config->set('flags_display_msg', $this->request->variable('flags_display_msg', 0));
+		$this->config->set('flags_display_index', $this->request->variable('flags_display_index', 0));
 	}
 
 	/**

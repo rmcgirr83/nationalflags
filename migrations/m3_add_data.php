@@ -25,6 +25,7 @@ class m3_add_data extends \phpbb\db\migration\migration
 	{
 		return array(
 			array('config.add', array('flags_num_display', 10)),
+			array('config.add', array('flags_display_index', true)),
 			array('config.update', array('nationalflags_version', '1.0.1')),
 		);
 	}

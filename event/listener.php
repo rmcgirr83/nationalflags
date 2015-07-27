@@ -164,7 +164,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function index_modify_page_title($event)
 	{
-		if (empty($this->config['allow_flags']))
+		if (empty($this->config['allow_flags']) || !$this->config['flags_display_index'])
 		{
 			return;
 		}

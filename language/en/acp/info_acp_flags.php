@@ -61,6 +61,8 @@ $lang = array_merge($lang, array(
 	'FLAGS_DISPLAY_MSG_EXPLAIN'			=> 'Choosing Yes here will display a message on the forum for a user to choose a flag',
 	'FLAGS_NUM_DISPLAY'					=> 'Number of flags',
 	'FLAGS_NUM_DISPLAY_EXPLAIN'			=> 'The number of flags to display on the index page of the forum',
+	'FLAGS_ON_INDEX'					=> 'Display on Index',
+	'FLAGS_ON_INDEX_EXPLAIN'			=> 'Display a summary of flag users on index page',
 
 	//Logs, messages and errors
 	'LOG_FLAGS_DELETED'					=> 'Deleted flag: %1$s',
