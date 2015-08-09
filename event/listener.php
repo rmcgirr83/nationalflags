@@ -152,7 +152,12 @@ class listener implements EventSubscriberInterface
 		}
 		// Need to ensure the flags are cached on page load
 		$this->functions->cache_flags();
-		$this->user->add_lang_ext('rmcgirr83/nationalflags', 'common');
+		$lang_set_ext = $event['lang_set_ext'];
+		$lang_set_ext[] = array(
+			'ext_name' => 'rmcgirr83/nationalflags',
+			'lang_set' => 'common',
+		);
+		$event['lang_set_ext'] = $lang_set_ext;
 	}
 
 	/**
