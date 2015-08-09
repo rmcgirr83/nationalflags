@@ -24,6 +24,11 @@
 		"display-name": "National Flags",
 		"soft-require": {
 			"phpbb/phpbb": ">=3.1.4-RC1,<3.2.*@dev"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/phpbb_3.1_national_flags",
+            "filename": "version_check"
 		}
 	}
 }
