@@ -304,7 +304,7 @@ class main_controller
 		), 'pagination', 'page', $total_users, $limit, $start);
 
 		$flag_image = $this->functions->get_user_flag($row['flag_id']);
-		//$flag_image = str_replace('./', generate_board_url() . '/', $flag_image); // Fix paths
+
 		$users_count = $total_users;
 		if ($total_users == 1)
 		{

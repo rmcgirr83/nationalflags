@@ -1,8 +1,9 @@
 ul.flags {
     width:100%;
     text-align:center;
-    background-color: #eef5f9;
 	list-style-type: none;
+    background-color: #eef5f9;
+	float: left;
 }
 
 ul.flags li {
