@@ -232,7 +232,7 @@ class admin_controller
 
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$user_count = ($row['user_count'] <> 1) ? sprintf($this->user->lang['FLAG_USERS'], $row['user_count']) : sprintf($this->user->lang['FLAG_USER'], $row['user_count']);
+			$user_count = ($row['user_count'] <> 1) ? $this->user->lang('FLAG_USERS', $row['user_count']) : $this->user->lang('FLAG_USER', $row['user_count']);
 
 			$this->template->assign_block_vars('flags', array(
 				'FLAG_NAME'		=> $row['flag_name'],
@@ -424,7 +424,7 @@ class admin_controller
 			$message = $this->user->lang['MSG_CONFIRM'];
 			if (!empty($row['flag_count']))
 			{
-				$message .= $row['flag_count'] <> 1 ? sprintf($this->user->lang['MSG_FLAGS_CONFIRM_DELETE'], $row['flag_count']) : sprintf($this->user->lang['MSG_FLAG_CONFIRM_DELETE'], $row['flag_count']);
+				$message .= $row['flag_count'] <> 1 ? $this->user->lang('MSG_FLAGS_CONFIRM_DELETE', $row['flag_count']) : $this->user->lang('MSG_FLAG_CONFIRM_DELETE', $row['flag_count']);
 			}
 			confirm_box(false, $message, build_hidden_fields(array(
 				'id'		=> (int) $flag_id,

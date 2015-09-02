@@ -155,11 +155,11 @@ class main_controller
 			$users_count = $users_count + $user_count;
 			if ($user_count == 1)
 			{
-				$user_flag_count = sprintf($this->user->lang['FLAG_USER'], $user_count);
+				$user_flag_count = $this->user->lang('FLAG_USER', $user_count);
 			}
 			else
 			{
-				$user_flag_count = sprintf($this->user->lang['FLAG_USERS'], $user_count);
+				$user_flag_count = $this->user->lang('FLAG_USERS', $user_count);
 			}
 			$flag_image = $this->functions->get_user_flag($row['flag_id']);
 
@@ -173,20 +173,20 @@ class main_controller
 
 		if ($users_count == 1)
 		{
-			$flag_users = sprintf($this->user->lang['FLAG_USER'], $users_count);
+			$flag_users = $this->user->lang('FLAG_USER', $users_count);
 		}
 		else
 		{
-			$flag_users = sprintf($this->user->lang['FLAG_USERS'], $users_count);
+			$flag_users = $this->user->lang('FLAG_USERS', $users_count);
 		}
 
 		if ($countries == 1)
 		{
-			$countries = sprintf($this->user->lang['FLAG'], $countries);
+			$countries = $this->user->lang('FLAG', $countries);
 		}
 		else
 		{
-			$countries = sprintf($this->user->lang['FLAGS'], $countries);
+			$countries = $this->user->lang('FLAGS', $countries);
 		}
 
 		$this->template->assign_vars(array(
@@ -308,11 +308,11 @@ class main_controller
 		$users_count = $total_users;
 		if ($total_users == 1)
 		{
-			$total_users = sprintf($this->user->lang['FLAG_USER'], $total_users);
+			$total_users = $this->user->lang('FLAG_USER', $total_users);
 		}
 		else
 		{
-			$total_users = sprintf($this->user->lang['FLAG_USERS'], $total_users);
+			$total_users = $this->user->lang('FLAG_USERS', $total_users);
 		}
 
 		$this->template->assign_vars(array(
