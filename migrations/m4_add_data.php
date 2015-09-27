@@ -45,7 +45,7 @@ class m4_add_data extends \phpbb\db\migration\migration
 					'flag_image'	=> 'CK.png',
 				),
 				array(
-					'flag_name'		=> 'Curasao',
+					'flag_name'		=> 'Curaçao',
 					'flag_image'	=> 'CW.png',
 				),
 				array(
