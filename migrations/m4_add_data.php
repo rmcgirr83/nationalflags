@@ -98,6 +98,26 @@ class m4_add_data extends \phpbb\db\migration\migration
 				),
 			);
 			$this->db->sql_multi_insert($this->table_prefix . 'flags', $sql_ary);
+
+			$update_ary = array(
+				array(
+					'flag_name'	=> 'Korea South',
+					'flag_image' => 'KR.png',
+				),
+				array(
+					'flag_name'	=> 'Korea North',
+					'flag_image' => 'KP.png',
+				),
+			);
+			foreach ($update_ary as $num => $flag)
+			{
+				$sql = 'UPDATE ' . $this->table_prefix . 'flags
+					SET ' . $this->db->sql_build_array('UPDATE', array(
+								'flag_image'	=> (string) $flag['flag_image'])
+							) . 
+					" WHERE flag_name = '" . (string) $flag['flag_name'] . "'";
+				$this->db->sql_query($sql);
+			}
 		}
 	}
 }

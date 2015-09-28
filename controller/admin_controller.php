@@ -183,6 +183,8 @@ class admin_controller
 			'FLAGS_REQUIRED'	=> $this->config['flags_required'] ? true : false,
 			'FLAGS_DISPLAY_MSG'	=> $this->config['flags_display_msg'] ? true : false,
 
+			'S_FLAGS'			=> true,
+
 			'U_ACTION'			=> $this->u_action,
 		));
 	}
