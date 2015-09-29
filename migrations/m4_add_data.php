@@ -114,7 +114,7 @@ class m4_add_data extends \phpbb\db\migration\migration
 				$sql = 'UPDATE ' . $this->table_prefix . 'flags
 					SET ' . $this->db->sql_build_array('UPDATE', array(
 								'flag_image'	=> (string) $flag['flag_image'])
-							) . 
+							) .
 					" WHERE flag_name = '" . (string) $flag['flag_name'] . "'";
 				$this->db->sql_query($sql);
 			}
