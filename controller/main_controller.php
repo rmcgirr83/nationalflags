@@ -153,14 +153,8 @@ class main_controller
 			$flag_id = $row['flag_id'];
 			$user_count = $row['user_count'];
 			$users_count = $users_count + $user_count;
-			if ($user_count == 1)
-			{
-				$user_flag_count = $this->user->lang('FLAG_USER', $user_count);
-			}
-			else
-			{
-				$user_flag_count = $this->user->lang('FLAG_USERS', $user_count);
-			}
+			$user_flag_count = $this->user->lang('FLAG_USERS', (int) $user_count);
+
 			$flag_image = $this->functions->get_user_flag($row['flag_id']);
 
 			$this->template->assign_block_vars('flag', array(
@@ -171,23 +165,9 @@ class main_controller
 		}
 		$this->db->sql_freeresult($result);
 
-		if ($users_count == 1)
-		{
-			$flag_users = $this->user->lang('FLAG_USER', $users_count);
-		}
-		else
-		{
-			$flag_users = $this->user->lang('FLAG_USERS', $users_count);
-		}
+		$flag_users = $this->user->lang('FLAG_USERS', (int) $users_count);
 
-		if ($countries == 1)
-		{
-			$countries = $this->user->lang('FLAG', $countries);
-		}
-		else
-		{
-			$countries = $this->user->lang('FLAGS', $countries);
-		}
+		$countries = $this->user->lang('FLAGS', (int) $countries);
 
 		$this->template->assign_vars(array(
 			'L_FLAGS'	=> $countries . '&nbsp;&nbsp;' . $flag_users,
@@ -306,14 +286,8 @@ class main_controller
 		$flag_image = $this->functions->get_user_flag($row['flag_id']);
 
 		$users_count = $total_users;
-		if ($total_users == 1)
-		{
-			$total_users = $this->user->lang('FLAG_USER', $total_users);
-		}
-		else
-		{
-			$total_users = $this->user->lang('FLAG_USERS', $total_users);
-		}
+
+		$total_users = $this->user->lang('FLAG_USERS', (int) $total_users);
 
 		$this->template->assign_vars(array(
 			'FLAG'			=> html_entity_decode($row['flag_name']),

@@ -234,7 +234,7 @@ class admin_controller
 
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$user_count = ($row['user_count'] <> 1) ? $this->user->lang('FLAG_USERS', $row['user_count']) : $this->user->lang('FLAG_USER', $row['user_count']);
+			$user_count = $this->user->lang('FLAG_USERS', (int) $row['user_count']);
 
 			$this->template->assign_block_vars('flags', array(
 				'FLAG_NAME'		=> $row['flag_name'],
