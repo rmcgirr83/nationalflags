@@ -1,4 +1,5 @@
 <!-- INCLUDE overall_header.html -->
+<!-- IF S_USER_LOGGED_IN and not S_IS_BOT -->
 <div class="forabg">
 	<div class="inner" id="flagusers">
 		<ul class="topiclist">
@@ -22,4 +23,12 @@
 		</ul>
 	</div>
 </div>
+<!-- ELSE -->
+<div class="panel" id="message">
+	<div class="inner">
+	<h2 class="message-title">{L_INFORMATION}</h2>
+	<p>{L_NOT_AUTHORISED}<br /><br /><a href="{ROOT_PATH}index.php">{L_RETURN_TO_INDEX}</a></p>
+		</div>
+</div>
+<!-- ENDIF -->
 <!-- INCLUDE overall_footer.html -->
