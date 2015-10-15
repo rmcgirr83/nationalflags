@@ -38,9 +38,9 @@ class admin_controller
 
 	/** @var \phpbb\user */
 	protected $user;
-	
+
 	/** @var \phpbb\log\log */
-	protected $log;	
+	protected $log;
 
 	/** @var \phpbb\extension\manager "Extension Manager" */
 	protected $ext_manager;
