@@ -46,15 +46,15 @@ class nationalflags
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\config\config               $config         Config object
-	 * @param \phpbb\controller\helper           $helper         Controller helper object
-	 * @param \phpbb\cache\service				$cache			Cache object
-	 * @param \phpbb\db\driver\driver			$db				Database object
-	 * @param \phpbb\template\template           $template       Template object
-	 * @param \phpbb\user                        $user           User object
-	 * @param string								$flags_table	Name of the table used to store flag data
-	 * @param \phpbb\extension\manager			$ext_manager		Extension manager object
-	 * @param \phpbb\path_helper					$path_helper	Path helper object
+	 * @param \phpbb\config\config			$config				Config object
+	 * @param \phpbb\controller\helper		$helper				Controller helper object
+	 * @param \phpbb\cache\service			$cache				Cache object
+	 * @param \phpbb\db\driver\driver		$db					Database object
+	 * @param \phpbb\template\template		$template			Template object
+	 * @param \phpbb\user					$user				User object
+	 * @param string						$flags_table		Name of the table used to store flag data
+	 * @param \phpbb\extension\manager		$ext_manager		Extension manager object
+	 * @param \phpbb\path_helper			$path_helper		Path helper object
 	 */
 	public function __construct(
 			\phpbb\config\config $config,

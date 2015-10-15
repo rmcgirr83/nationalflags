@@ -10,8 +10,6 @@
 
 namespace rmcgirr83\nationalflags\controller;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 /**
 * Admin controller
 */
@@ -40,9 +38,9 @@ class admin_controller
 
 	/** @var \phpbb\user */
 	protected $user;
-
-	/** @var ContainerInterface */
-	protected $container;
+	
+	/** @var \phpbb\log\log */
+	protected $log;	
 
 	/** @var \phpbb\extension\manager "Extension Manager" */
 	protected $ext_manager;
@@ -76,12 +74,12 @@ class admin_controller
 	* @param \phpbb\config\config					$config				Config object
 	* @param \phpbb\db\driver\driver_interface		$db					Database object
 	* @param \phpbb\pagination						$pagination			Pagination object
-	* @param \phpbb\controller\helper           	$helper         Controller helper object
+	* @param \phpbb\controller\helper           	$helper     	    Controller helper object
 	* @param \phpbb\request\request					$request			Request object
 	* @param \phpbb\template\template				$template			Template object
 	* @param \phpbb\user							$user				User object
-	* @param ContainerInterface						$container			Service container interface
-	* @param \phpbb\extension\manager				$ext_manager			Extension manager object
+	* @param \phpbb\log								$log				Log object
+	* @param \phpbb\extension\manager				$ext_manager		Extension manager object
 	* @param \phpbb\path_helper						$path_helper		Path helper object
 	* @param string                             	$root_path      	phpBB root path
 	* @param string                             	$php_ext        	phpEx
@@ -99,7 +97,7 @@ class admin_controller
 			\phpbb\request\request $request,
 			\phpbb\template\template $template,
 			\phpbb\user $user,
-			ContainerInterface $container,
+			\phpbb\log\log $log,
 			\phpbb\extension\manager $ext_manager,
 			\phpbb\path_helper $path_helper,
 			$root_path,
@@ -115,7 +113,7 @@ class admin_controller
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
-		$this->container = $container;
+		$this->log = $log;
 		$this->ext_manager	 = $ext_manager;
 		$this->path_helper	 = $path_helper;
 		$this->root_path = $root_path;
@@ -164,8 +162,7 @@ class admin_controller
 				$this->set_options();
 
 				// Add option settings change action to the admin log
-				$log = $this->container->get('log');
-				$log->add('admin', $this->user->data['user_id'], $this->user->ip, 'FLAG_CONFIG_SAVED');
+				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'FLAG_CONFIG_SAVED');
 
 				// Option settings have been updated and logged
 				// Confirm this to the user and provide link back to previous page
@@ -228,7 +225,7 @@ class admin_controller
 		// used for pagination
 		$result2 = $this->db->sql_query($sql);
 		$row2 = $this->db->sql_fetchrowset($result2);
-		$total_count = (int) count($row2);
+		$total_count = (int) sizeof($row2);
 		$this->db->sql_freeresult($result2);
 		unset($row2);
 
@@ -284,8 +281,7 @@ class admin_controller
 				$sql = 'INSERT INTO ' . $this->flags_table . ' ' . $this->db->sql_build_array('INSERT', $flag_row);
 				$this->db->sql_query($sql);
 
-				$log = $this->container->get('log');
-				$log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_FLAG_ADD', time(), array($flag_row['flag_name']));
+				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_FLAG_ADD', time(), array($flag_row['flag_name']));
 
 				$this->cache->destroy('_user_flags');
 				// cache this data for ever, can only change in ACP
@@ -337,8 +333,7 @@ class admin_controller
 					WHERE flag_id = ' . (int) $flag_id;
 				$this->db->sql_query($sql);
 
-				$log = $this->container->get('log');
-				$log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_FLAG_EDIT', time(), array($flag_row['flag_name']));
+				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_FLAG_EDIT', time(), array($flag_row['flag_name']));
 
 				$this->cache->destroy('_user_flags');
 				$this->functions->cache_flags();
@@ -405,8 +400,7 @@ class admin_controller
 				WHERE user_flag = ' . (int) $flag_id;
 			$this->db->sql_query($sql);
 
-			$log = $this->container->get('log');
-			$log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_FLAGS_DELETED', time(), array($flag_row['flag_name']));
+			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_FLAGS_DELETED', time(), array($flag_row['flag_name']));
 
 			$this->cache->destroy('_user_flags');
 			$this->functions->cache_flags();

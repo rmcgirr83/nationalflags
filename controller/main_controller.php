@@ -10,6 +10,7 @@
 
 namespace rmcgirr83\nationalflags\controller;
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -125,7 +126,6 @@ class main_controller
 	/**
 	 * Display the flags page
 	 *
-	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 * @access public
 	 */
 	public function displayFlags()
@@ -189,7 +189,6 @@ class main_controller
 	 *
 	 * @param $flag_id	int		the id of the flag
 	 * @param $page		int		page number we are on
-	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 * @access public
 	 */
 	public function getFlags($flag_id, $page = 0)
@@ -205,7 +204,7 @@ class main_controller
 		// ensure our flag id passed actually exists in the cache
 		if (!isset($flags[$flag_id]))
 		{
-			throw new \RunTimeException($this->user->lang('FLAG_NOT_EXIST'));
+			throw new NotFoundHttpException($this->user->lang('FLAG_NOT_EXIST'));
 		}
 
 		$flag_name = $flags[$flag_id]['flag_name'];
@@ -224,7 +223,7 @@ class main_controller
 	/**
 	 * Display flag
 	 *
-	 * @param $flag_id	int		the id of the flag
+	 * @param $flag_id		int		the id of the flag
 	 * @param $start		int		page number we start at
 	 * @param $limit		int		limit to display for pagination
 	 * @return null

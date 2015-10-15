@@ -13,7 +13,7 @@ services:
             - @request
             - @template
             - @user
-            - @service_container
+            - @log
             - @ext.manager
             - @path_helper
             - %core.root_path%
