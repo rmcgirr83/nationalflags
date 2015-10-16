@@ -65,9 +65,9 @@ $lang = array_merge($lang, array(
 	'FLAGS_ON_INDEX_EXPLAIN'			=> 'Display a summary of flag users on index page',
 
 	//Logs, messages and errors
-	'LOG_FLAGS_DELETED'					=> 'Deleted flag: %1$s',
-	'LOG_FLAG_EDIT'						=> 'Updated flag: %1$s',
-	'LOG_FLAG_ADD'						=> 'Added new flag: %1$s',
+	'LOG_FLAGS_DELETED'					=> '<strong>Deleted flag</strong><br />» %1$s',
+	'LOG_FLAG_EDIT'						=> '<strong>Updated flag</strong><br />» %1$s',
+	'LOG_FLAG_ADD'						=> '<strong>Added new flag</strong><br />» %1$s',
 	'MSG_FLAGS_DELETED'					=> 'Flag has been deleted.',
 	'MSG_CONFIRM'						=> 'Are you sure you want to delete this flag?',
 	'MSG_FLAG_CONFIRM_DELETE'			=> '<br /><strong>%d</strong> user has this flag and will have to select a different flag if you choose to delete this one.',
