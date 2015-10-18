@@ -10,7 +10,6 @@
 
 namespace rmcgirr83\nationalflags\controller;
 
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response;
 use phpbb\exception\http_exception;
 
@@ -217,7 +216,7 @@ class main_controller
 		// ensure our flag id passed actually exists in the cache
 		if (!isset($flags[$flag_id]))
 		{
-			throw new NotFoundHttpException($this->user->lang('FLAG_NOT_EXIST'));
+			throw new http_exception(404, 'FLAG_NOT_EXIST');
 		}
 
 		$flag_name = $flags[$flag_id]['flag_name'];
