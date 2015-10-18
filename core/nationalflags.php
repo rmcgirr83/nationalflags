@@ -163,6 +163,12 @@ class nationalflags
 	 */
 	public function top_flags()
 	{
+
+		// If setting in ACP is set to not allow guests and bots to view the flags
+		if (empty($this->config['flags_display_to_guests']) && ($this->user->data['is_bot'] || $this->user->data['user_id'] == ANONYMOUS))
+		{
+			return;
+		}
 		// grab all the flags
 		$sql_array = array(
 			'SELECT'	=> 'user_flag, COUNT(user_flag) AS fnum',

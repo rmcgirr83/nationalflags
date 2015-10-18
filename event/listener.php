@@ -397,6 +397,13 @@ class listener implements EventSubscriberInterface
 		{
 			return;
 		}
+
+		// If setting in ACP is set to not allow guests and bots to view the flags
+		if (empty($this->config['flags_display_to_guests']) && ($this->user->data['is_bot'] || $this->user->data['user_id'] == ANONYMOUS))
+		{
+			return;
+		}
+
 		$flag = $this->functions->get_user_flag($event['user_poster_data']['user_flag']);
 		$flags = $this->get_flag_cache();
 
@@ -422,14 +429,14 @@ class listener implements EventSubscriberInterface
 
 		if (!empty($event['member']['user_flag']))
 		{
-		$flag = $this->functions->get_user_flag($event['member']['user_flag']);
-		$flags = $this->get_flag_cache();
+			$flag = $this->functions->get_user_flag($event['member']['user_flag']);
+			$flags = $this->get_flag_cache();
 
-		$this->template->assign_vars(array(
-			'USER_FLAG'		=> $flag,
-			'S_FLAGS'		=> true,
-			'U_FLAG'		=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $flags[$event['member']['user_flag']]['flag_id'])) : '',
-		));
+			$this->template->assign_vars(array(
+				'USER_FLAG'		=> $flag,
+				'S_FLAGS'		=> true,
+				'U_FLAG'		=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $flags[$event['member']['user_flag']]['flag_id'])) : '',
+			));
 		}
 	}
 

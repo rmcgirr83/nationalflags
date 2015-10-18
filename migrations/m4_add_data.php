@@ -24,7 +24,7 @@ class m4_add_data extends \phpbb\db\migration\migration
 	public function update_data()
 	{
 		return array(
-			array('config.add', array('nationalflags_version', '1.0.2')),
+			array('config.update', array('nationalflags_version', '1.0.2')),
 			array('custom', array(
 				array(&$this, 'flag_update_images')
 			)),

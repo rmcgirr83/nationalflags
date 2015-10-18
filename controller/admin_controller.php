@@ -179,6 +179,7 @@ class admin_controller
 			'ALLOW_FLAGS'		=> $this->config['allow_flags'] ? true : false,
 			'FLAGS_REQUIRED'	=> $this->config['flags_required'] ? true : false,
 			'FLAGS_DISPLAY_MSG'	=> $this->config['flags_display_msg'] ? true : false,
+			'FLAGS_DISPLAY_TO_GUESTS'	=> $this->config['flags_display_to_guests'] ? true : false,
 
 			'S_FLAGS'			=> true,
 
@@ -199,6 +200,7 @@ class admin_controller
 		$this->config->set('flags_required', $this->request->variable('flags_required', 0));
 		$this->config->set('flags_display_msg', $this->request->variable('flags_display_msg', 0));
 		$this->config->set('flags_display_index', $this->request->variable('flags_display_index', 0));
+		$this->config->set('flags_display_to_guests', $this->request->variable('flags_display_to_guests', 0));
 	}
 
 	/**

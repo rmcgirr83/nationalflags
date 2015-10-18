@@ -3,8 +3,8 @@
 	"type": "phpbb-extension",
 	"description": "Allows user to be able to choose a national flag and have a top (those with the most users selecting the flag) number of flags display on the index page of a phpBB 3.1 forum.  Header is link to a listing of all users of a flag.  Clicking on user count of the flag displays the users that have that flag set.  This extension requires at least phpBB version 3.1.4-RC1.",
 	"homepage": "https://github.com/rmcgirr83/phpbb-3.1-nationalflags",	
-	"version": "1.0.2",
-	"time": "2015-09-27",
+	"version": "1.0.3",
+	"time": "2015-10-18",
 	"keywords": ["phpbb", "extension", "flags", "national", "national flags", "user", "communication"],
 	"license": "GPL-2.0",
 	"authors": [

@@ -63,6 +63,8 @@ $lang = array_merge($lang, array(
 	'FLAGS_NUM_DISPLAY_EXPLAIN'			=> 'The number of flags to display on the index page of the forum',
 	'FLAGS_ON_INDEX'					=> 'Display on Index',
 	'FLAGS_ON_INDEX_EXPLAIN'			=> 'Display a summary of flag users on index page',
+	'FLAGS_DISPLAY_TO_GUESTS'			=> 'Display flags to guests',
+	'FLAGS_DISPLAY_TO_GUESTS_EXPLAIN'	=> 'Choosing Yes here will display the flags to guests and bots',
 
 	//Logs, messages and errors
 	'LOG_FLAGS_DELETED'					=> '<strong>Deleted flag</strong><br />» %1$s',

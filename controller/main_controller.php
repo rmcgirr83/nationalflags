@@ -12,6 +12,7 @@ namespace rmcgirr83\nationalflags\controller;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response;
+use phpbb\exception\http_exception;
 
 /**
 * Main controller
@@ -136,6 +137,12 @@ class main_controller
 			redirect(append_sid("{$this->root_path}index.{$this->php_ext}"));
 		}
 
+		// If setting in ACP is set to not allow guests and bots to view the flags
+		if (empty($this->config['flags_display_to_guests']) && ($this->user->data['is_bot'] || $this->user->data['user_id'] == ANONYMOUS))
+		{
+			throw new http_exception(401, 'NOT_AUTHORISED');
+		}
+
 		//let's get the flags
 		$sql = 'SELECT f.flag_id, f.flag_name, f.flag_image, COUNT(u.user_flag) as user_count
 			FROM ' . $this->flags_table . ' f
@@ -197,6 +204,12 @@ class main_controller
 		if (empty($this->config['allow_flags']))
 		{
 			redirect(append_sid("{$this->root_path}index.{$this->php_ext}"));
+		}
+
+		// If setting in ACP is set to not allow guests and bots to view the flags
+		if (empty($this->config['flags_display_to_guests']) && ($this->user->data['is_bot'] || $this->user->data['user_id'] == ANONYMOUS))
+		{
+			throw new http_exception(401, 'NOT_AUTHORISED');
 		}
 
 		$flags = $this->cache->get('_user_flags');
