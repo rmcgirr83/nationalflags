@@ -296,7 +296,7 @@ class admin_controller
 			$upload->set_allowed_extensions(array('gif', 'png', 'jpeg', 'jpg'));
 			$upload->set_allowed_dimensions(false, false, self::MAX_WIDTH, self::MAX_HEIGHT);
 			$file = $upload->form_upload('flag_upload');
-			$file->move_file($upload_dir, false);
+			$file->move_file($upload_dir, true);
 
 			if (sizeof($file->error))
 			{

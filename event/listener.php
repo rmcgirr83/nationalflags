@@ -549,7 +549,7 @@ class listener implements EventSubscriberInterface
 		if ($event['data']['user_flag'])
 		{
 			$flag_name = $flags[$event['data']['user_flag']]['flag_name'];
-			$flag_image = strtolower($flags[$event['data']['user_flag']]['flag_image']);
+			$flag_image = $flags[$event['data']['user_flag']]['flag_image'];
 			$flag_id = $flags[$event['data']['user_flag']]['flag_id'];
 		}
 

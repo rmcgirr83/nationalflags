@@ -93,7 +93,7 @@ class nationalflags
 
 		if ($flag_id)
 		{
-			$flag = '<img class="flag_image" src="' . $this->ext_path_web . 'flags/' . strtolower($flags[$flag_id]['flag_image']) . '" alt="' . $flags[$flag_id]['flag_name'] . '" title="' . $flags[$flag_id]['flag_name'] . '" />';
+			$flag = '<img class="flag_image" src="' . $this->ext_path_web . 'flags/' . $flags[$flag_id]['flag_image'] . '" alt="' . $flags[$flag_id]['flag_name'] . '" title="' . $flags[$flag_id]['flag_name'] . '" />';
 
 			return $flag;
 		}
