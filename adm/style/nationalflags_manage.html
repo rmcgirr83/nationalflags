@@ -1,9 +1,10 @@
 <!-- INCLUDE overall_header.html -->
-<!-- IF S_ADD_FLAG -->
+<!-- IF S_ADD_FLAG or S_EDIT_FLAG-->
 
 <a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
 
-<h1>{L_FLAG_ADD}</h1>
+<h1><!-- IF S_ADD_FLAG -->{L_FLAG_ADD}<!-- ELSE -->{L_FLAG_EDIT}<!-- ENDIF --></h1>
+<!-- IF S_ADD_FLAG and not S_UPLOAD_FLAG --><p>{L_ACP_NO_UPLOAD}</p><!-- ENDIF -->
 <!-- IF S_ERROR -->
 <div class="errorbox">
 	<h3>{L_WARNING}</h3>
@@ -11,16 +12,24 @@
 </div>
 <!-- ENDIF -->
 
-<form id="acp_add_flag" method="post" action="{U_ACTION}">
+<form id="acp_add_flag" method="post" action="{U_ACTION}" {S_FORM_ENCTYPE}>
 	<fieldset>
+		<!-- IF S_UPLOAD_FLAG and not S_EDIT_FLAG-->
+		<dl>
+			<dt><label for="flag_upload">{L_FILENAME}{L_COLON}</label></dt>
+			<dd>
+				<input type="file" name="flag_upload" id="flag_upload" class="inputbox autowidth" />
+			</dd>
+		</dl>
+		<!-- ENDIF -->
 		<dl>
 			<dt><label for="flag_name">{L_FLAG_NAME}{L_COLON}</label><br /><span>{L_FLAG_NAME_EXPLAIN}</span></dt>
 			<dd><input name="flag_name" type="text" id="flag_name" value="{FLAG_NAME}" maxlength="255" /></dd>
 		</dl>
-		<dl>
+		<!-- IF S_ADD_FLAG and not S_UPLOAD_FLAG --><dl>
 			<dt><label for="flag_image">{L_FLAG_IMG}{L_COLON}</label><br /><span>{L_FLAG_IMG_EXPLAIN}</span></dt>
 			<dd><input name="flag_image" type="text" id="flag_image" value="{FLAG_IMAGE}" maxlength="255" /></dd>
-		</dl>
+		</dl><!-- ENDIF -->
 
 		<p class="submit-buttons">
 			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />

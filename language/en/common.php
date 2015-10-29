@@ -35,7 +35,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'FLAGS'				=> array(
-		1 => '1 flag',
+		1 => '%s flag',
 		2 => '%s flags',
 	),
 	'USER_FLAG'			=> 'Flag',
@@ -44,7 +44,7 @@ $lang = array_merge($lang, array(
 	'USER_NEEDS_FLAG'	=> 'Please take a moment and %svisit your profile%s to choose a flag.',
 	'FLAGS_VIEWONLINE'	=> 'Viewing flags',
 	'FLAG_USERS'		=>  array(
-		1 => '1 User',
+		1 => '%s User',
 		2 => '%s Users',
 	),
 	'MUST_CHOOSE_FLAG'	=> 'You must choose a flag.',
