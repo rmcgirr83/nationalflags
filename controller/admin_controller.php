@@ -262,7 +262,7 @@ class admin_controller
 			'S_FLAGS'	=> true,
 		));
 	}
-    
+
 	/**
 	 * Add a flag
 	 *
@@ -284,7 +284,7 @@ class admin_controller
 
 		if ($this->request->is_set_post('submit'))
 		{
-			$errors = $this->check_flag($flag_row['flag_name'], $flag_row['flag_image'], $errors, 'add_flag');
+			$errors = $this->check_flag($flag_row['flag_name'], $errors, 'add_flag', $flag_row['flag_image']);
 			include_once($this->root_path . 'includes/functions_upload.' . $this->php_ext);
 
 			//Set upload directory
@@ -297,7 +297,7 @@ class admin_controller
 			$upload->set_allowed_dimensions(false, false, self::MAX_WIDTH, self::MAX_HEIGHT);
 			$file = $upload->form_upload('flag_upload');
 			$file->move_file($upload_dir, false);
-			
+
 			if (sizeof($file->error))
 			{
 				$file->remove();
@@ -357,7 +357,7 @@ class admin_controller
 
 		if ($this->request->is_set_post('submit'))
 		{
-			$errors = $this->check_flag($flag_row['flag_name'], $flag_row['flag_image'], $errors, 'edit_flag');
+			$errors = $this->check_flag($flag_row['flag_name'], $errors, 'edit_flag', $flag_row['flag_image']);
 
 			if (!sizeof($errors))
 			{
@@ -480,7 +480,7 @@ class admin_controller
 	* @return array
 	* @access private
 	*/
-	private function check_flag($flag_name, $flag_image = false, $errors, $form_key = '')
+	private function check_flag($flag_name, $errors, $form_key = '', $flag_image = false)
 	{
 		if (!check_form_key($form_key))
 		{
