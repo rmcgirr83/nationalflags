@@ -27,10 +27,10 @@ class m6_update_data extends \phpbb\db\migration\migration
 			array('config.update', array('nationalflags_version', '1.0.4')),
 			array('custom', array(
 				array(&$this, 'flag_update_images')
-			)),			
+			)),
 		);
 	}
-	
+
 	public function flag_update_images()
 	{
 		if ($this->db_tools->sql_table_exists($this->table_prefix . 'flags'))
@@ -959,7 +959,7 @@ class m6_update_data extends \phpbb\db\migration\migration
 				array(
 					'flag_name'		=> 'Mayotte',
 					'flag_image'	=> 'yt.png',
-				),				
+				),
 			);
 			foreach ($sql_ary as $num => $flag)
 			{
@@ -971,5 +971,5 @@ class m6_update_data extends \phpbb\db\migration\migration
 				$this->db->sql_query($sql);
 			}
 		}
-	}	
+	}
 }
