@@ -243,19 +243,10 @@ class main_controller
 	 */
 	protected function display_flag($flag_id, $start, $limit)
 	{
-
-		//let's get the flag requested
-		$sql = 'SELECT flag_id, flag_name, flag_image
-			FROM ' . $this->flags_table . '
-			WHERE flag_id = ' . (int) $flag_id;
-		$result = $this->db->sql_query($sql);
-		$row = $this->db->sql_fetchrow($result);
-		$this->db->sql_freeresult($result);
-
-		// now users that have the flag
+		// Get users that have the flag
 		$sql = 'SELECT *
 			FROM ' . USERS_TABLE . '
-			WHERE user_flag = ' . (int) $row['flag_id'] . '
+			WHERE user_flag = ' . (int) $flag_id . '
 				AND ' . $this->db->sql_in_set('user_type', array(USER_NORMAL, USER_FOUNDER)) . '
 			ORDER BY username_clean';
 		$result = $this->db->sql_query_limit($sql, $limit, $start);
@@ -294,14 +285,16 @@ class main_controller
 			),
 		), 'pagination', 'page', $total_users, $limit, $start);
 
-		$flag_image = $this->functions->get_user_flag($row['flag_id']);
+		$flag_image = $this->functions->get_user_flag((int) $flag_id);
 
 		$users_count = $total_users;
 
 		$total_users = $this->user->lang('FLAG_USERS', (int) $total_users);
 
+		$flags_array = $this->cache->get('_user_flags');
+
 		$this->template->assign_vars(array(
-			'FLAG'			=> html_entity_decode($row['flag_name']),
+			'FLAG'			=> html_entity_decode($flags_array[$flag_id]['flag_name']),
 			'FLAG_IMAGE'	=> $flag_image,
 			'TOTAL_USERS'	=> $total_users,
 			'S_VIEWONLINE'	=> $this->auth->acl_get('u_viewonline'),
@@ -319,7 +312,7 @@ class main_controller
 		// Assign breadcrumb template vars for the flags page
 		$this->template->assign_block_vars('navlinks', array(
 			'U_VIEW_FORUM'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $flag_id)),
-			'FORUM_NAME'		=> $row['flag_name'],
+			'FORUM_NAME'		=> html_entity_decode($flags_array[$flag_id]['flag_name']),
 		));
 	}
 
