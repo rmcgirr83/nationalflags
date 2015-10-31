@@ -124,13 +124,13 @@ class main_controller
 	public function displayFlags()
 	{
 		// When flags are disabled, redirect users back to the forum index
-		if (empty($this->config['allow_flags']))
+		if (!$this->functions->is_allowed())
 		{
 			redirect(append_sid("{$this->root_path}index.{$this->php_ext}"));
 		}
 
 		// If setting in ACP is set to not allow guests and bots to view the flags
-		if (empty($this->config['flags_display_to_guests']) && ($this->user->data['is_bot'] || $this->user->data['user_id'] == ANONYMOUS))
+		if (!$this->config['flags_display_to_guests'] && ($this->user->data['is_bot'] || $this->user->data['user_id'] == ANONYMOUS))
 		{
 			throw new http_exception(401, 'NOT_AUTHORISED');
 		}
@@ -193,13 +193,13 @@ class main_controller
 	public function getFlags($flag_id, $page = 0)
 	{
 		// When flags are disabled, redirect users back to the forum index
-		if (empty($this->config['allow_flags']))
+		if (!$this->functions->is_allowed())
 		{
 			redirect(append_sid("{$this->root_path}index.{$this->php_ext}"));
 		}
 
 		// If setting in ACP is set to not allow guests and bots to view the flags
-		if (empty($this->config['flags_display_to_guests']) && ($this->user->data['is_bot'] || $this->user->data['user_id'] == ANONYMOUS))
+		if (!$this->config['flags_display_to_guests'] && ($this->user->data['is_bot'] || $this->user->data['user_id'] == ANONYMOUS))
 		{
 			throw new http_exception(401, 'NOT_AUTHORISED');
 		}
