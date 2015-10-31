@@ -23,9 +23,6 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\auth\auth */
 	protected $auth;
 
-	/** @var \phpbb\cache\service */
-	protected $cache;
-
 	/** @var \phpbb\config\config */
 	protected $config;
 
@@ -60,7 +57,6 @@ class listener implements EventSubscriberInterface
 	* Constructor
 	*
 	* @param \phpbb\auth\auth					$auth			Auth object
-	* @param \phpbb\cache\service				$cache			Cache object
 	* @param \phpbb\config\config               $config         Config object
 	* @param \phpbb\controller\helper           $helper         Controller helper object
 	* @param \phpbb\db\driver\driver			$db				Database object
@@ -75,7 +71,6 @@ class listener implements EventSubscriberInterface
 	*/
 	public function __construct(
 			\phpbb\auth\auth $auth,
-			\phpbb\cache\service $cache,
 			\phpbb\config\config $config,
 			\phpbb\controller\helper $helper,
 			\phpbb\db\driver\driver_interface $db,
@@ -88,7 +83,6 @@ class listener implements EventSubscriberInterface
 			\rmcgirr83\nationalflags\core\nationalflags $functions)
 	{
 		$this->auth = $auth;
-		$this->cache = $cache;
 		$this->config = $config;
 		$this->helper = $helper;
 		$this->db = $db;
@@ -146,7 +140,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function user_setup($event)
 	{
-		if (empty($this->config['allow_flags']))
+		if (!$this->functions->is_allowed())
 		{
 			return;
 		}
@@ -169,7 +163,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function index_modify_page_title($event)
 	{
-		if (empty($this->config['allow_flags']) || !$this->config['flags_display_index'])
+		if (!$this->functions->is_allowed() || !$this->config['flags_display_index'])
 		{
 			return;
 		}
@@ -186,7 +180,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function page_header_after($event)
 	{
-		if (!$this->auth->acl_get('u_chgprofileinfo') || empty($this->config['allow_flags']))
+		if (!$this->auth->acl_get('u_chgprofileinfo') || !$this->functions->is_allowed())
 		{
 			return;
 		}
@@ -197,7 +191,7 @@ class listener implements EventSubscriberInterface
 		{
 			return;
 		}
-		if ($this->config['flags_display_msg'] && $this->config['allow_flags'])
+		if ($this->config['flags_display_msg'] && !$this->functions->is_allowed())
 		{
 			$this->template->assign_vars(array(
 				'S_FLAG_MESSAGE'	=> (empty($this->user->data['user_flag'])) ? true : false,
@@ -215,7 +209,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function user_flag_profile($event)
 	{
-		if (empty($this->config['allow_flags']))
+		if (!$this->functions->is_allowed())
 		{
 			return;
 		}
@@ -237,7 +231,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function user_flag_profile_validate($event)
 	{
-		if (empty($this->config['allow_flags']) || empty($this->config['flags_required']))
+		if (!$this->functions->is_allowed() || empty($this->config['flags_required']))
 		{
 			return;
 		}
@@ -259,7 +253,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function user_flag_profile_sql($event)
 	{
-		if (empty($this->config['allow_flags']))
+		if (!$this->functions->is_allowed())
 		{
 			return;
 		}
@@ -277,7 +271,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function user_flag_registration_sql($event)
 	{
-		if (empty($this->config['allow_flags']))
+		if (!$this->functions->is_allowed())
 		{
 			return;
 		}
@@ -296,7 +290,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function acp_user_flag_profile($event)
 	{
-		if (empty($this->config['allow_flags']))
+		if (!$this->functions->is_allowed())
 		{
 			return;
 		}
@@ -337,7 +331,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function viewtopic_template_vars_before($event)
 	{
-		if (empty($this->config['allow_flags']))
+		if (!$this->functions->is_allowed())
 		{
 			return;
 		}
@@ -355,7 +349,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function viewtopic_cache_user_data($event)
 	{
-		if (empty($this->config['allow_flags']))
+		if (!$this->functions->is_allowed())
 		{
 			return;
 		}
@@ -374,7 +368,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function viewtopic_cache_guest_data($event)
 	{
-		if (empty($this->config['allow_flags']))
+		if (!$this->functions->is_allowed())
 		{
 			return;
 		}
@@ -393,7 +387,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function viewtopic_modify_post_row($event)
 	{
-		if (empty($this->config['allow_flags']))
+		if (!$this->functions->is_allowed())
 		{
 			return;
 		}
@@ -405,7 +399,7 @@ class listener implements EventSubscriberInterface
 		}
 
 		$flag = $this->functions->get_user_flag($event['user_poster_data']['user_flag']);
-		$flags = $this->get_flag_cache();
+		$flags = $this->functions->get_flag_cache();
 
 		$event['post_row'] = array_merge($event['post_row'], array(
 			'USER_FLAG' => $flag,
@@ -422,7 +416,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function memberlist_view_profile($event)
 	{
-		if (empty($this->config['allow_flags']))
+		if (!$this->functions->is_allowed())
 		{
 			return;
 		}
@@ -430,7 +424,7 @@ class listener implements EventSubscriberInterface
 		if (!empty($event['member']['user_flag']))
 		{
 			$flag = $this->functions->get_user_flag($event['member']['user_flag']);
-			$flags = $this->get_flag_cache();
+			$flags = $this->functions->get_flag_cache();
 
 			$this->template->assign_vars(array(
 				'USER_FLAG'		=> $flag,
@@ -449,7 +443,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function search_get_posts_data($event)
 	{
-		if (empty($this->config['allow_flags']))
+		if (!$this->functions->is_allowed())
 		{
 			return;
 		}
@@ -468,7 +462,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function search_modify_tpl_ary($event)
 	{
-		if (empty($this->config['allow_flags']) || $event['show_results'] == 'topics')
+		if (!$this->functions->is_allowed() || $event['show_results'] == 'topics')
 		{
 			return;
 		}
@@ -476,7 +470,7 @@ class listener implements EventSubscriberInterface
 		$array = $event['tpl_ary'];
 
 		$flag = $this->functions->get_user_flag($event['row']['user_flag']);
-		$flags = $this->get_flag_cache();
+		$flags = $this->functions->get_flag_cache();
 
 		$array = array_merge($array, array(
 			'USER_FLAG'		=> $flag,
@@ -495,7 +489,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function search_modify_search_title($event)
 	{
-		if (empty($this->config['allow_flags']) || $event['show_results'] == 'topics')
+		if (!$this->functions->is_allowed() || $event['show_results'] == 'topics')
 		{
 			return;
 		}
@@ -514,7 +508,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function ucp_pm_view_messsage($event)
 	{
-		if (empty($this->config['allow_flags']))
+		if (!$this->functions->is_allowed())
 		{
 			return;
 		}
@@ -543,7 +537,7 @@ class listener implements EventSubscriberInterface
 	 */
 	private function display_flag_options($event)
 	{
-		$flags = $this->get_flag_cache();
+		$flags = $this->functions->get_flag_cache();
 		$flag_name = $flag_image = '';
 		$flag_id = 0;
 		if ($event['data']['user_flag'])
@@ -564,16 +558,5 @@ class listener implements EventSubscriberInterface
 			'S_FLAG_REQUIRED'	=> !empty($this->config['flags_required']) ? true : false,
 			'AJAX_FLAG_INFO' 	=> $this->helper->route('rmcgirr83_nationalflags_getflag', array('flag_id' => 'FLAG_ID')),
 		));
-	}
-
-	/**
-	 * Get the cache of the flags
-	 *
-	 * @return string flag_cache
-	 * @access private
-	 */
-	private function get_flag_cache()
-	{
-		return $this->cache->get('_user_flags');
 	}
 }

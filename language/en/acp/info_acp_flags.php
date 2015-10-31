@@ -51,6 +51,10 @@ $lang = array_merge($lang, array(
 	'FLAG_IMAGE'						=> 'Flag Image',
 	'FLAG_ADD'							=> 'Add new flag',
 	'FLAG_UPLOAD'						=> 'Upload flag',
+	'FLAG_UPLOAD_NOTICE'				=> 'Uploading an image will overwrite an image file already located on the server if one exists.  The image file is case sensitive.',
+	'FLAG_UPLOAD_NO_OVERWRITE'			=> 'You will not be able to overwrite an already existing image with the same name and extension as shown below.',
+	'FLAG_FOUND'						=> 'Flag found',
+	'IMAGES_ON_SERVER'					=> 'Image names on server',
 
 	//Settings
 	'ACP_FLAG_SETTINGS'					=> 'National Flag Settings',

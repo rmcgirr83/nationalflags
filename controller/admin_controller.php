@@ -244,7 +244,7 @@ class admin_controller
 
 			$this->template->assign_block_vars('flags', array(
 				'FLAG_NAME'		=> $row['flag_name'],
-				'FLAG_IMG'		=> $this->ext_path_web . 'flags/' . strtolower($row['flag_image']),
+				'FLAG_IMG'		=> $this->ext_path_web . 'flags/' . $row['flag_image'],
 				'FLAG_ID'		=> $row['flag_id'],
 				'USER_COUNT'	=> $user_count,
 				'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $row['flag_id'])),
@@ -285,6 +285,7 @@ class admin_controller
 		if ($this->request->is_set_post('submit'))
 		{
 			$errors = $this->check_flag($flag_row['flag_name'], $errors, 'add_flag', $flag_row['flag_image']);
+
 			include_once($this->root_path . 'includes/functions_upload.' . $this->php_ext);
 
 			//Set upload directory
@@ -296,19 +297,22 @@ class admin_controller
 			$upload->set_allowed_extensions(array('gif', 'png', 'jpeg', 'jpg'));
 			$upload->set_allowed_dimensions(false, false, self::MAX_WIDTH, self::MAX_HEIGHT);
 			$file = $upload->form_upload('flag_upload');
-			$file->move_file($upload_dir, true);
+			$file->move_file($upload_dir, false);
 
 			if (sizeof($file->error))
 			{
 				$file->remove();
-				$errors = array_merge($errors, $file->error);
+				$file_error = $file->error;
 			}
+
+			$errors = array_merge($errors, $file_error);
 			if (!sizeof($errors))
 			{
 				$flag_row['flag_image'] = $file->uploadname;
 
 				// phpbb_chmod doesn't work well here on some servers so be explicit
 				@chmod($this->ext_path_web . 'flags/' . $file->uploadname, 0644);
+
 				$sql = 'INSERT INTO ' . $this->flags_table . ' ' . $this->db->sql_build_array('INSERT', $flag_row);
 				$this->db->sql_query($sql);
 
@@ -321,14 +325,19 @@ class admin_controller
 				trigger_error($this->user->lang['MSG_FLAG_ADDED'] . adm_back_link($this->u_action));
 			}
 		}
-
+/*		$flag_img = '';
+		$flags_array = $this->cache->get('_user_flags');
+		foreach ($flags_array as $flag->
+*/
 		$this->template->assign_vars(array(
+			'L_TITLE'		=> $this->user->lang['FLAG_ADD'],
 			'U_ACTION'		=> $this->u_action . '&amp;action=add',
 			'U_BACK'		=> $this->u_action,
 			'FLAG_NAME'		=> $flag_row['flag_name'],
 			'FLAG_IMAGE'	=> $flag_row['flag_image'],
 			'ERROR_MSG'		=> (sizeof($errors)) ? implode('<br />', $errors) : '',
-
+			'FLAG_LIST'		=> $this->list_flag_names(),
+		
 			'S_ADD_FLAG'	=> true,
 			'S_ERROR'		=> (sizeof($errors)) ? true : false,
 			'S_UPLOAD_FLAG'	=> $this->can_upload_flag(),
@@ -358,9 +367,33 @@ class admin_controller
 		if ($this->request->is_set_post('submit'))
 		{
 			$errors = $this->check_flag($flag_row['flag_name'], $errors, 'edit_flag', $flag_row['flag_image']);
+			include_once($this->root_path . 'includes/functions_upload.' . $this->php_ext);
 
+			//Set upload directory
+			$upload_dir = $this->ext_path_web . 'flags';
+			$upload_dir = str_replace(array('../', '..\\', './', '.\\'), '', $upload_dir);
+
+			//Upload file
+			$upload = new \fileupload();
+			$upload->set_allowed_extensions(array('gif', 'png', 'jpeg', 'jpg'));
+			$upload->set_allowed_dimensions(false, false, self::MAX_WIDTH, self::MAX_HEIGHT);
+			$file = $upload->form_upload('flag_upload');
+			$file->move_file($upload_dir, true);
+
+			if (sizeof($file->error))
+			{
+				$file->remove();
+				$file_error = $file->error;
+			}
+
+			$errors = array_merge($errors, $file_error);
 			if (!sizeof($errors))
 			{
+				$flag_row['flag_image'] = $file->uploadname;
+
+				// phpbb_chmod doesn't work well here on some servers so be explicit
+				@chmod($this->ext_path_web . 'flags/' . $file->uploadname, 0644);
+
 				$sql = 'UPDATE ' . $this->flags_table . '
 					SET ' . $this->db->sql_build_array('UPDATE', $flag_row) . '
 					WHERE flag_id = ' . (int) $flag_id;
@@ -379,25 +412,27 @@ class admin_controller
 			FROM ' . $this->flags_table . '
 			WHERE flag_id =' . (int) $flag_id;
 		$result = $this->db->sql_query($sql);
-		$flag_row = $this->db->sql_fetchrow($result);
+		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
 
 		if (!$flag_row)
 		{
 			trigger_error($this->user->lang['FLAG_ERROR_NOT_EXIST'] . adm_back_link($this->u_action . '&amp;mode=manage'), E_USER_WARNING);
 		}
-
+		$found_flag = $this->ext_path_web . 'flags/' . $row['flag_image'];
 		$this->template->assign_vars(array(
 			'L_TITLE'		=> $this->user->lang['FLAG_EDIT'],
 			'U_ACTION'		=> $this->u_action . "&amp;flag_id=$flag_id&amp;action=edit",
 			'U_BACK'		=> $this->u_action . '&amp;mode=manage',
 			'ERROR_MSG'		=> (sizeof($errors)) ? implode('<br />', $errors) : '',
 
-			'FLAG_NAME'		=> $flag_row['flag_name'],
-			'FLAG_IMAGE'	=> $flag_row['flag_image'],
-			'FLAG_ID'		=> $flag_row['flag_id'],
-
-			'S_EDIT_FLAG'	=> true,
+			'FLAG_NAME'		=> $row['flag_name'],
+			'FLAG_IMAGE'	=> $row['flag_image'],
+			'FLAG_ID'		=> $row['flag_id'],
+			'FOUND_FLAG'	=> (!empty($found_flag)) ? $found_flag : '',
+			'FLAG_LIST'		=> $this->list_flag_names(),
+			'S_CAN_OVERWRITE'	=> true,
+			'S_ADD_FLAG'	=> true,
 			'S_UPLOAD_FLAG'	=> $this->can_upload_flag(),
 			'S_ERROR'		=> (sizeof($errors)) ? true : false,
 			)
@@ -526,6 +561,22 @@ class admin_controller
 	protected function can_upload_flag()
 	{
 		return (file_exists($this->ext_path_web . 'flags') && phpbb_is_writable($this->ext_path_web . 'flags') && (@ini_get('file_uploads') || strtolower(@ini_get('file_uploads')) == 'on'));
+	}
+
+	/**
+	* List current flag names
+	*/
+	protected function list_flag_names()
+	{
+		$data = $this->cache->get('_user_flags');
+
+		foreach ($data as $key => $row)
+		{
+			$flag[$key] = $row['flag_image'];
+		}
+		array_multisort($flag, SORT_NATURAL, $data);
+
+		return implode(', ', $flag);
 	}
 
 	/**

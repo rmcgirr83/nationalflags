@@ -10,7 +10,6 @@
 
 namespace rmcgirr83\nationalflags\controller;
 
-use Symfony\Component\HttpFoundation\Response;
 use phpbb\exception\http_exception;
 
 /**
@@ -20,9 +19,6 @@ class main_controller
 {
 	/** @var \phpbb\auth\auth */
 	protected $auth;
-
-	/** @var \phpbb\cache\service */
-	protected $cache;
 
 	/** @var \phpbb\config\config */
 	protected $config;
@@ -71,7 +67,6 @@ class main_controller
 	* Constructor
 	*
 	* @param \phpbb\auth\auth					$auth			Auth object
-	* @param \phpbb\cache\service				$cache			Cache object
 	* @param \phpbb\config\config               $config         Config object
 	* @param \phpbb\db\driver\driver			$db				Database object
 	* @param \phpbb\pagination					$pagination		Pagination object
@@ -89,7 +84,6 @@ class main_controller
 	*/
 	public function __construct(
 			\phpbb\auth\auth $auth,
-			\phpbb\cache\service $cache,
 			\phpbb\config\config $config,
 			\phpbb\db\driver\driver_interface $db,
 			\phpbb\pagination $pagination,
@@ -105,7 +99,6 @@ class main_controller
 			\rmcgirr83\nationalflags\core\nationalflags $functions)
 	{
 		$this->auth = $auth;
-		$this->cache = $cache;
 		$this->config = $config;
 		$this->db = $db;
 		$this->pagination = $pagination;
@@ -211,7 +204,7 @@ class main_controller
 			throw new http_exception(401, 'NOT_AUTHORISED');
 		}
 
-		$flags = $this->cache->get('_user_flags');
+		$flags = $this->functions->get_flag_cache();
 
 		// ensure our flag id passed actually exists in the cache
 		if (!isset($flags[$flag_id]))
@@ -291,7 +284,7 @@ class main_controller
 
 		$total_users = $this->user->lang('FLAG_USERS', (int) $total_users);
 
-		$flags_array = $this->cache->get('_user_flags');
+		$flags_array = $this->functions->get_flag_cache();
 
 		$this->template->assign_vars(array(
 			'FLAG'			=> html_entity_decode($flags_array[$flag_id]['flag_name']),
@@ -314,38 +307,5 @@ class main_controller
 			'U_VIEW_FORUM'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $flag_id)),
 			'FORUM_NAME'		=> html_entity_decode($flags_array[$flag_id]['flag_name']),
 		));
-	}
-
-	/**
-	 * Display flag on change in ucp
-	 * Ajax function
-	 * @param $flag_id
-	 *
-	 * @return \Symfony\Component\HttpFoundation\Response
-	 */
-	public function getFlag($flag_id)
-	{
-		if (empty($flag_id))
-		{
-			if ($this->config['flags_required'])
-			{
-				return new Response($this->user->lang['MUST_CHOOSE_FLAG']);
-			}
-			else
-			{
-				return new Response($this->user->lang['NO_SUCH_FLAG']);
-			}
-		}
-
-		$flags = $this->cache->get('_user_flags');
-
-		$flag_img = $this->ext_path . 'flags/' . $flags[$flag_id]['flag_image'];
-		$flag_img = str_replace('./', generate_board_url() . '/', $flag_img); //fix paths
-
-		$flag_name = $flags[$flag_id]['flag_name'];
-
-		$return = '<img class="flag_image" src="' . $flag_img . '" alt="' . $flag_name . '" title="' . $flag_name . '" />';
-
-		return new Response($return);
 	}
 }

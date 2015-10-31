@@ -9,6 +9,8 @@
 
 namespace rmcgirr83\nationalflags\core;
 
+use Symfony\Component\HttpFoundation\Response;
+
 class nationalflags
 {
 
@@ -89,7 +91,7 @@ class nationalflags
 
 	public function get_user_flag($flag_id = false)
 	{
-		$flags = $this->cache->get('_user_flags');
+		$flags = $this->get_flag_cache();
 
 		if ($flag_id)
 		{
@@ -182,7 +184,7 @@ class nationalflags
 		$result = $this->db->sql_query_limit($this->db->sql_build_query('SELECT', $sql_array), $this->config['flags_num_display']);
 
 		$count = 0;
-		$flags = $this->cache->get('_user_flags');
+		$flags = $this->get_flag_cache();
 
 		while ($row = $this->db->sql_fetchrow($result))
 		{
@@ -202,5 +204,60 @@ class nationalflags
 				'S_FLAGS'	=> true,
 			));
 		}
+	}
+
+	/**
+	 * Display flag on change in ucp
+	 * Ajax function
+	 * @param $flag_id
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+	public function getFlag($flag_id)
+	{
+		if (empty($flag_id))
+		{
+			if ($this->config['flags_required'])
+			{
+				return new Response($this->user->lang['MUST_CHOOSE_FLAG']);
+			}
+			else
+			{
+				return new Response($this->user->lang['NO_SUCH_FLAG']);
+			}
+		}
+
+		$flags = $this->get_flag_cache();
+
+		$flag_img = $this->ext_path . 'flags/' . $flags[$flag_id]['flag_image'];
+		$flag_img = str_replace('./', generate_board_url() . '/', $flag_img); //fix paths
+
+		$flag_name = $flags[$flag_id]['flag_name'];
+
+		$return = '<img class="flag_image" src="' . $flag_img . '" alt="' . $flag_name . '" title="' . $flag_name . '" />';
+
+		return new Response($return);
+	}
+
+	/**
+	 * Get the cache of the flags
+	 *
+	 * @return string flag_cache
+	 * @access public
+	 */
+	public function get_flag_cache()
+	{
+		return $this->cache->get('_user_flags');
+	}
+
+	/**
+	* Is allowed
+	*
+	* @return true or false
+	* @access public
+	*/
+	public function is_allowed()
+	{
+		return $this->config['allow_flags'];
 	}
 }
