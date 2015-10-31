@@ -191,7 +191,7 @@ class listener implements EventSubscriberInterface
 		{
 			return;
 		}
-		if ($this->config['flags_display_msg'] && !$this->functions->is_allowed())
+		if ($this->config['flags_display_msg'] && $this->functions->is_allowed())
 		{
 			$this->template->assign_vars(array(
 				'S_FLAG_MESSAGE'	=> (empty($this->user->data['user_flag'])) ? true : false,
@@ -393,7 +393,7 @@ class listener implements EventSubscriberInterface
 		}
 
 		// If setting in ACP is set to not allow guests and bots to view the flags
-		if (empty($this->config['flags_display_to_guests']) && ($this->user->data['is_bot'] || $this->user->data['user_id'] == ANONYMOUS))
+		if (!$this->config['flags_display_to_guests'] && ($this->user->data['is_bot'] || $this->user->data['user_id'] == ANONYMOUS))
 		{
 			return;
 		}
@@ -555,7 +555,7 @@ class listener implements EventSubscriberInterface
 			'FLAG_NAME'		=> $flag_name,
 			'S_FLAG_OPTIONS'	=> $s_flag_options,
 			'S_FLAGS'			=> true,
-			'S_FLAG_REQUIRED'	=> !empty($this->config['flags_required']) ? true : false,
+			'S_FLAG_REQUIRED'	=> ($this->config['flags_required']) ? true : false,
 			'AJAX_FLAG_INFO' 	=> $this->helper->route('rmcgirr83_nationalflags_getflag', array('flag_id' => 'FLAG_ID')),
 		));
 	}
