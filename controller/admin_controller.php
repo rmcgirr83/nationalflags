@@ -325,10 +325,7 @@ class admin_controller
 				trigger_error($this->user->lang['MSG_FLAG_ADDED'] . adm_back_link($this->u_action));
 			}
 		}
-/*		$flag_img = '';
-		$flags_array = $this->cache->get('_user_flags');
-		foreach ($flags_array as $flag->
-*/
+
 		$this->template->assign_vars(array(
 			'L_TITLE'		=> $this->user->lang['FLAG_ADD'],
 			'U_ACTION'		=> $this->u_action . '&amp;action=add',
