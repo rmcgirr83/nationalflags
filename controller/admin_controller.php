@@ -532,20 +532,17 @@ class admin_controller
 			}
 		}
 
-		if ($form_key == 'add_flag')
-		{
-			//we don't want two flags with the same name...right?
-			$sql = 'SELECT flag_name
-				FROM ' . $this->flags_table . "
-				WHERE upper(flag_name) = '" . $this->db->sql_escape(strtoupper($flag_name)) . "'";
-			$result = $this->db->sql_query($sql);
+		//we don't want two flags with the same name...right?
+		$sql = 'SELECT flag_name
+			FROM ' . $this->flags_table . "
+			WHERE upper(flag_name) = '" . $this->db->sql_escape(strtoupper($flag_name)) . "'";
+		$result = $this->db->sql_query($sql);
 
-			if ($this->db->sql_fetchrow($result))
-			{
-				$errors[] = $this->user->lang['FLAG_NAME_EXISTS'];
-			}
-			$this->db->sql_freeresult($result);
+		if ($this->db->sql_fetchrow($result))
+		{
+			$errors[] = $this->user->lang['FLAG_NAME_EXISTS'];
 		}
+		$this->db->sql_freeresult($result);
 
 		return $errors;
 	}
