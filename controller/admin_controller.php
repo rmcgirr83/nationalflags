@@ -303,9 +303,9 @@ class admin_controller
 			{
 				$file->remove();
 				$file_error = $file->error;
+				$errors = array_merge($errors, $file_error);
 			}
 
-			$errors = array_merge($errors, $file_error);
 			if (!sizeof($errors))
 			{
 				$flag_row['flag_image'] = $file->uploadname;
@@ -325,7 +325,10 @@ class admin_controller
 				trigger_error($this->user->lang['MSG_FLAG_ADDED'] . adm_back_link($this->u_action));
 			}
 		}
-
+/*		$flag_img = '';
+		$flags_array = $this->cache->get('_user_flags');
+		foreach ($flags_array as $flag->
+*/
 		$this->template->assign_vars(array(
 			'L_TITLE'		=> $this->user->lang['FLAG_ADD'],
 			'U_ACTION'		=> $this->u_action . '&amp;action=add',
@@ -334,7 +337,7 @@ class admin_controller
 			'FLAG_IMAGE'	=> $flag_row['flag_image'],
 			'ERROR_MSG'		=> (sizeof($errors)) ? implode('<br />', $errors) : '',
 			'FLAG_LIST'		=> $this->list_flag_names(),
-
+		
 			'S_ADD_FLAG'	=> true,
 			'S_ERROR'		=> (sizeof($errors)) ? true : false,
 			'S_UPLOAD_FLAG'	=> $this->can_upload_flag(),
@@ -532,17 +535,20 @@ class admin_controller
 			}
 		}
 
-		//we don't want two flags with the same name...right?
-		$sql = 'SELECT flag_name
-			FROM ' . $this->flags_table . "
-			WHERE upper(flag_name) = '" . $this->db->sql_escape(strtoupper($flag_name)) . "'";
-		$result = $this->db->sql_query($sql);
-
-		if ($this->db->sql_fetchrow($result))
+		if ($form_key == 'add_flag')
 		{
-			$errors[] = $this->user->lang['FLAG_NAME_EXISTS'];
+			//we don't want two flags with the same name...right?
+			$sql = 'SELECT flag_name
+				FROM ' . $this->flags_table . "
+				WHERE upper(flag_name) = '" . $this->db->sql_escape(strtoupper($flag_name)) . "'";
+			$result = $this->db->sql_query($sql);
+
+			if ($this->db->sql_fetchrow($result))
+			{
+				$errors[] = $this->user->lang['FLAG_NAME_EXISTS'];
+			}
+			$this->db->sql_freeresult($result);
 		}
-		$this->db->sql_freeresult($result);
 
 		return $errors;
 	}
