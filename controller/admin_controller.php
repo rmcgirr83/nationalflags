@@ -337,7 +337,7 @@ class admin_controller
 			'FLAG_IMAGE'	=> $flag_row['flag_image'],
 			'ERROR_MSG'		=> (sizeof($errors)) ? implode('<br />', $errors) : '',
 			'FLAG_LIST'		=> $this->list_flag_names(),
-		
+
 			'S_ADD_FLAG'	=> true,
 			'S_ERROR'		=> (sizeof($errors)) ? true : false,
 			'S_UPLOAD_FLAG'	=> $this->can_upload_flag(),
