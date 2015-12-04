@@ -33,7 +33,7 @@ class nationalflags
 	protected $user;
 
 	/**
-	 * The database table the rules are stored in
+	 * The database table the flags are stored in
 	 *
 	 * @var string
 	 */
