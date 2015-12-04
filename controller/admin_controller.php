@@ -177,8 +177,6 @@ class admin_controller
 			}
 		}
 
-		// create our cache for the flags
-		$this->functions->cache_flags();
 		// Set output vars for display in the template
 		$this->template->assign_vars(array(
 			'ERROR'				=> isset($error) ? ((sizeof($error)) ? implode('<br />', $error) : '') : '',
@@ -567,6 +565,9 @@ class admin_controller
 	*/
 	protected function list_flag_names()
 	{
+		// ensure cache for the flags is built
+		$this->functions->cache_flags();
+		
 		$data = $this->cache->get('_user_flags');
 
 		foreach ($data as $key => $row)
