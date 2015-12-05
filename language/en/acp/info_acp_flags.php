@@ -37,8 +37,7 @@ $lang = array_merge($lang, array(
 	//Module and page titles
 	'ACP_CAT_FLAGS'						=> 'National Flags',
 	'ACP_FLAGS'							=> 'National Flags',
-	'ACP_FLAGS_EXPLAIN'					=> 'Here you can add/edit and delete the different flags.',
-	'ACP_NO_UPLOAD'						=> '<br /><strong>If you want to use images you should upload them to ext/rmcgirr83/nationalflags/flags before you add the new Flag.  The flag must have a lower case name, ie uk.gif</strong>',
+	'ACP_FLAGS_EXPLAIN'					=> 'Here you can add/edit and delete the different flags. <strong>If you want to use images you should upload them to ext/rmcgirr83/nationalflags/flags before you add the new Flag.  The flag must have a lower case name, ie uk.gif</strong>',
 	'ACP_FLAGS_DONATE'					=> 'Please consider a <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=S4UTZ9YNKEDDN" onclick="window.open(this.href); return false;"><strong>Donation</strong></a> if you like the Extension',
 	'ACP_FLAG_USERS'					=> 'Number of Users',
 
@@ -50,11 +49,6 @@ $lang = array_merge($lang, array(
 	'FLAG_IMG_EXPLAIN'					=> 'The name of the image. Example: uk.gif. New images should be uploaded to ext/rmcgirr83/nationalflags/flags.',
 	'FLAG_IMAGE'						=> 'Flag Image',
 	'FLAG_ADD'							=> 'Add new flag',
-	'FLAG_UPLOAD'						=> 'Upload flag',
-	'FLAG_UPLOAD_NOTICE'				=> 'Uploading an image will overwrite an image file already located on the server if one exists.  The image file is case sensitive.',
-	'FLAG_UPLOAD_NO_OVERWRITE'			=> 'You will not be able to overwrite an already existing image with the same name and extension as shown below.',
-	'FLAG_FOUND'						=> 'Flag found',
-	'IMAGES_ON_SERVER'					=> 'Image names on server',
 
 	//Settings
 	'ACP_FLAG_SETTINGS'					=> 'National Flag Settings',
@@ -77,11 +71,9 @@ $lang = array_merge($lang, array(
 	'LOG_FLAG_EDIT'						=> '<strong>Updated flag</strong><br />» %1$s',
 	'LOG_FLAG_ADD'						=> '<strong>Added new flag</strong><br />» %1$s',
 	'MSG_FLAGS_DELETED'					=> 'Flag has been deleted.',
-	'MSG_CONFIRM'						=> '<strong>Are you sure you want to delete this flag?</strong>',
-	'MSG_FLAG_CONFIRM_DELETE'			=> array(
-		1	=> '<br /><strong>%d</strong> user has this flag and will have to select a different flag if you choose to delete this one.',
-		2	=> '<br /><strong>%d</strong> users have this flag and will have to select a different flag if you choose to delete this one.',
-	),
+	'MSG_CONFIRM'						=> 'Are you sure you want to delete this flag?',
+	'MSG_FLAG_CONFIRM_DELETE'			=> '<br /><strong>%d</strong> user has this flag and will have to select a different flag if you choose to delete this one.',
+	'MSG_FLAGS_CONFIRM_DELETE'			=> '<br /><strong>%d</strong> users have this flag and will have to select a different flag if you choose to delete this one.',
 	'MSG_FLAG_EDITED'					=> 'Flag has been edited.',
 	'MSG_FLAG_ADDED'					=> 'New flag has been added.',
 	'FLAG_ERROR_NO_FLAG_NAME'			=> 'No flag name defined, this is a required field.',

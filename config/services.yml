@@ -25,6 +25,7 @@ services:
         class: rmcgirr83\nationalflags\controller\main_controller
         arguments:
             - @auth
+            - @cache
             - @config
             - @dbal.conn
             - @pagination
@@ -43,6 +44,7 @@ services:
         class: rmcgirr83\nationalflags\event\listener
         arguments:
             - @auth
+            - @cache
             - @config
             - @controller.helper
             - @dbal.conn
