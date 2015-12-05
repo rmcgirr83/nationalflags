@@ -40,7 +40,9 @@ env:
 branches:
   only:
     - master
-    - /^(3\.[1-9]|[4-9]\.\d)\.x$/
+    - develop
+    - /^develop-.*$/
+    - /^release-.*$/
 
 before_install:
     - sudo apt-get update
