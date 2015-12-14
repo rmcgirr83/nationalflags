@@ -2,8 +2,7 @@ ul.flags {
     width:100%;
     text-align:center;
 	list-style-type: none;
-    background-color: #eef5f9;
-	float: left;
+	padding-bottom: 6px;
 }
 
 ul.flags li {
@@ -11,20 +10,12 @@ ul.flags li {
     font-size: inherit;
     line-height: inherit;
 	padding-bottom: 2px;
-	width: 8%;
-	white-space: nowrap;
+	width: 95px;
 }
 
 ul.flags li.flagslist {
-    float: left;
-}
-
-.rtl ul.flags li.flagslist {
-    float: right;
-}
-
-div.flags {
-   background-color: #eef5f9;
+    text-align:center;
+	margin: 7px 2px 0;
 }
 
 .flagusers {
