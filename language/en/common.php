@@ -35,19 +35,20 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'FLAGS'				=> array(
-		1 => '1 flag',
+		1 => '%s flag',
 		2 => '%s flags',
 	),
 	'USER_FLAG'			=> 'Flag',
+	'USER_FLAG_EXPLAIN'	=> 'The board default flag is being displayed.',
 	'NATIONAL_FLAGS'	=> 'Flags',
 	'FLAG_EXPLAIN'		=> 'Choose your flag',
 	'USER_NEEDS_FLAG'	=> 'Please take a moment and %svisit your profile%s to choose a flag.',
 	'FLAGS_VIEWONLINE'	=> 'Viewing flags',
 	'FLAG_USERS'		=>  array(
-		1 => '1 User',
+		1 => '%s User',
 		2 => '%s Users',
 	),
-	'MUST_CHOOSE_FLAG'	=> 'You must choose a flag.',
+	'MUST_CHOOSE_FLAG'	=> '<span class="error">You must choose a flag.</span>',
 	'NO_SUCH_FLAG'		=> 'Please choose a flag.',
 	'NO_USER_HAS_FLAG'	=> 'No user has this flag',
 	'FLAG_NOT_EXIST'	=> 'Flag does not exist',

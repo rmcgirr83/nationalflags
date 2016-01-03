@@ -9,6 +9,8 @@
 
 namespace rmcgirr83\nationalflags\core;
 
+use Symfony\Component\HttpFoundation\Response;
+
 class nationalflags
 {
 
@@ -31,7 +33,7 @@ class nationalflags
 	protected $user;
 
 	/**
-	 * The database table the rules are stored in
+	 * The database table the flags are stored in
 	 *
 	 * @var string
 	 */
@@ -89,11 +91,11 @@ class nationalflags
 
 	public function get_user_flag($flag_id = false)
 	{
-		$flags = $this->cache->get('_user_flags');
+		$flags = $this->get_flag_cache();
 
 		if ($flag_id)
 		{
-			$flag = '<img class="flag_image" src="' . $this->ext_path_web . 'flags/' . strtolower($flags[$flag_id]['flag_image']) . '" alt="' . $flags[$flag_id]['flag_name'] . '" title="' . $flags[$flag_id]['flag_name'] . '" />';
+			$flag = '<img class="flag_image" src="' . $this->ext_path_web . 'flags/' . $flags[$flag_id]['flag_image'] . '" alt="' . $flags[$flag_id]['flag_name'] . '" title="' . $flags[$flag_id]['flag_name'] . '" />';
 
 			return $flag;
 		}
@@ -111,7 +113,7 @@ class nationalflags
 	{
 		if (($this->cache->get('_user_flags')) === false)
 		{
-			$sql = 'SELECT flag_id, flag_name, flag_image
+			$sql = 'SELECT *
 				FROM ' . $this->flags_table . '
 			ORDER BY flag_id';
 			$result = $this->db->sql_query($sql);
@@ -123,6 +125,7 @@ class nationalflags
 					'flag_id'		=> $row['flag_id'],
 					'flag_name'		=> $row['flag_name'],
 					'flag_image'	=> $row['flag_image'],
+					'flag_default'	=> $row['flag_default'],
 				);
 			}
 			$this->db->sql_freeresult($result);
@@ -141,7 +144,7 @@ class nationalflags
 
 	public function list_flags($flag_id)
 	{
-		$sql = 'SELECT flag_id, flag_name, flag_image
+		$sql = 'SELECT *
 			FROM ' . $this->flags_table . '
 		ORDER BY flag_name';
 		$result = $this->db->sql_query($sql);
@@ -149,7 +152,7 @@ class nationalflags
 		$flag_options = '<option value="0">' . $this->user->lang['FLAG_EXPLAIN'] . '</option>';
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$selected = ($row['flag_id'] == $flag_id) ? ' selected="selected"' : '';
+			$selected = ($row['flag_id'] == $flag_id) ? ' selected="selected"' : ($row['flag_default'] ? ' selected="selected"' : '');
 			$flag_options .= '<option value="' . $row['flag_id'] . '" ' . $selected . '>' . $row['flag_name'] . '</option>';
 		}
 		$this->db->sql_freeresult($result);
@@ -165,7 +168,7 @@ class nationalflags
 	{
 
 		// If setting in ACP is set to not allow guests and bots to view the flags
-		if (empty($this->config['flags_display_to_guests']) && ($this->user->data['is_bot'] || $this->user->data['user_id'] == ANONYMOUS))
+		if (!$this->config['flags_display_to_guests'] && ($this->user->data['is_bot'] || $this->user->data['user_id'] == ANONYMOUS))
 		{
 			return;
 		}
@@ -182,7 +185,7 @@ class nationalflags
 		$result = $this->db->sql_query_limit($this->db->sql_build_query('SELECT', $sql_array), $this->config['flags_num_display']);
 
 		$count = 0;
-		$flags = $this->cache->get('_user_flags');
+		$flags = $this->get_flag_cache();
 
 		while ($row = $this->db->sql_fetchrow($result))
 		{
@@ -202,5 +205,49 @@ class nationalflags
 				'S_FLAGS'	=> true,
 			));
 		}
+	}
+
+	/**
+	 * Display flag on change in ucp
+	 * Ajax function
+	 * @param $flag_id
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+	public function getFlag($flag_id)
+	{
+		if (empty($flag_id))
+		{
+			if ($this->config['flags_required'])
+			{
+				return new Response($this->user->lang['MUST_CHOOSE_FLAG']);
+			}
+			else
+			{
+				return new Response($this->user->lang['NO_SUCH_FLAG']);
+			}
+		}
+
+		$flags = $this->get_flag_cache();
+
+		$flag_img = $this->ext_path . 'flags/' . $flags[$flag_id]['flag_image'];
+		$flag_img = str_replace('./', generate_board_url() . '/', $flag_img); //fix paths
+
+		$flag_name = $flags[$flag_id]['flag_name'];
+
+		$return = '<img class="flag_image" src="' . $flag_img . '" alt="' . $flag_name . '" title="' . $flag_name . '" />';
+
+		return new Response($return);
+	}
+
+	/**
+	 * Get the cache of the flags
+	 *
+	 * @return string flag_cache
+	 * @access public
+	 */
+	public function get_flag_cache()
+	{
+		return $this->cache->get('_user_flags');
 	}
 }

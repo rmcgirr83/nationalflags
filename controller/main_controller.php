@@ -10,8 +10,6 @@
 
 namespace rmcgirr83\nationalflags\controller;
 
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpFoundation\Response;
 use phpbb\exception\http_exception;
 
 /**
@@ -21,9 +19,6 @@ class main_controller
 {
 	/** @var \phpbb\auth\auth */
 	protected $auth;
-
-	/** @var \phpbb\cache\service */
-	protected $cache;
 
 	/** @var \phpbb\config\config */
 	protected $config;
@@ -72,7 +67,6 @@ class main_controller
 	* Constructor
 	*
 	* @param \phpbb\auth\auth					$auth			Auth object
-	* @param \phpbb\cache\service				$cache			Cache object
 	* @param \phpbb\config\config               $config         Config object
 	* @param \phpbb\db\driver\driver			$db				Database object
 	* @param \phpbb\pagination					$pagination		Pagination object
@@ -90,7 +84,6 @@ class main_controller
 	*/
 	public function __construct(
 			\phpbb\auth\auth $auth,
-			\phpbb\cache\service $cache,
 			\phpbb\config\config $config,
 			\phpbb\db\driver\driver_interface $db,
 			\phpbb\pagination $pagination,
@@ -106,7 +99,6 @@ class main_controller
 			\rmcgirr83\nationalflags\core\nationalflags $functions)
 	{
 		$this->auth = $auth;
-		$this->cache = $cache;
 		$this->config = $config;
 		$this->db = $db;
 		$this->pagination = $pagination;
@@ -131,14 +123,8 @@ class main_controller
 	 */
 	public function displayFlags()
 	{
-		// When flags are disabled, redirect users back to the forum index
-		if (empty($this->config['allow_flags']))
-		{
-			redirect(append_sid("{$this->root_path}index.{$this->php_ext}"));
-		}
-
 		// If setting in ACP is set to not allow guests and bots to view the flags
-		if (empty($this->config['flags_display_to_guests']) && ($this->user->data['is_bot'] || $this->user->data['user_id'] == ANONYMOUS))
+		if (!$this->config['flags_display_to_guests'] && ($this->user->data['is_bot'] || $this->user->data['user_id'] == ANONYMOUS))
 		{
 			throw new http_exception(401, 'NOT_AUTHORISED');
 		}
@@ -200,24 +186,18 @@ class main_controller
 	 */
 	public function getFlags($flag_id, $page = 0)
 	{
-		// When flags are disabled, redirect users back to the forum index
-		if (empty($this->config['allow_flags']))
-		{
-			redirect(append_sid("{$this->root_path}index.{$this->php_ext}"));
-		}
-
 		// If setting in ACP is set to not allow guests and bots to view the flags
-		if (empty($this->config['flags_display_to_guests']) && ($this->user->data['is_bot'] || $this->user->data['user_id'] == ANONYMOUS))
+		if (!$this->config['flags_display_to_guests'] && ($this->user->data['is_bot'] || $this->user->data['user_id'] == ANONYMOUS))
 		{
 			throw new http_exception(401, 'NOT_AUTHORISED');
 		}
 
-		$flags = $this->cache->get('_user_flags');
+		$flags = $this->functions->get_flag_cache();
 
 		// ensure our flag id passed actually exists in the cache
 		if (!isset($flags[$flag_id]))
 		{
-			throw new NotFoundHttpException($this->user->lang('FLAG_NOT_EXIST'));
+			throw new http_exception(404, 'FLAG_NOT_EXIST');
 		}
 
 		$flag_name = $flags[$flag_id]['flag_name'];
@@ -244,19 +224,10 @@ class main_controller
 	 */
 	protected function display_flag($flag_id, $start, $limit)
 	{
-
-		//let's get the flag requested
-		$sql = 'SELECT flag_id, flag_name, flag_image
-			FROM ' . $this->flags_table . '
-			WHERE flag_id = ' . (int) $flag_id;
-		$result = $this->db->sql_query($sql);
-		$row = $this->db->sql_fetchrow($result);
-		$this->db->sql_freeresult($result);
-
-		// now users that have the flag
+		// Get users that have the flag
 		$sql = 'SELECT *
 			FROM ' . USERS_TABLE . '
-			WHERE user_flag = ' . (int) $row['flag_id'] . '
+			WHERE user_flag = ' . (int) $flag_id . '
 				AND ' . $this->db->sql_in_set('user_type', array(USER_NORMAL, USER_FOUNDER)) . '
 			ORDER BY username_clean';
 		$result = $this->db->sql_query_limit($sql, $limit, $start);
@@ -266,7 +237,7 @@ class main_controller
 		// for counting of total flag users
 		$result = $this->db->sql_query($sql);
 		$row2 = $this->db->sql_fetchrowset($result);
-		$total_users = (int) count($row2);
+		$total_users = (int) sizeof($row2);
 		$this->db->sql_freeresult($result);
 		unset($row2);
 
@@ -295,14 +266,16 @@ class main_controller
 			),
 		), 'pagination', 'page', $total_users, $limit, $start);
 
-		$flag_image = $this->functions->get_user_flag($row['flag_id']);
+		$flag_image = $this->functions->get_user_flag((int) $flag_id);
 
 		$users_count = $total_users;
 
 		$total_users = $this->user->lang('FLAG_USERS', (int) $total_users);
 
+		$flags_array = $this->functions->get_flag_cache();
+
 		$this->template->assign_vars(array(
-			'FLAG'			=> html_entity_decode($row['flag_name']),
+			'FLAG'			=> html_entity_decode($flags_array[$flag_id]['flag_name']),
 			'FLAG_IMAGE'	=> $flag_image,
 			'TOTAL_USERS'	=> $total_users,
 			'S_VIEWONLINE'	=> $this->auth->acl_get('u_viewonline'),
@@ -320,40 +293,7 @@ class main_controller
 		// Assign breadcrumb template vars for the flags page
 		$this->template->assign_block_vars('navlinks', array(
 			'U_VIEW_FORUM'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $flag_id)),
-			'FORUM_NAME'		=> $row['flag_name'],
+			'FORUM_NAME'		=> html_entity_decode($flags_array[$flag_id]['flag_name']),
 		));
-	}
-
-	/**
-	 * Display flag on change in ucp
-	 * Ajax function
-	 * @param $flag_id
-	 *
-	 * @return \Symfony\Component\HttpFoundation\Response
-	 */
-	public function getFlag($flag_id)
-	{
-		if (empty($flag_id))
-		{
-			if ($this->config['flags_required'])
-			{
-				return new Response($this->user->lang['MUST_CHOOSE_FLAG']);
-			}
-			else
-			{
-				return new Response($this->user->lang['NO_SUCH_FLAG']);
-			}
-		}
-
-		$flags = $this->cache->get('_user_flags');
-
-		$flag_img = $this->ext_path . 'flags/' . strtolower($flags[$flag_id]['flag_image']);
-		$flag_img = str_replace('./', generate_board_url() . '/', $flag_img); //fix paths
-
-		$flag_name = $flags[$flag_id]['flag_name'];
-
-		$return = '<img class="flag_image" src="' . $flag_img . '" alt="' . $flag_name . '" title="' . $flag_name . '" />';
-
-		return new Response($return);
 	}
 }
