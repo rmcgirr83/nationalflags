@@ -418,7 +418,7 @@ class admin_controller
 			if (!sizeof($errors))
 			{
 				if (!empty($this->request->variable('flag_upload', '')))
-				{				
+				{
 					$flag_row['flag_image'] = $file->uploadname;
 
 					// phpbb_chmod doesn't work well here on some servers so be explicit
