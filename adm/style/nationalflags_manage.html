@@ -19,7 +19,7 @@
 		<!-- IF FOUND_FLAG -->
 		<dl>
 			<dt><label for="current_flag">{L_FLAG_FOUND}{L_COLON}</label></dt>
-			<dd>{FLAG_IMAGE}<br /><img src="{FOUND_FLAG}" alt="{FLAG_NAME}" title="{FLAG_NAME}" /></dd>
+			<dd>{FLAG_IMAGE}<br><img src="{FOUND_FLAG}" alt="{FLAG_NAME}" title="{FLAG_NAME}" /></dd>
 		</dl>
 		<!-- ENDIF -->
 		<!-- IF S_UPLOAD_FLAG -->
@@ -31,15 +31,15 @@
 		</dl>
 		<!-- ENDIF -->
 		<dl>
-			<dt><label for="flag_name">{L_FLAG_NAME}{L_COLON}</label><br /><span>{L_FLAG_NAME_EXPLAIN}</span></dt>
+			<dt><label for="flag_name">{L_FLAG_NAME}{L_COLON}</label><br><span>{L_FLAG_NAME_EXPLAIN}</span></dt>
 			<dd><input name="flag_name" type="text" id="flag_name" value="{FLAG_NAME}" maxlength="255" /></dd>
 		</dl>
 		<!-- IF S_ADD_FLAG and not S_UPLOAD_FLAG --><dl>
-			<dt><label for="flag_image">{L_FLAG_IMG}{L_COLON}</label><br /><span>{L_FLAG_IMG_EXPLAIN}</span></dt>
+			<dt><label for="flag_image">{L_FLAG_IMG}{L_COLON}</label><br><span>{L_FLAG_IMG_EXPLAIN}</span></dt>
 			<dd><input name="flag_image" type="text" id="flag_image" value="{FLAG_IMAGE}" maxlength="255" /></dd>
 		</dl><!-- ENDIF -->
 		<dl>
-			<dt><label for="flag_default">{L_FLAG_DEFAULT}{L_COLON}</label><br /><span>{L_FLAG_DEFAULT_EXPLAIN}</span></dt>
+			<dt><label for="flag_default">{L_FLAG_DEFAULT}{L_COLON}</label><br><span>{L_FLAG_DEFAULT_EXPLAIN}</span></dt>
 			<dd><label><input type="radio" class="radio" name="flag_default" value="1" <!-- IF FLAG_DEFAULT -->id="flag_default" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
 			<label><input type="radio" class="radio" name="flag_default" value="0" <!-- IF not FLAG_DEFAULT -->id="flag_default" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
@@ -61,7 +61,7 @@
 
 <h1>{TOTAL_FLAGS} {L_ACP_FLAGS}</h1>
 
-<p>{L_ACP_FLAGS_EXPLAIN}<br />{L_ACP_FLAGS_DONATE}</p>
+<p>{L_ACP_FLAGS_EXPLAIN}<br>{L_ACP_FLAGS_DONATE}</p>
 
 <form id="acp_flags" method="post" action="{U_ACTION}">
 	<fieldset class="quick">

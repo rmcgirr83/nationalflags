@@ -179,7 +179,7 @@ class admin_controller
 
 		// Set output vars for display in the template
 		$this->template->assign_vars(array(
-			'ERROR'				=> isset($error) ? ((sizeof($error)) ? implode('<br />', $error) : '') : '',
+			'ERROR'				=> isset($error) ? ((sizeof($error)) ? implode('<br>', $error) : '') : '',
 			'FLAGS_VERSION' 	=> $this->config['nationalflags_version'],
 			'FLAGS_NUM_DISPLAY'	=> $this->config['flags_num_display'],
 			'FLAGS_DISPLAY_INDEX'	=> $this->config['flags_display_index'] ? true : false,
@@ -347,7 +347,7 @@ class admin_controller
 			'U_BACK'		=> $this->u_action,
 			'FLAG_NAME'		=> $flag_row['flag_name'],
 			'FLAG_IMAGE'	=> $flag_row['flag_image'],
-			'ERROR_MSG'		=> (sizeof($errors)) ? implode('<br />', $errors) : '',
+			'ERROR_MSG'		=> (sizeof($errors)) ? implode('<br>', $errors) : '',
 			'FLAG_LIST'		=> $this->list_flag_names(),
 
 			'S_ADD_FLAG'	=> true,
@@ -451,7 +451,7 @@ class admin_controller
 			'L_TITLE'		=> $this->user->lang['FLAG_EDIT'],
 			'U_ACTION'		=> $this->u_action . "&amp;flag_id=$flag_id&amp;action=edit",
 			'U_BACK'		=> $this->u_action . '&amp;mode=manage',
-			'ERROR_MSG'		=> (sizeof($errors)) ? implode('<br />', $errors) : '',
+			'ERROR_MSG'		=> (sizeof($errors)) ? implode('<br>', $errors) : '',
 
 			'FLAG_NAME'		=> $row['flag_name'],
 			'FLAG_IMAGE'	=> $row['flag_image'],

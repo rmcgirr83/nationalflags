@@ -73,14 +73,14 @@ $lang = array_merge($lang, array(
 	'FLAGS_DISPLAY_TO_GUESTS_EXPLAIN'	=> 'Choosing Yes here will display the flags to guests and bots',
 
 	//Logs, messages and errors
-	'LOG_FLAGS_DELETED'					=> '<strong>Deleted flag</strong><br />» %1$s',
-	'LOG_FLAG_EDIT'						=> '<strong>Updated flag</strong><br />» %1$s',
-	'LOG_FLAG_ADD'						=> '<strong>Added new flag</strong><br />» %1$s',
+	'LOG_FLAGS_DELETED'					=> '<strong>Deleted flag</strong><br>» %1$s',
+	'LOG_FLAG_EDIT'						=> '<strong>Updated flag</strong><br>» %1$s',
+	'LOG_FLAG_ADD'						=> '<strong>Added new flag</strong><br>» %1$s',
 	'MSG_FLAGS_DELETED'					=> 'Flag has been deleted.',
 	'MSG_CONFIRM'						=> '<strong>Are you sure you want to delete this flag?</strong>',
 	'MSG_FLAG_CONFIRM_DELETE'			=> array(
-		1	=> '<br /><strong>%d</strong> user has this flag and will have to select a different flag if you choose to delete this one.',
-		2	=> '<br /><strong>%d</strong> users have this flag and will have to select a different flag if you choose to delete this one.',
+		1	=> '<br><strong>%d</strong> user has this flag and will have to select a different flag if you choose to delete this one.',
+		2	=> '<br><strong>%d</strong> users have this flag and will have to select a different flag if you choose to delete this one.',
 	),
 	'MSG_FLAG_EDITED'					=> 'Flag has been edited.',
 	'MSG_FLAG_ADDED'					=> 'New flag has been added.',

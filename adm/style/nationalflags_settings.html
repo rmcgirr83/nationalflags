@@ -1,6 +1,6 @@
 <!-- INCLUDE overall_header.html -->
 <h1>{L_ACP_FLAG_SETTINGS}</h1>
-<p>{L_FLAGS_VERSION} {FLAGS_VERSION}<br />{L_ACP_FLAGS_DONATE}</p>
+<p>{L_FLAGS_VERSION} {FLAGS_VERSION}<br>{L_ACP_FLAGS_DONATE}</p>
 
 <!-- IF ERROR -->
 	<div class="errorbox"><h3>{L_WARNING}</h3>
@@ -11,26 +11,26 @@
 <form id="acp_flags_config" method="post" action="{U_ACTION}">
 	<fieldset>
 		<dl>
-			<dt><label for="flags_display_index">{L_FLAGS_ON_INDEX}{L_COLON}</label><br />{L_FLAGS_ON_INDEX_EXPLAIN}</dt>
+			<dt><label for="flags_display_index">{L_FLAGS_ON_INDEX}{L_COLON}</label><br>{L_FLAGS_ON_INDEX_EXPLAIN}</dt>
 			<dd><label><input type="radio" class="radio" name="flags_display_index" value="1" <!-- IF FLAGS_DISPLAY_INDEX -->id="flags_display_index" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
 			<label><input type="radio" class="radio" name="flags_display_index" value="0" <!-- IF not FLAGS_DISPLAY_INDEX -->id="flags_display_index" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
 		<dl>
-			<dt><label id="flags_num_display" for="flags_num_display">{L_FLAGS_NUM_DISPLAY}</label><br />{L_FLAGS_NUM_DISPLAY_EXPLAIN}</dt>
+			<dt><label id="flags_num_display" for="flags_num_display">{L_FLAGS_NUM_DISPLAY}</label><br>{L_FLAGS_NUM_DISPLAY_EXPLAIN}</dt>
 			<dd><input type="text" name="flags_num_display" id="flags_num_display" size="10" value="{FLAGS_NUM_DISPLAY}" /></dd>
 		</dl>
 		<dl>
-			<dt><label for="flags_required">{L_FLAGS_REQUIRED}{L_COLON}</label><br />{L_FLAGS_REQUIRED_EXPLAIN}</dt>
+			<dt><label for="flags_required">{L_FLAGS_REQUIRED}{L_COLON}</label><br>{L_FLAGS_REQUIRED_EXPLAIN}</dt>
 			<dd><label><input type="radio" class="radio" name="flags_required" value="1" <!-- IF FLAGS_REQUIRED -->id="flags_required" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
 			<label><input type="radio" class="radio" name="flags_required" value="0" <!-- IF not FLAGS_REQUIRED -->id="flags_required" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
 		<dl>
-			<dt><label for="flags_display_msg">{L_FLAGS_DISPLAY_MSG}{L_COLON}</label><br />{L_FLAGS_DISPLAY_MSG_EXPLAIN}</dt>
+			<dt><label for="flags_display_msg">{L_FLAGS_DISPLAY_MSG}{L_COLON}</label><br>{L_FLAGS_DISPLAY_MSG_EXPLAIN}</dt>
 			<dd><label><input type="radio" class="radio" name="flags_display_msg" value="1" <!-- IF FLAGS_DISPLAY_MSG -->id="flags_display_msg" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
 			<label><input type="radio" class="radio" name="flags_display_msg" value="0" <!-- IF not FLAGS_DISPLAY_MSG -->id="flags_display_msg" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
 		<dl>
-			<dt><label for="flags_display_to_guests">{L_FLAGS_DISPLAY_TO_GUESTS}{L_COLON}</label><br />{L_FLAGS_DISPLAY_TO_GUESTS_EXPLAIN}</dt>
+			<dt><label for="flags_display_to_guests">{L_FLAGS_DISPLAY_TO_GUESTS}{L_COLON}</label><br>{L_FLAGS_DISPLAY_TO_GUESTS_EXPLAIN}</dt>
 			<dd><label><input type="radio" class="radio" name="flags_display_to_guests" value="1" <!-- IF FLAGS_DISPLAY_TO_GUESTS -->id="flags_display_to_guests" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
 			<label><input type="radio" class="radio" name="flags_display_to_guests" value="0" <!-- IF not FLAGS_DISPLAY_TO_GUESTS -->id="flags_display_to_guests" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>

@@ -23,7 +23,7 @@
     "extra": {
         "display-name": "National Flags",
         "soft-require": {
-			"phpbb/phpbb": ">=3.1.4-RC1,<3.2.*"
+			"phpbb/phpbb": ">=3.1.4-RC1,<3.2.0"
         },
         "version-check": {
             "host": "www.phpbb.com",
