@@ -209,9 +209,18 @@ class listener implements EventSubscriberInterface
 		$event['data'] = array_merge($event['data'], array(
 			'user_flag'	=> $this->request->variable('user_flag', (int) $this->user->data['user_flag']),
 		));
+		$flags = $this->functions->get_flag_cache();
+		$has_default = false;
+		foreach ($flags as $flag => $settings)
+		{
+			if (!empty($settings['flag_default']))
+			{
+				$has_default = true;
+			}
+		}
 
 		$this->template->assign_vars(array(
-			'FLAG_DEFAULT' => (empty($event['data']['user_flag'])) ? true : false,
+			'FLAG_DEFAULT' => (empty($event['data']['user_flag']) && $has_default) ? true : false,
 		));
 		$this->display_flag_options($event);
 	}
