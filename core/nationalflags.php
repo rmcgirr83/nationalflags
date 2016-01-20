@@ -9,7 +9,7 @@
 
 namespace rmcgirr83\nationalflags\core;
 
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class nationalflags
 {
@@ -178,7 +178,7 @@ class nationalflags
 			'FROM'		=> array(USERS_TABLE => 'u'),
 			'WHERE'		=> $this->db->sql_in_set('user_type', array(USER_NORMAL, USER_FOUNDER)) . ' AND user_flag > 0',
 			'GROUP_BY'	=> 'user_flag',
-			'ORDER_BY'	=> 'fnum DESC',
+			'ORDER_BY'	=> 'fnum DESC, user_flag ASC',
 		);
 
 		// we limit the number of flags to display to the number set in the ACP settings
@@ -212,32 +212,42 @@ class nationalflags
 	 * Ajax function
 	 * @param $flag_id
 	 *
-	 * @return \Symfony\Component\HttpFoundation\Response
+	 * @return \Symfony\Component\HttpFoundation\JsonResponse
 	 */
 	public function getFlag($flag_id)
 	{
-		if (empty($flag_id))
+		$flags = $this->get_flag_cache();
+
+		foreach ($flags as $id => $data)
+		{
+			$flags_id[] = $id;
+		}
+		if (!in_array($flag_id, $flags_id))
 		{
 			if ($this->config['flags_required'])
 			{
-				return new Response($this->user->lang['MUST_CHOOSE_FLAG']);
+				return new JsonResponse(array(
+					'error' => $this->user->lang['MUST_CHOOSE_FLAG'],
+				));
 			}
 			else
 			{
-				return new Response($this->user->lang['NO_SUCH_FLAG']);
+				return new JsonResponse(array(
+					'error' => $this->user->lang['NO_SUCH_FLAG'],
+				));
 			}
 		}
-
-		$flags = $this->get_flag_cache();
 
 		$flag_img = $this->ext_path . 'flags/' . $flags[$flag_id]['flag_image'];
 		$flag_img = str_replace('./', generate_board_url() . '/', $flag_img); //fix paths
 
 		$flag_name = $flags[$flag_id]['flag_name'];
 
-		$return = '<img class="flag_image" src="' . $flag_img . '" alt="' . $flag_name . '" title="' . $flag_name . '" />';
-
-		return new Response($return);
+		$json = new JsonResponse(array(
+				'flag_image'     => $flag_img,
+				'flag_title'     => $flag_name,
+		));
+		return $json;
 	}
 
 	/**
