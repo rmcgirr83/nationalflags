@@ -1,3 +1,4 @@
+<a class="category<!-- IF S_NATIONALFLAGS_HIDDEN --> hidden-category<!-- ENDIF -->" style="display: none; height: 0"></a>
 <div class="forabg responsive-hide" id="flags">
 	<div class="inner">
 	<ul class="topiclist">
@@ -6,9 +7,10 @@
 				<dt><div class="list-inner"><!-- IF U_FLAGS --><a href="{U_FLAGS}"><!-- ENDIF -->{L_NATIONAL_FLAGS}<!-- IF U_FLAGS --></a><!-- ENDIF --></div></dt>
 				<dd></dd>
 			</dl>
+			<!-- IF U_NATIONALFLAGS_COLLAPSE_URL --><a href="{U_NATIONALFLAGS_COLLAPSE_URL}" class="collapse-btn collapse-<!-- IF S_NATIONALFLAGS_HIDDEN -->show<!-- ELSE -->hide<!-- ENDIF -->" data-hidden="{S_NATIONALFLAGS_HIDDEN}" data-ajax="phpbb_collapse" data-overlay="true" title="{L_COLLAPSIBLE_CATEGORIES_TITLE}" style="display: none; line-height: 0;"></a><!-- ENDIF -->
 		</li>
 	</ul>
-	<ul class="forums flags">
+	<ul class="forums flags collapsible">
 	<!-- BEGIN flag -->
 		<li class="flags_bg flagslist">
 			<a href="{flag.U_FLAG}">{flag.FLAG}</a><br>{flag.FLAG_USERS}

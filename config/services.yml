@@ -68,3 +68,4 @@ services:
             - %rmcgirr83.nationalflags.table.nationalflags%
             - @ext.manager
             - @path_helper
+            - @?phpbb.collapsiblecategories.operator

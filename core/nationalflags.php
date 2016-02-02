@@ -67,7 +67,8 @@ class nationalflags
 			\phpbb\user $user,
 			$flags_table,
 			\phpbb\extension\manager $ext_manager,
-			\phpbb\path_helper $path_helper)
+			\phpbb\path_helper $path_helper,
+			\phpbb\collapsiblecategories\operator\operator $operator = null)
 	{
 		$this->config = $config;
 		$this->helper = $helper;
@@ -78,6 +79,7 @@ class nationalflags
 		$this->flags_table = $flags_table;
 		$this->ext_manager	 = $ext_manager;
 		$this->path_helper	 = $path_helper;
+		$this->operator = $operator;
 
 		$this->ext_path = $this->ext_manager->get_extension_path('rmcgirr83/nationalflags', true);
 		$this->ext_path_web = $this->path_helper->update_web_root_path($this->ext_path);
@@ -200,6 +202,16 @@ class nationalflags
 
 		if ($count)
 		{
+			if ($this->operator !== null)
+			{
+				$fid = 'nationalflags'; // can be any unique string to identify your extension's collapsible element
+				$this->template->assign_vars(array(
+					'S_NATIONALFLAGS_HIDDEN' => in_array($fid, $this->operator->get_user_categories()),
+					'U_NATIONALFLAGS_COLLAPSE_URL' => $this->helper->route('phpbb_collapsiblecategories_main_controller', array(
+						'forum_id' => $fid,
+						'hash' => generate_link_hash("collapsible_$fid")))
+				));
+			}
 			$this->template->assign_vars(array(
 				'U_FLAGS'		=> $this->helper->route('rmcgirr83_nationalflags_display'),
 				'S_FLAGS'	=> true,
