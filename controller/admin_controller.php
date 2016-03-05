@@ -10,8 +10,6 @@
 
 namespace rmcgirr83\nationalflags\controller;
 
-use phpbb\exception\http_exception;
-
 /**
 * Admin controller
 */
@@ -571,7 +569,7 @@ class admin_controller
 		$upload = new \fileupload('FLAG_IMAGE_', array('gif', 'png', 'jpeg', 'jpg'), false, false, false, self::MAX_WIDTH, self::MAX_HEIGHT);
 
 		$file = $upload->form_upload('flag_upload');
-		
+
 		$file->move_file($upload_dir, true);
 
 		if (sizeof($file->error))
