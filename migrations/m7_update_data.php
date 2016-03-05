@@ -26,6 +26,7 @@ class m7_update_data extends \phpbb\db\migration\migration
 		return array(
 			array('config.update', array('nationalflags_version', '2.0.0')),
 			array('config.remove', array('allow_flags')),
+			array('config.add', array('flag_position', 0)),
 		);
 	}
 

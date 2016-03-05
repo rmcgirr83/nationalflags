@@ -316,8 +316,11 @@ class listener implements EventSubscriberInterface
 	 */
 	public function viewtopic_template_vars_before($event)
 	{
+		$flag_display_position = $this->flag_display_position();
+
 		$this->template->assign_vars(array(
 			'S_FLAGS'		=> true,
+			$flag_display_position => true,
 		));
 	}
 	/**
@@ -368,6 +371,7 @@ class listener implements EventSubscriberInterface
 
 		$event['post_row'] = array_merge($event['post_row'], array(
 			'USER_FLAG' => $flag,
+			'FLAG_POSITION'	=> $this->config['flag_position'],
 			'U_FLAG'	=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $flags[$event['user_poster_data']['user_flag']]['flag_id'])) : '',
 		));
 	}
@@ -385,11 +389,13 @@ class listener implements EventSubscriberInterface
 		{
 			$flag = $this->functions->get_user_flag($event['member']['user_flag']);
 			$flags = $this->functions->get_flag_cache();
+			$flag_display_position = $this->flag_display_position();
 
 			$this->template->assign_vars(array(
 				'USER_FLAG'		=> $flag,
 				'S_FLAGS'		=> true,
 				'U_FLAG'		=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $flags[$event['member']['user_flag']]['flag_id'])) : '',
+				$flag_display_position => true,
 			));
 		}
 	}
@@ -472,8 +478,10 @@ class listener implements EventSubscriberInterface
 			$array['U_FLAG'] = ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $event['user_info']['user_flag'])) : '';
 			$event['msg_data'] = $array;
 
+			$flag_display_position = $this->flag_display_position();
 			$this->template->assign_vars(array(
 				'S_FLAGS'		=> true,
+				$flag_display_position => true,
 			));
 		}
 	}
@@ -519,5 +527,25 @@ class listener implements EventSubscriberInterface
 			'S_FLAG_REQUIRED'	=> ($this->config['flags_required']) ? true : false,
 			'AJAX_FLAG_INFO' 	=> $this->helper->route('rmcgirr83_nationalflags_getflag', array('flag_id' => 'FLAG_ID')),
 		));
+	}
+
+	/**
+	* Flag position
+	*/
+	private function flag_display_position()
+	{
+		$flag_position_constants = "\\rmcgirr83\\nationalflags\\core\\flag_position_constants";
+		$class = new \ReflectionClass($flag_position_constants);
+		$flag_position_constants = $class->getConstants();
+
+		$flag_display_position = '';
+		foreach ($flag_position_constants as $name => $value)
+		{
+			if ($value == $this->config['flag_position'])
+			{
+				$flag_display_position = 'FLAG_POSITION_' . $name;
+			}
+		}
+		return $flag_display_position;
 	}
 }

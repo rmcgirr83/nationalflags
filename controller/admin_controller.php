@@ -10,6 +10,8 @@
 
 namespace rmcgirr83\nationalflags\controller;
 
+use phpbb\exception\http_exception;
+
 /**
 * Admin controller
 */
@@ -187,6 +189,7 @@ class admin_controller
 			'FLAGS_REQUIRED'	=> $this->config['flags_required'] ? true : false,
 			'FLAGS_DISPLAY_MSG'	=> $this->config['flags_display_msg'] ? true : false,
 			'FLAGS_DISPLAY_TO_GUESTS'	=> $this->config['flags_display_to_guests'] ? true : false,
+			'FLAG_POSITION'	=> $this->flag_position($this->config['flag_position']),
 
 			'S_FLAGS'			=> true,
 
@@ -208,6 +211,7 @@ class admin_controller
 		$this->config->set('flags_display_msg', $this->request->variable('flags_display_msg', 0));
 		$this->config->set('flags_display_index', $this->request->variable('flags_display_index', 0));
 		$this->config->set('flags_display_to_guests', $this->request->variable('flags_display_to_guests', 0));
+		$this->config->set('flag_position', $this->request->variable('flag_position', 0));
 	}
 
 	/**
@@ -289,55 +293,23 @@ class admin_controller
 		{
 			$errors = $this->check_flag($flag_row['flag_name'], $errors, 'add_flag', $flag_row['flag_image']);
 
-			if (!empty($this->request->variable('flag_upload', '')))
+			if (!sizeof($errors) && $this->can_upload_flag())
 			{
-				include_once($this->root_path . 'includes/functions_upload.' . $this->php_ext);
-
-				//Set upload directory
-				$upload_dir = $this->ext_path_web . 'flags';
-				$upload_dir = str_replace(array('../', '..\\', './', '.\\'), '', $upload_dir);
-
-				//Upload file
-				$upload = new \fileupload('FLAG_EXISTS_');
-				$upload->set_allowed_extensions(array('gif', 'png', 'jpeg', 'jpg'));
-				$upload->set_allowed_dimensions(false, false, self::MAX_WIDTH, self::MAX_HEIGHT);
-				$file = $upload->form_upload('flag_upload');
-				$file->move_file($upload_dir, false);
-
-				if (sizeof($file->error))
-				{
-					$file->remove();
-					$file_error = $file->error;
-					$errors = array_merge($errors, $file_error);
-				}
+				$flag_row['flag_image'] = $this->flag_upload($errors);
 			}
 
 			if (!sizeof($errors))
 			{
-				if (!empty($this->request->variable('flag_upload', '')))
-				{
-					$flag_row['flag_image'] = $file->uploadname;
-
-					// phpbb_chmod doesn't work well here on some servers so be explicit
-					@chmod($this->ext_path_web . 'flags/' . $file->uploadname, 0644);
-				}
 				// if this flag is set to default, change all other flags to not be set as default
 				if ($flag_row['flag_default'])
 				{
-					$sql = 'UPDATE ' . $this->flags_table . ' SET flag_default = 0 WHERE flag_default = 1';
-					$this->db->sql_query($sql);
+					$this->change_flag_default();
 				}
 
 				$sql = 'INSERT INTO ' . $this->flags_table . ' ' . $this->db->sql_build_array('INSERT', $flag_row);
 				$this->db->sql_query($sql);
 
-				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_FLAG_ADD', time(), array($flag_row['flag_name']));
-
-				$this->cache->destroy('_user_flags');
-				// cache this data for ever, can only change in ACP
-				$this->functions->cache_flags();
-
-				trigger_error($this->user->lang['MSG_FLAG_ADDED'] . adm_back_link($this->u_action));
+				$this->log_message('LOG_FLAG_ADD', $flag_row['flag_name'], 'MSG_FLAG_ADDED');
 			}
 		}
 
@@ -386,50 +358,24 @@ class admin_controller
 
 		$flag_row = array(
 			'flag_name'			=> ucfirst(utf8_normalize_nfc($this->request->variable('flag_name', '', true))),
-			'flag_image'		=> (!$this->can_upload_flag()) ? $this->request->variable('flag_image', $row['flag_image']) : $row['flag_image'],
+			'flag_image'		=> (!$this->can_upload_flag()) ? $this->request->variable('flag_image', $row['flag_image']) : '',
 			'flag_default'		=> $this->request->variable('flag_default', 0),
 		);
 
 		if ($this->request->is_set_post('submit'))
 		{
 			$errors = $this->check_flag($flag_row['flag_name'], $errors, 'edit_flag', $flag_row['flag_image']);
-			if (!empty($this->request->variable('flag_upload', '')))
+
+			if (!sizeof($errors) && $this->can_upload_flag())
 			{
-				include_once($this->root_path . 'includes/functions_upload.' . $this->php_ext);
-
-				//Set upload directory
-				$upload_dir = $this->ext_path_web . 'flags';
-				$upload_dir = str_replace(array('../', '..\\', './', '.\\'), '', $upload_dir);
-
-				//Upload file
-				$upload = new \fileupload();
-				$upload->set_allowed_extensions(array('gif', 'png', 'jpeg', 'jpg'));
-				$upload->set_allowed_dimensions(false, false, self::MAX_WIDTH, self::MAX_HEIGHT);
-				$file = $upload->form_upload('flag_upload');
-				$file->move_file($upload_dir, true);
-
-				if (sizeof($file->error))
-				{
-					$file->remove();
-					$file_error = $file->error;
-					$errors = array_merge($errors, $file_error);
-				}
+				$flag_row['flag_image'] = $this->flag_upload($errors);
 			}
 			if (!sizeof($errors))
 			{
-				if (!empty($this->request->variable('flag_upload', '')))
-				{
-					$flag_row['flag_image'] = $file->uploadname;
-
-					// phpbb_chmod doesn't work well here on some servers so be explicit
-					@chmod($this->ext_path_web . 'flags/' . $file->uploadname, 0644);
-				}
-
 				// if this flag is set to default, change all other flags to not be set as default
 				if ($flag_row['flag_default'])
 				{
-					$sql = 'UPDATE ' . $this->flags_table . ' SET flag_default = 0 WHERE flag_default = 1';
-					$this->db->sql_query($sql);
+					$this->change_flag_default();
 				}
 
 				$sql = 'UPDATE ' . $this->flags_table . '
@@ -437,12 +383,8 @@ class admin_controller
 					WHERE flag_id = ' . (int) $flag_id;
 				$this->db->sql_query($sql);
 
-				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_FLAG_EDIT', time(), array($flag_row['flag_name']));
+				$this->log_message('LOG_FLAG_EDIT', $flag_row['flag_name'], 'MSG_FLAG_EDITED');
 
-				$this->cache->destroy('_user_flags');
-				$this->functions->cache_flags();
-
-				trigger_error($this->user->lang['MSG_FLAG_EDITED'] . adm_back_link($this->u_action));
 			}
 		}
 
@@ -459,10 +401,11 @@ class admin_controller
 			'FLAG_DEFAULT'	=> $row['flag_default'],
 			'FOUND_FLAG'	=> (!empty($found_flag)) ? $found_flag : '',
 			'FLAG_LIST'		=> $this->list_flag_names(),
-			'S_CAN_OVERWRITE'	=> true,
+
 			'S_ADD_FLAG'	=> true,
 			'S_UPLOAD_FLAG'	=> $this->can_upload_flag(),
 			'S_ERROR'		=> (sizeof($errors)) ? true : false,
+			'S_FORM_ENCTYPE'	=> ' enctype="multipart/form-data"',
 			)
 		);
 	}
@@ -487,9 +430,7 @@ class admin_controller
 			$this->db->sql_freeresult($result);
 
 			// Delete the flag...
-			$sql = 'DELETE FROM ' . $this->flags_table . '
-				WHERE flag_id = ' . (int) $flag_id;
-			$this->db->sql_query($sql);
+			$this->db->sql_query('DELETE FROM ' . $this->flags_table . ' WHERE flag_id = ' . (int) $flag_id);
 
 			// Reset the flag for users
 			$sql = 'UPDATE ' . USERS_TABLE . '
@@ -500,12 +441,7 @@ class admin_controller
 			// remove the flag from the server
 			@unlink($this->ext_path_web . 'flags/' . $flag_row['flag_image']);
 
-			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_FLAGS_DELETED', time(), array($flag_row['flag_name']));
-
-			$this->cache->destroy('_user_flags');
-			$this->functions->cache_flags();
-
-			trigger_error($this->user->lang['MSG_FLAGS_DELETED'] . adm_back_link($this->u_action . "&amp;mode=manage"));
+			$this->log_message('LOG_FLAGS_DELETED', $flag_row['flag_name'], 'MSG_FLAGS_DELETED');
 		}
 		else
 		{
@@ -557,10 +493,10 @@ class admin_controller
 
 		if (!$this->can_upload_flag())
 		{
-		if (empty($flag_image))
-		{
-			$errors[] = $this->user->lang['FLAG_ERROR_NO_FLAG_IMG'];
-		}
+			if (empty($flag_image))
+			{
+				$errors[] = $this->user->lang['FLAG_ERROR_NO_FLAG_IMG'];
+			}
 		}
 
 		if ($form_key == 'add_flag')
@@ -608,6 +544,97 @@ class admin_controller
 		array_multisort($flag, SORT_NATURAL, $data);
 
 		return implode(', ', $flag);
+	}
+
+	/**
+	* Copy a flag image to server.
+	*
+	* @param	string	$flag 	The flag image from usrs hard drive
+	* @param	array	$error	The array error, passed by reference
+	* @return	false|string	String if no errors, else false
+	*/
+	private function flag_upload(&$errors)
+	{
+		$new_flag = $this->request->variable('flag_upload', '');
+		$old_flag = $this->request->variable('old_flag', '');
+		// Init upload class
+		if (!class_exists('fileupload'))
+		{
+			include($this->root_path . 'includes/functions_upload.' . $this->php_ext);
+		}
+
+		//Set upload directory
+		$upload_dir = $this->ext_path_web . 'flags';
+		$upload_dir = str_replace(array('../', '..\\', './', '.\\'), '', $upload_dir);
+
+		//Upload file
+		$upload = new \fileupload('FLAG_IMAGE_', array('gif', 'png', 'jpeg', 'jpg'), false, false, false, self::MAX_WIDTH, self::MAX_HEIGHT);
+
+		$file = $upload->form_upload('flag_upload');
+		
+		$file->move_file($upload_dir, true);
+
+		if (sizeof($file->error))
+		{
+			$file->remove();
+			$errors = array_merge($errors, $file->error);
+			return false;
+		}
+		// phpbb_chmod doesn't work well here on some servers so be explicit
+		@chmod($this->ext_path_web . 'flags/' . $file->uploadname, 0644);
+
+		// remove the old flag if set
+		@unlink($this->ext_path_web . 'flags/' . $old_flag);
+
+		return $file->uploadname;
+	}
+
+	/**
+	 * Change flag setting to not be default
+	 *
+	 * @return null
+	 * @access private
+	*/
+	private function change_flag_default()
+	{
+		$this->db->sql_query('UPDATE ' . $this->flags_table . ' SET flag_default = 0 WHERE flag_default = 1');
+	}
+
+	/**
+	 * Log Message either edit, add or delete
+	 *
+	 * @return message
+	 * @access private
+	*/
+	private function log_message($log_message, $flag_name, $user_message)
+	{
+		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, $log_message, time(), array($flag_name));
+
+		$this->cache->destroy('_user_flags');
+		$this->functions->cache_flags();
+
+		trigger_error($this->user->lang[$user_message] . adm_back_link($this->u_action));
+	}
+	/**
+	* Display drop down of areas to display the flag
+	*/
+	private function flag_position($flag_position)
+	{
+		global $user;
+
+		$flag_position_constants = "\\rmcgirr83\\nationalflags\\core\\flag_position_constants";
+		$class = new \ReflectionClass($flag_position_constants);
+		$flag_position_constants = $class->getConstants();
+
+		$s_flag_position = '';
+		foreach ($flag_position_constants as $name => $value)
+		{
+			$selected = ($value == $flag_position) ? ' selected="selected"' : '';
+			$position_name = $user->lang['FLAG_POSITION_' . $name];
+			$s_flag_position .= "<option value='{$value}'$selected>$position_name</option>";
+		}
+
+		return $s_flag_position;
 	}
 
 	/**

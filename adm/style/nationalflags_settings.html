@@ -34,6 +34,10 @@
 			<dd><label><input type="radio" class="radio" name="flags_display_to_guests" value="1" <!-- IF FLAGS_DISPLAY_TO_GUESTS -->id="flags_display_to_guests" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
 			<label><input type="radio" class="radio" name="flags_display_to_guests" value="0" <!-- IF not FLAGS_DISPLAY_TO_GUESTS -->id="flags_display_to_guests" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
+		<dl>
+			<dt><label for="flags_position_viewtopic">{L_FLAGS_VIEWTOPIC_POSITION}{L_COLON}</label><br>{L_FLAGS_VIEWTOPIC_POSITION_EXPLAIN}</dt>
+			<dd><select id="flag_position" name="flag_position">{FLAG_POSITION}</select></dd>
+		</dl>
 		<p class="submit-buttons">
 			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
 			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
