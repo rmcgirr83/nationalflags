@@ -154,7 +154,11 @@ class nationalflags
 		$flag_options = '<option value="0">' . $this->user->lang['FLAG_EXPLAIN'] . '</option>';
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$selected = ($row['flag_id'] == $flag_id) ? ' selected="selected"' : ($row['flag_default'] ? ' selected="selected"' : '');
+			$selected = ($row['flag_id'] == $flag_id) ? ' selected="selected"' : '';
+			if (!$selected)
+			{
+				$selected = $row['flag_default'] ? ' selected="selected"' : '';
+			}
 			$flag_options .= '<option value="' . $row['flag_id'] . '" ' . $selected . '>' . $row['flag_name'] . '</option>';
 		}
 		$this->db->sql_freeresult($result);
