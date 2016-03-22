@@ -10,7 +10,7 @@
 	<h3>{L_WARNING}</h3>
 	<p>{ERROR_MSG}</p>
 	<!-- ENDIF -->
-	<p><!-- IF not S_UPLOAD_FLAG -->{L_ACP_NO_UPLOAD}<!-- ENDIF --><!-- IF S_UPLOAD_FLAG --><!-- IF S_CAN_OVERWRITE -->{L_FLAG_UPLOAD_NOTICE}<!-- ELSE -->{L_FLAG_UPLOAD_NO_OVERWRITE}<!-- ENDIF --><!-- ENDIF --></p>
+	<!-- IF !S_ERROR --><p><!-- IF not S_UPLOAD_FLAG -->{L_ACP_NO_UPLOAD}<!-- ENDIF --><!-- IF S_UPLOAD_FLAG --><!-- IF S_CAN_OVERWRITE -->{L_FLAG_UPLOAD_NOTICE}<!-- ELSE -->{L_FLAG_UPLOAD_NO_OVERWRITE}<!-- ENDIF --><!-- ENDIF --></p><!-- ENDIF -->
 </div>
 
 

@@ -15,13 +15,6 @@ namespace rmcgirr83\nationalflags\controller;
 */
 class admin_controller
 {
-
-	/**
-	* define our constants
-	**/
-	const MAX_WIDTH = 32;
-	const MAX_HEIGHT = 32;
-
 	/** @var \phpbb\cache\service */
 	protected $cache;
 
@@ -282,7 +275,7 @@ class admin_controller
 		$errors = array();
 
 		$flag_row = array(
-			'flag_name'			=> ucfirst(utf8_normalize_nfc($this->request->variable('flag_name', '', true))),
+			'flag_name'			=> ucfirst($this->request->variable('flag_name', '', true)),
 			'flag_image'		=> (!$this->can_upload_flag()) ? $this->request->variable('flag_image', '') : '',
 			'flag_default'		=> $this->request->variable('flag_default', 0),
 		);
@@ -293,7 +286,7 @@ class admin_controller
 
 			if (!sizeof($errors) && $this->can_upload_flag())
 			{
-				$flag_row['flag_image'] = $this->flag_upload($errors);
+				$flag_row['flag_image'] = $this->flag_upload($errors, 'add_flag');
 			}
 
 			if (!sizeof($errors))
@@ -355,7 +348,7 @@ class admin_controller
 		$errors = array();
 
 		$flag_row = array(
-			'flag_name'			=> ucfirst(utf8_normalize_nfc($this->request->variable('flag_name', '', true))),
+			'flag_name'			=> ucfirst($this->request->variable('flag_name', '', true)),
 			'flag_image'		=> (!$this->can_upload_flag()) ? $this->request->variable('flag_image', $row['flag_image']) : '',
 			'flag_default'		=> $this->request->variable('flag_default', 0),
 		);
@@ -366,7 +359,7 @@ class admin_controller
 
 			if (!sizeof($errors) && $this->can_upload_flag())
 			{
-				$flag_row['flag_image'] = $this->flag_upload($errors);
+				$flag_row['flag_image'] = $this->flag_upload($errors, 'edit_flag');
 			}
 			if (!sizeof($errors))
 			{
@@ -551,9 +544,8 @@ class admin_controller
 	* @param	array	$error	The array error, passed by reference
 	* @return	false|string	String if no errors, else false
 	*/
-	private function flag_upload(&$errors)
+	private function flag_upload(&$errors, $action = '')
 	{
-		$new_flag = $this->request->variable('flag_upload', '');
 		$old_flag = $this->request->variable('old_flag', '');
 		// Init upload class
 		if (!class_exists('fileupload'))
@@ -566,9 +558,15 @@ class admin_controller
 		$upload_dir = str_replace(array('../', '..\\', './', '.\\'), '', $upload_dir);
 
 		//Upload file
-		$upload = new \fileupload('FLAG_IMAGE_', array('gif', 'png', 'jpeg', 'jpg'), false, false, false, self::MAX_WIDTH, self::MAX_HEIGHT);
+		$upload = new \fileupload('FLAG_IMAGE_', array('gif', 'png', 'jpeg', 'jpg'));
 
 		$file = $upload->form_upload('flag_upload');
+
+		// if the flag_upload field is empty and we are editing...return the old flag
+		if ($action == 'edit_flag' && empty($file->realname))
+		{
+			return $old_flag;
+		}
 
 		$file->move_file($upload_dir, true);
 
