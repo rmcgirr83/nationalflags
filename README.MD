@@ -12,7 +12,7 @@ Custom Flag Page
 Users of a Flag
 ![Screenshot](users_of_flag.jpg)
 
-[![Build Status](https://travis-ci.org/RMcGirr83/phpBB-3.1-nationalflags.svg?branch=master)](https://travis-ci.org/RMcGirr83/phpBB-3.1-nationalflags)
+[![Build Status](https://travis-ci.org/rmcgirr83/phpBB-3.1-nationalflags.svg?branch=master)](https://travis-ci.org/rmcgirr83/phpBB-3.1-nationalflags)
 ## Installation
 
 ### 1. clone
@@ -20,7 +20,7 @@ Clone (or download and move) the repository into the folder ext/rmcgirr83/nation
 
 ```
 cd phpBB3
-git clone https://github.com/RMcGirr83/phpBB-3.1-nationalflags.git ext/rmcgirr83/nationalflags/
+git clone https://github.com/rmcgirr83/phpBB-3.1-nationalflags.git ext/rmcgirr83/nationalflags/
 ```
 
 ### 2. activate
