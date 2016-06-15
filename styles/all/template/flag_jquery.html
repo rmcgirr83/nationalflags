@@ -7,9 +7,17 @@ jQuery( document ).ready(function() {
 		var flagId = $(this).val();
         $.ajax({
             url: AJAX_FLAG_INFO.replace("FLAG_ID", flagId),
-			dataType:'html',
-			success:function(html){
-				$('#flag_image').html(html).show();
+			dataType: 'text',
+			success: function(data){
+				var json = $.parseJSON(data);
+				if (json.error)
+				{
+					$('#flag_image').html(''+json.error+'');
+				}
+				else
+				{
+					$('#flag_image').html('<img class="flag_image" src="'+json.flag_image+'" alt="'+json.flag_name+'" title="'+json.flag_name+'" />');
+				}
 			}
 		});
 	});

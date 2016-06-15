@@ -31,5 +31,9 @@ ul.flags li.flagslist {
 .flag_image {
 	font-size: 12px;
 	height: 32px;
-	vertical-align:middle;
+	vertical-align: middle;
+}
+
+.avatarflag {
+	margin-left: 8px;
 }

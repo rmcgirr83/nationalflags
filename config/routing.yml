@@ -4,7 +4,7 @@ rmcgirr83_nationalflags_display:
 
 rmcgirr83_nationalflags_getflag:
     pattern: /flag/{flag_id}
-    defaults: { _controller: rmcgirr83.nationalflags.main.controller:getFlag }
+    defaults: { _controller: rmcgirr83.nationalflags.nationalflags:getFlag }
 
 rmcgirr83_nationalflags_getflags:
     path: /flags/{flag_id}

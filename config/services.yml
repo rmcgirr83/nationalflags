@@ -5,68 +5,70 @@ services:
     rmcgirr83.nationalflags.admin.controller:
         class: rmcgirr83\nationalflags\controller\admin_controller
         arguments:
-            - @cache
-            - @config
-            - @dbal.conn
-            - @pagination
-            - @controller.helper
-            - @request
-            - @template
-            - @user
-            - @log
-            - @ext.manager
-            - @path_helper
-            - %core.root_path%
-            - %core.php_ext%			
-            - %rmcgirr83.nationalflags.table.nationalflags%
-            - @rmcgirr83.nationalflags.functions
+            - '@cache'
+            - '@config'
+            - '@dbal.conn'
+            - '@pagination'
+            - '@controller.helper'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@log'
+            - '@ext.manager'
+            - '@path_helper'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%rmcgirr83.nationalflags.table.nationalflags%'
+            - '@rmcgirr83.nationalflags.nationalflags'
+            - '@?files.factory'
 
     rmcgirr83.nationalflags.main.controller:
         class: rmcgirr83\nationalflags\controller\main_controller
         arguments:
-            - @auth
-            - @cache
-            - @config
-            - @dbal.conn
-            - @pagination
-            - @controller.helper
-            - @request
-            - @ext.manager
-            - @path_helper
-            - @template
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
-            - %rmcgirr83.nationalflags.table.nationalflags%
-            - @rmcgirr83.nationalflags.functions
+            - '@auth'
+            - '@config'
+            - '@dbal.conn'
+            - '@pagination'
+            - '@controller.helper'
+            - '@request'
+            - '@ext.manager'
+            - '@path_helper'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%rmcgirr83.nationalflags.table.nationalflags%'
+            - '@rmcgirr83.nationalflags.nationalflags'
+            - '@?files.factory'
 
     rmcgirr83.nationalflags.listener:
         class: rmcgirr83\nationalflags\event\listener
         arguments:
-            - @auth
-            - @cache
-            - @config
-            - @controller.helper
-            - @dbal.conn
-            - @request
-            - @template
-            - @user
-            - @ext.manager
-            - %core.root_path%
-            - %core.php_ext%
-            - @rmcgirr83.nationalflags.functions
+            - '@auth'
+            - '@config'
+            - '@controller.helper'
+            - '@dbal.conn'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@ext.manager'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '@rmcgirr83.nationalflags.nationalflags'
         tags:
             - { name: event.listener }
 
-    rmcgirr83.nationalflags.functions:
+    rmcgirr83.nationalflags.nationalflags:
         class: rmcgirr83\nationalflags\core\nationalflags
         arguments:
-            - @config
-            - @controller.helper
-            - @cache
-            - @dbal.conn
-            - @template
-            - @user
-            - %rmcgirr83.nationalflags.table.nationalflags%
-            - @ext.manager
-            - @path_helper
+            - '@config'
+            - '@controller.helper'
+            - '@cache'
+            - '@dbal.conn'
+            - '@template'
+            - '@user'
+            - '%rmcgirr83.nationalflags.table.nationalflags%'
+            - '@ext.manager'
+            - '@path_helper'
+            - '@?files.factory'
+            - '@?phpbb.collapsiblecategories.operator'
