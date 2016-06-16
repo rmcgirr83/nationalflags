@@ -268,7 +268,7 @@ class nationalflags
 
 		$json = new JsonResponse(array(
 				'flag_image'     => $flag_img,
-				'flag_title'     => $flag_name,
+				'flag_name'     => $flag_name,
 		));
 		return $json;
 	}

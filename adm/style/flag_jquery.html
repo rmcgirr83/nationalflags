@@ -12,11 +12,11 @@ jQuery( document ).ready(function() {
 				var json = $.parseJSON(data);
 				if (json.error)
 				{
-					$('#flag_image').html(''+json.error+'');
+					$('#flag_image').html(''+json.error+'').show();
 				}
 				else
 				{
-					$('#flag_image').html('<img class="flag_image" src="'+json.flag_image+'" alt="'+json.flag_name+'" title="'+json.flag_name+'" />');
+					$('#flag_image').html('<img class="flag_image" src="'+json.flag_image+'" alt="'+json.flag_name+'" title="'+json.flag_name+'" />').show();
 				}
 			}
 		});
