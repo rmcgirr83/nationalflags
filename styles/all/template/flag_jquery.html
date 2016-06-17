@@ -1,8 +1,7 @@
 <!-- IF AJAX_FLAG_INFO -->
 <script type="text/javascript">
-// <![CDATA[
-// Use full jQuery function name to reference jQuery.
-jQuery( document ).ready(function() {
+(function($) { // Avoid conflicts with other libraries
+	'use strict';
 	$("#user_flag").change(function () {
 		var flagId = $(this).val();
         $.ajax({
@@ -21,7 +20,6 @@ jQuery( document ).ready(function() {
 			}
 		});
 	});
-});
-// ]]>
+})(jQuery);
 </script>
 <!-- ENDIF -->
