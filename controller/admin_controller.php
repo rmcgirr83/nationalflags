@@ -16,12 +16,6 @@ namespace rmcgirr83\nationalflags\controller;
 class admin_controller
 {
 
-	/**
-	* define our constants
-	**/
-	const MAX_WIDTH = 32;
-	const MAX_HEIGHT = 32;
-
 	/** @var \phpbb\cache\service */
 	protected $cache;
 
@@ -566,8 +560,7 @@ class admin_controller
 		{
 			$upload = $this->files_factory->get('upload')
 				->set_error_prefix('FLAG_IMAGE_')
-				->set_allowed_extensions(array('gif', 'png', 'jpeg', 'jpg'))
-				->set_allowed_dimensions(self::MAX_WIDTH, self::MAX_HEIGHT, self::MAX_WIDTH, self::MAX_HEIGHT);
+				->set_allowed_extensions(array('gif', 'png', 'jpeg', 'jpg'));
 		}
 		else
 		{
