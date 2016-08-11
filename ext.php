@@ -21,7 +21,7 @@ class ext extends \phpbb\extension\base
 	 * @access public
 	 */
 	public function is_enableable()
-	{	
+	{
 		$config = $this->container->get('config');
 		$enableable = (phpbb_version_compare(PHPBB_VERSION, '3.1.4-RC1', '>=') && version_compare(PHP_VERSION, '5.4.*', '>'));
 		if (!$enableable)
