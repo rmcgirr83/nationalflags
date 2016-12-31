@@ -311,7 +311,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function viewtopic_template_vars_before($event)
 	{
-		$flag_display_position = $this->flag_display_position();
+		$flag_display_position = $this->nationalflags->flag_display_position();
 
 		$this->template->assign_vars(array(
 			'S_FLAGS'		=> $this->nationalflags->display_flags_on_forum(),
@@ -522,25 +522,5 @@ class listener implements EventSubscriberInterface
 			'S_FLAG_REQUIRED'	=> ($this->config['flags_required']) ? true : false,
 			'AJAX_FLAG_INFO' 	=> $this->helper->route('rmcgirr83_nationalflags_getflag', array('flag_id' => 'FLAG_ID')),
 		));
-	}
-
-	/**
-	* Flag position
-	*/
-	private function flag_display_position()
-	{
-		$flag_position_constants = "\\rmcgirr83\\nationalflags\\core\\flag_position_constants";
-		$class = new \ReflectionClass($flag_position_constants);
-		$flag_position_constants = $class->getConstants();
-
-		$flag_display_position = '';
-		foreach ($flag_position_constants as $name => $value)
-		{
-			if ($value == $this->config['flag_position'])
-			{
-				$flag_display_position = 'FLAG_POSITION_' . $name;
-			}
-		}
-		return $flag_display_position;
 	}
 }

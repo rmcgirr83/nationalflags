@@ -2,7 +2,7 @@
 
 <h2 class="solo" id="flagusers">{FLAG_IMAGE} {FLAG}</h2>
 		<!-- IF S_FLAG_USERS -->
-		<div class="action-bar top">
+		<div class="action-bar">
 			<div class="pagination">
 				{TOTAL_USERS} 
 				<!-- IF .pagination -->
@@ -30,7 +30,7 @@
 					<dl>
 						<dt style="font-size: 1.2em;line-height: 2.2em;padding: 4px 0;">
 							<div class="list-inner">
-								{user_row.USERNAME_FULL}
+								<!-- IF user_row.USER_AVATAR -->{user_row.USER_AVATAR}<!-- ENDIF --> {user_row.USERNAME_FULL}
 							</div>
 						</dt>
 						<dd class="topics">
@@ -46,7 +46,7 @@
 			</div>
 		</div>
 	
-		<div class="action-bar bottom">
+		<div class="action-bar">
 			<div class="pagination">
 				{TOTAL_USERS}
 				<!-- IF .pagination --> 

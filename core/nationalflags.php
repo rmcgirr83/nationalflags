@@ -10,6 +10,7 @@
 namespace rmcgirr83\nationalflags\core;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+use rmcgirr83\nationalflags\core\flag_position_constants;
 
 class nationalflags
 {
@@ -186,11 +187,11 @@ class nationalflags
 		}
 		// grab all the flags
 		$sql_array = array(
-			'SELECT'	=> 'user_flag, COUNT(user_flag) AS fnum',
+			'SELECT'	=> 'u.user_flag, COUNT(u.user_flag) AS fnum',
 			'FROM'		=> array(USERS_TABLE => 'u'),
-			'WHERE'		=> $this->db->sql_in_set('user_type', array(USER_NORMAL, USER_FOUNDER)) . ' AND user_flag > 0',
-			'GROUP_BY'	=> 'user_flag',
-			'ORDER_BY'	=> 'fnum DESC, user_flag ASC',
+			'WHERE'		=> $this->db->sql_in_set('u.user_type', array(USER_NORMAL, USER_FOUNDER)) . ' AND u.user_flag > 0',
+			'GROUP_BY'	=> 'u.user_flag',
+			'ORDER_BY'	=> 'fnum DESC, u.user_flag ASC',
 		);
 
 		// we limit the number of flags to display to the number set in the ACP settings
@@ -297,4 +298,22 @@ class nationalflags
 
 		return true;
 	}
+
+	/**
+	* Flag position
+	*/
+	public function flag_display_position()
+	{
+		$flag_position_constants = flag_position_constants::getFlagPosition();
+
+		$flag_display_position = '';
+		foreach ($flag_position_constants as $name => $value)
+		{
+			if ($value == $this->config['flag_position'])
+			{
+				$flag_display_position = 'FLAG_POSITION_' . $name;
+			}
+		}
+		return $flag_display_position;
+	}	
 }

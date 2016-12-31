@@ -10,11 +10,19 @@
 
 namespace rmcgirr83\nationalflags\controller;
 
+use rmcgirr83\nationalflags\core\flag_position_constants;
+
 /**
 * Admin controller
 */
 class admin_controller
 {
+
+	/**
+	* define our constants
+	**/
+	const MAX_WIDTH = 32;
+	const MAX_HEIGHT = 32;
 
 	/** @var \phpbb\cache\service */
 	protected $cache;
@@ -560,7 +568,8 @@ class admin_controller
 		{
 			$upload = $this->files_factory->get('upload')
 				->set_error_prefix('FLAG_IMAGE_')
-				->set_allowed_extensions(array('gif', 'png', 'jpeg', 'jpg'));
+				->set_allowed_extensions(array('gif', 'png', 'jpeg', 'jpg'))
+				->set_allowed_dimensions(self::MAX_WIDTH, self::MAX_HEIGHT, self::MAX_WIDTH, self::MAX_HEIGHT);
 		}
 		else
 		{
@@ -568,11 +577,11 @@ class admin_controller
 			{
 				include($this->root_path . 'includes/functions_upload.' . $this->php_ext);
 			}
-			$upload = new \fileupload('FLAG_IMAGE_', array('gif', 'png', 'jpeg', 'jpg'));
+			$upload = new \fileupload('FLAG_IMAGE_', array('gif', 'png', 'jpeg', 'jpg'), false, self::MAX_WIDTH, self::MAX_HEIGHT, self::MAX_WIDTH, self::MAX_HEIGHT);
 		}
 
 		// Uploading from a form, form name
-		$file = (isset($this->files_factory)) ? $upload->handle_upload('files.types.form', 'flag_upload') : $upload->form_upload('flag_upload');
+		$file = ($this->files_factory !== null) ? $upload->handle_upload('files.types.form', 'flag_upload') : $upload->form_upload('flag_upload');
 
 		// if the flag_upload field is empty and we are editing...return the old flag
 		if ($action == 'edit_flag' && empty($file->get('realname')))
@@ -629,9 +638,7 @@ class admin_controller
 	private function flag_position($flag_position)
 	{
 
-		$flag_position_constants = "\\rmcgirr83\\nationalflags\\core\\flag_position_constants";
-		$class = new \ReflectionClass($flag_position_constants);
-		$flag_position_constants = $class->getConstants();
+		$flag_position_constants = flag_position_constants::getFlagPosition();
 
 		$s_flag_position = '';
 		foreach ($flag_position_constants as $name => $value)

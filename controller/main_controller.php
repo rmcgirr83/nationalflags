@@ -66,6 +66,8 @@ class main_controller
 	/** @var \phpbb\files\factory */
 	protected $files_factory;
 
+	const MAX_SIZE = 30; // Max size img
+	
 	/**
 	* Constructor
 	*
@@ -253,12 +255,15 @@ class main_controller
 			$user_id = $userrow['user_id'];
 
 			$username = ($this->auth->acl_get('u_viewprofile')) ? get_username_string('full', $user_id, $userrow['username'], $userrow['user_colour']) : get_username_string('no_profile', $user_id, $userrow['username'], $userrow['user_colour']);
+			$user_avatar = ($this->auth->acl_get('u_viewprofile')) ? '<a href='"{$this->path_helper->get_web_root_path()}"' . memberlist.' . $this->php_ext . 'mode=viewprofile&amp;u=' . $user_id . '>' . phpbb_get_user_avatar($this->avatar_img_resize($userrow)) . '</a>' : phpbb_get_user_avatar($this->avatar_img_resize($userrow));
+			//var_dump($userrow);
 
 			$this->template->assign_block_vars('user_row', array(
 				'JOINED'		=> $this->user->format_date($userrow['user_regdate']),
 				'VISITED'		=> (empty($userrow['user_lastvisit'])) ? ' - ' : $this->user->format_date($userrow['user_lastvisit']),
 				'POSTS'			=> ($userrow['user_posts']) ? $userrow['user_posts'] : 0,
 				'USERNAME_FULL'		=> $username,
+				'USER_AVATAR'		=> $user_avatar,
 				'U_SEARCH_USER'		=> ($this->auth->acl_get('u_search')) ? append_sid("{$this->root_path}search.$this->php_ext", "author_id=$user_id&amp;sr=posts") : '',
 			));
 		}
@@ -304,4 +309,43 @@ class main_controller
 			'FORUM_NAME'		=> html_entity_decode($flags_array[$flag_id]['flag_name']),
 		));
 	}
+
+	/* Generate and resize avatar
+	* from last post avatar extension
+	*/
+	private function avatar_img_resize($avatar)
+	{
+		if (!empty($avatar['user_avatar']))
+		{
+			if ($avatar['user_avatar_width'] >= $avatar['user_avatar_height'])
+			{
+				$avatar_width = ($avatar['user_avatar_width'] > self::MAX_SIZE) ? self::MAX_SIZE : $avatar['user_avatar_width'];
+				if ($avatar_width == self::MAX_SIZE)
+				{
+					$avatar['user_avatar_height'] = round(self::MAX_SIZE/$avatar['user_avatar_width']*$avatar['user_avatar_height']);
+				}
+				$avatar['user_avatar_width'] = $avatar_width;
+			}
+			else
+			{
+				$avatar_height = ($avatar['user_avatar_height'] > self::MAX_SIZE) ? self::MAX_SIZE : $avatar['user_avatar_height'];
+				if ($avatar_height == self::MAX_SIZE)
+				{
+					$avatar['user_avatar_width'] = round(self::MAX_SIZE/$avatar['user_avatar_height']*$avatar['user_avatar_width']);
+				}
+				$avatar['user_avatar_height'] = $avatar_height;
+			}
+		}
+		else
+		{
+			$no_avatar = "{$this->path_helper->get_web_root_path()}styles/" . rawurlencode($this->user->style['style_path']) . '/theme/images/no_avatar.gif';
+			$avatar = array(
+				'user_avatar' => $no_avatar,
+				'user_avatar_type' => AVATAR_REMOTE,
+				'user_avatar_width' => self::MAX_SIZE,
+				'user_avatar_height' => self::MAX_SIZE,
+			);
+		}
+		return $avatar;
+	}	
 }
