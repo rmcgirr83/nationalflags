@@ -315,5 +315,5 @@ class nationalflags
 			}
 		}
 		return $flag_display_position;
-	}	
+	}
 }

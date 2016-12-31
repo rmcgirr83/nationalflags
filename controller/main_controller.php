@@ -67,7 +67,7 @@ class main_controller
 	protected $files_factory;
 
 	const MAX_SIZE = 30; // Max size img
-	
+
 	/**
 	* Constructor
 	*
@@ -347,5 +347,5 @@ class main_controller
 			);
 		}
 		return $avatar;
-	}	
+	}
 }
