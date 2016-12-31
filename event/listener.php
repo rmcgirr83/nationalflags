@@ -384,7 +384,7 @@ class listener implements EventSubscriberInterface
 		{
 			$flag = $this->nationalflags->get_user_flag($event['member']['user_flag']);
 			$flags = $this->nationalflags->get_flag_cache();
-			$flag_display_position = $this->flag_display_position();
+			$flag_display_position = $this->nationalflags->flag_display_position();
 
 			$this->template->assign_vars(array(
 				'USER_FLAG'		=> $flag,
@@ -473,7 +473,7 @@ class listener implements EventSubscriberInterface
 			$array['U_FLAG'] = ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $event['user_info']['user_flag'])) : '';
 			$event['msg_data'] = $array;
 
-			$flag_display_position = $this->flag_display_position();
+			$flag_display_position = $this->nationalflags->flag_display_position();
 			$this->template->assign_vars(array(
 				'S_FLAGS'		=> true,
 				$flag_display_position => true,
