@@ -255,8 +255,7 @@ class main_controller
 			$user_id = $userrow['user_id'];
 
 			$username = ($this->auth->acl_get('u_viewprofile')) ? get_username_string('full', $user_id, $userrow['username'], $userrow['user_colour']) : get_username_string('no_profile', $user_id, $userrow['username'], $userrow['user_colour']);
-			$user_avatar = ($this->auth->acl_get('u_viewprofile')) ? '<a href='"{$this->path_helper->get_web_root_path()}"' . memberlist.' . $this->php_ext . 'mode=viewprofile&amp;u=' . $user_id . '>' . phpbb_get_user_avatar($this->avatar_img_resize($userrow)) . '</a>' : phpbb_get_user_avatar($this->avatar_img_resize($userrow));
-			//var_dump($userrow);
+			$user_avatar = ($this->user->optionget('viewavatars')) ? phpbb_get_user_avatar($this->avatar_img_resize($userrow)) : '';
 
 			$this->template->assign_block_vars('user_row', array(
 				'JOINED'		=> $this->user->format_date($userrow['user_regdate']),
