@@ -584,7 +584,8 @@ class admin_controller
 		$file = ($this->files_factory !== null) ? $upload->handle_upload('files.types.form', 'flag_upload') : $upload->form_upload('flag_upload');
 
 		// if the flag_upload field is empty and we are editing...return the old flag
-		if ($action == 'edit_flag' && empty($file->get('realname')))
+		$name = $file->get('realname');
+		if ($action == 'edit_flag' && empty($name))
 		{
 			return $old_flag;
 		}
