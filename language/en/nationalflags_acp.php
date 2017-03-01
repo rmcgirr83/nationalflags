@@ -111,6 +111,6 @@ $lang = array_merge($lang, array(
 	'FLAG_IMAGE_URL_INVALID'				=> 'The flag address is invalid',
 	'FLAG_IMAGE_URL_NOT_FOUND'				=> 'The file cannot be found.',
 	'FLAG_IMAGE_WRONG_FILESIZE'				=> 'The flag size must be between 0 and %1d %2s.',
-	'FLAG_IMAGE_WRONG_SIZE'					=> 'The flag must be at most %3$s wide and %4$s high. The submitted image is %5$s wide and %6$s high.',
+	'FLAG_IMAGE_WRONG_SIZE'					=> 'The flag must be exactly %3$s wide and %4$s high. The submitted image is %5$s wide and %6$s high.',
 	'FLAGS_REQUIRE_540'			=> 'This extension requires at least PHP version 5.4.0 and phpBB version 3.1.4-RC1.  Please update your PHP version and/or your phpBB version in order to use the extension.',
 ));

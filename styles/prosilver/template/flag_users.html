@@ -18,7 +18,7 @@
 			<ul class="topiclist">
 				<li class="header">
 					<dl class="<!-- IF PHPBB_IS_32 -->row-item<!-- ELSE -->icon<!-- ENDIF -->">
-						<dt><div class="list-inner">{L_USERNAME}</div></dt>
+						<dt>{L_USERNAME}</dt>
 						<dd class="topics">{L_POSTS}</dd>
 						<dd class="lastpost"><span>{L_JOINED}</span></dd>
 					</dl>
@@ -28,10 +28,8 @@
 			<!-- BEGIN user_row -->
 				<li class="row <!-- IF user_row.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
 					<dl>
-						<dt style="font-size: 1.2em;line-height: 2.2em;padding: 4px 0;">
-							<div class="list-inner">
-								<!-- IF user_row.USER_AVATAR -->{user_row.USER_AVATAR}<!-- ENDIF --> {user_row.USERNAME_FULL}
-							</div>
+						<dt class="flag_inner">
+							<!-- IF user_row.USER_AVATAR -->{user_row.USER_AVATAR}<!-- ENDIF --> {user_row.USERNAME_FULL}
 						</dt>
 						<dd class="topics">
 							<!-- IF user_row.POSTS and S_DISPLAY_SEARCH --><a href="{user_row.U_SEARCH_USER}" title="{L_SEARCH_USER_POSTS}">{user_row.POSTS}</a><!-- ELSE -->{user_row.POSTS}<!-- ENDIF -->

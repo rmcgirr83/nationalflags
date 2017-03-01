@@ -221,6 +221,7 @@ class listener implements EventSubscriberInterface
 		$event['data'] = array_merge($event['data'], array(
 			'user_flag'	=> $this->request->variable('user_flag', (int) $user_flag),
 		));
+
 		$flags = $this->nationalflags->get_flag_cache();
 		$has_default = false;
 		foreach ($flags as $flag => $settings)
@@ -234,7 +235,7 @@ class listener implements EventSubscriberInterface
 		$this->template->assign_vars(array(
 			'FLAG_DEFAULT' => (empty($event['data']['user_flag']) && $has_default) ? true : false,
 		));
-		$this->display_flag_options($event);
+		$this->display_flag_options($event['data']['user_flag']);
 	}
 
 	/**
@@ -484,15 +485,14 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Display flag for user selection
 	 *
-	 * @param object $event The event object
+	 * @param object $user_flag The event object
 	 * @return null
 	 * @access private
 	 */
-	private function display_flag_options($event)
+	private function display_flag_options($user_flag)
 	{
 		$flags = $this->nationalflags->get_flag_cache();
 		$flag_name = $flag_image = '';
-		$flag_id = 0;
 
 		foreach ($flags as $key => $value)
 		{
@@ -500,21 +500,19 @@ class listener implements EventSubscriberInterface
 			{
 				$flag_name = $value['flag_name'];
 				$flag_image = $value['flag_image'];
-				$flag_id = $value['flag_id'];
 			}
 		}
 
-		if ($event['data']['user_flag'])
+		if ($user_flag)
 		{
-			$flag_name = $flags[$event['data']['user_flag']]['flag_name'];
-			$flag_image = $flags[$event['data']['user_flag']]['flag_image'];
-			$flag_id = $flags[$event['data']['user_flag']]['flag_id'];
+			$flag_name = $flags[$user_flag]['flag_name'];
+			$flag_image = $flags[$user_flag]['flag_image'];
 		}
 
-		$s_flag_options = $this->nationalflags->list_flags($event['data']['user_flag']);
+		$s_flag_options = $this->nationalflags->list_flags($user_flag);
 
 		$this->template->assign_vars(array(
-			'USER_FLAG'		=> $event['data']['user_flag'],
+			'USER_FLAG'		=> $user_flag,
 			'FLAG_IMAGE'	=> ($flag_image) ? $this->ext_path . 'flags/' . $flag_image : '',
 			'FLAG_NAME'		=> $flag_name,
 			'S_FLAG_OPTIONS'	=> $s_flag_options,

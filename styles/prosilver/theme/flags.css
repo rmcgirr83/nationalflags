@@ -37,3 +37,10 @@ ul.flags li.flagslist {
 .avatarflag {
 	margin-left: 8px;
 }
+
+ul.topiclist dt.flag_inner {
+	font-size: 1.2em;
+	line-height: 2.2em;
+	padding: 4px 5px 4px 0;
+	margin-left: 5px;
+}

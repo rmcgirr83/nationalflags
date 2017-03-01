@@ -5,13 +5,13 @@
 
 <h1>{L_TITLE}</h1>
 
+<!-- IF !S_ERROR -->
 <div class="warningbox">
 	<p><!-- IF not S_UPLOAD_FLAG -->{L_ACP_NO_UPLOAD}<!-- ELSE --><!-- IF S_CAN_OVERWRITE -->{L_FLAG_UPLOAD_NOTICE}<!-- ELSE -->{L_FLAG_UPLOAD_NO_OVERWRITE}<!-- ENDIF --><!-- ENDIF --></p>
 </div>
-
-<!-- IF S_ERROR -->
+<!-- ELSEIF S_ERROR -->
 <div class="errorbox">
-	<h3>{L_WARNING}</h3>
+	<h3>{L_ERROR}</h3>
 	<p>{ERROR_MSG}</p>
 </div>
 <!-- ENDIF -->
@@ -20,7 +20,7 @@
 	<fieldset>
 		<!-- IF FOUND_FLAG -->
 		<dl>
-			<dt><label for="current_flag">{L_FLAG_FOUND}{L_COLON}</label></dt>
+			<dt>{L_FLAG_FOUND}{L_COLON}</dt>
 			<dd>{FLAG_IMAGE}<br><img src="{FOUND_FLAG}" alt="{FLAG_NAME}" title="{FLAG_NAME}" /></dd>
 		</dl>
 		<!-- ENDIF -->
@@ -54,7 +54,7 @@
 	</fieldset>
 	<fieldset>
 		<dl>
-			<dt><label for="flag_listing">{L_IMAGES_ON_SERVER}{L_COLON}</label></dt>
+			<dt>{L_IMAGES_ON_SERVER}{L_COLON}</dt>
 			<dd>{FLAG_LIST}</dd>
 		</dl>
 	</fieldset>

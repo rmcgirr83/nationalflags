@@ -15,6 +15,11 @@ use rmcgirr83\nationalflags\core\flag_position_constants;
 class nationalflags
 {
 
+	/**
+	 * Target flag_is_set
+	 */
+	protected $flag_is_set = false;
+	
 	/** @var \phpbb\config\config */
 	protected $config;
 
@@ -151,7 +156,7 @@ class nationalflags
 	 * @return string flag_options
 	 */
 
-	public function list_flags($flag_id)
+	public function list_flags($flag_id = false)
 	{
 		$sql = 'SELECT *
 			FROM ' . $this->flags_table . '
@@ -161,10 +166,14 @@ class nationalflags
 		$flag_options = '<option value="0">' . $this->user->lang['FLAG_EXPLAIN'] . '</option>';
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$selected = ($row['flag_id'] == $flag_id) ? ' selected="selected"' : '';
-			if (!$selected)
+			$selected = ($row['flag_id'] == $flag_id && !$this->flag_is_set) ? ' selected="selected"' : '';
+			if (!empty($selected))
 			{
-				$selected = $row['flag_default'] ? ' selected="selected"' : '';
+				$this->flag_is_set = true;
+			}
+			elseif ($row['flag_default'] && !$this->flag_is_set)
+			{
+				$selected = ' selected="selected"';
 			}
 			$flag_options .= '<option value="' . $row['flag_id'] . '" ' . $selected . '>' . $row['flag_name'] . '</option>';
 		}
@@ -225,7 +234,7 @@ class nationalflags
 			}
 			$this->template->assign_vars(array(
 				'U_FLAGS'		=> $this->helper->route('rmcgirr83_nationalflags_display'),
-				'S_FLAGS'	=> true,
+				'S_FLAGS'		=> true,
 				'PHPBB_IS_32'	=> ($this->files_factory !== null) ? true : false,
 			));
 		}
