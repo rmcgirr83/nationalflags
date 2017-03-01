@@ -19,7 +19,7 @@ class nationalflags
 	 * Target flag_is_set
 	 */
 	protected $flag_is_set = false;
-	
+
 	/** @var \phpbb\config\config */
 	protected $config;
 
@@ -171,7 +171,7 @@ class nationalflags
 			{
 				$this->flag_is_set = true;
 			}
-			elseif ($row['flag_default'] && !$this->flag_is_set)
+			else if ($row['flag_default'] && !$this->flag_is_set)
 			{
 				$selected = ' selected="selected"';
 			}
