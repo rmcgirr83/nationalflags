@@ -140,17 +140,14 @@ class listener implements EventSubscriberInterface
 	 */
 	public function user_setup($event)
 	{
-		if ($this->nationalflags->display_flags_on_forum())
-		{
-			// Need to ensure the flags are cached on page load
-			$this->nationalflags->cache_flags();
-			$lang_set_ext = $event['lang_set_ext'];
-			$lang_set_ext[] = array(
-				'ext_name' => 'rmcgirr83/nationalflags',
-				'lang_set' => 'common',
-			);
-			$event['lang_set_ext'] = $lang_set_ext;
-		}
+		// Need to ensure the flags are cached on page load
+		$this->nationalflags->cache_flags();
+		$lang_set_ext = $event['lang_set_ext'];
+		$lang_set_ext[] = array(
+			'ext_name' => 'rmcgirr83/nationalflags',
+			'lang_set' => 'common',
+		);
+		$event['lang_set_ext'] = $lang_set_ext;
 	}
 
 	/**
