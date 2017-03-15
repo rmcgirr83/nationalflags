@@ -22,8 +22,7 @@ class ext extends \phpbb\extension\base
 	 */
 	public function is_enableable()
 	{
-		$config = $this->container->get('config');
-		$enableable = (phpbb_version_compare($config['version'], '3.1.4-RC1', '>=') && version_compare(PHP_VERSION, '5.4.*', '>'));
+		$enableable = (phpbb_version_compare(PHPBB_VERSION, '3.1.4-RC1', '>=') && version_compare(PHP_VERSION, '5.4.*', '>'));
 		if (!$enableable)
 		{
 			$user = $this->container->get('user');
@@ -31,6 +30,6 @@ class ext extends \phpbb\extension\base
 			trigger_error($user->lang('FLAGS_REQUIRE_540'), E_USER_WARNING);
 		}
 
-		return true;
+		return $enableable;
 	}
 }
