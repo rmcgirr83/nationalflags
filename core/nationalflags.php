@@ -109,7 +109,8 @@ class nationalflags
 
 		if ($flag_id)
 		{
-			$flag = '<img class="flag_image" src="' . $this->ext_path_web . 'flags/' . $flags[$flag_id]['flag_image'] . '" alt="' . $flags[$flag_id]['flag_name'] . '" title="' . $flags[$flag_id]['flag_name'] . '" />';
+			$flag_name = isset($this->user->lang[strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name']))]) ? html_entity_decode($this->user->lang[strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name']))]) : html_entity_decode($flags_array[$flag_id]['flag_name']);
+			$flag = '<img class="flag_image" src="' . $this->ext_path_web . 'flags/' . $flags[$flag_id]['flag_image'] . '" alt="' . $flag_name . '" title="' . $flag_name . '" />';
 
 			return $flag;
 		}
@@ -175,7 +176,8 @@ class nationalflags
 			{
 				$selected = ' selected="selected"';
 			}
-			$flag_options .= '<option value="' . $row['flag_id'] . '" ' . $selected . '>' . $row['flag_name'] . '</option>';
+			$flag_name = isset($this->user->lang[strtoupper(str_replace(" ", "_", $row['flag_name']))]) ? html_entity_decode($this->user->lang[strtoupper(str_replace(" ", "_", $row['flag_name']))]) : $row['flag_name'];
+			$flag_options .= '<option value="' . $row['flag_id'] . '" ' . $selected . '>' . $flag_name . '</option>';
 		}
 		$this->db->sql_freeresult($result);
 
@@ -274,7 +276,7 @@ class nationalflags
 		$flag_img = $this->ext_path . 'flags/' . $flags[$flag_id]['flag_image'];
 		$flag_img = str_replace('./', generate_board_url() . '/', $flag_img); //fix paths
 
-		$flag_name = $flags[$flag_id]['flag_name'];
+		$flag_name = isset($this->user->lang[strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name']))]) ? $this->user->lang[strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name']))] : $flags[$flag_id]['flag_name'];
 
 		$json = new JsonResponse(array(
 				'flag_image'     => $flag_img,

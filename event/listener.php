@@ -502,7 +502,9 @@ class listener implements EventSubscriberInterface
 
 		if ($user_flag)
 		{
-			$flag_name = $flags[$user_flag]['flag_name'];
+			$flag_name = isset($this->user->lang[strtoupper(str_replace(" ", "_", $flags[$user_flag]['flag_name']))]) ? html_entity_decode($this->user->lang[strtoupper(str_replace(" ", "_", $flags[$user_flag]['flag_name']))]) : html_entity_decode($flags[$user_flag]['flag_name']);
+
+			$flag_name = $flag_name;
 			$flag_image = $flags[$user_flag]['flag_image'];
 		}
 
