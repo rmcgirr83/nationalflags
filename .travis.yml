@@ -1,11 +1,12 @@
 # Opt into fully virtualized infrastructure
 sudo: required
+dist: precise
 
 language: php
 
 matrix:
   include:
-    - php: 5.4
+    - php: 5.5
       env: DB=none;NOTESTS=1
     - php: 5.4
       env: DB=mysqli #myisam
@@ -23,11 +24,16 @@ matrix:
       env: DB=mysqli
     - php: 7.0
       env: DB=mysqli
+    - php: 7.1
+      env: DB=mysqli
+    - php: nightly
+      env: DB=mysqli
     - php: hhvm
       env: DB=mysqli
   allow_failures:
+    - php: nightly
     - php: hhvm
-  fast_finish: true
+fast_finish: true
 
 env:
   global:
