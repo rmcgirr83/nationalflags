@@ -103,14 +103,15 @@ class nationalflags
 	 * @return string flag
 	 */
 
-	public function get_user_flag($flag_id = false)
+	public function get_user_flag($flag_id = false, $size = 0)
 	{
 		$flags = $this->get_flag_cache();
 
 		if ($flag_id)
 		{
-			$flag_name = isset($this->user->lang[strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name']))]) ? html_entity_decode($this->user->lang[strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name']))]) : html_entity_decode($flags[$flag_id]['flag_name']);
-			$flag = '<img class="flag_image" src="' . $this->ext_path_web . 'flags/' . $flags[$flag_id]['flag_image'] . '" alt="' . $flag_name . '" title="' . $flag_name . '" />';
+			$flag_name = isset($this->user->lang[strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name']))]) ? html_entity_decode($this->user->lang[strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name']))]) : html_entity_decode($flags_array[$flag_id]['flag_name']);
+			$size = (!empty($size)) ? 'style="height:' . $size . 'px; width:auto;"' : '';
+			$flag = '<img class="flag_image" src="' . $this->ext_path_web . 'flags/' . $flags[$flag_id]['flag_image'] . '"' . $size . 'alt="' . $flag_name . '" title="' . $flag_name . '" />';
 
 			return $flag;
 		}
@@ -297,6 +298,17 @@ class nationalflags
 	}
 
 	/**
+	 * Get the cache of the users and their flags
+	 *
+	 * @return string users and flags
+	 * @access public
+	 */
+	public function get_users_and_flags_cache()
+	{
+		return $this->cache->get('_users_and_flags');
+	}
+	
+	/**
 	* Display Flag to guests
 	*/
 	public function display_flags_on_forum()
@@ -326,5 +338,31 @@ class nationalflags
 			}
 		}
 		return $flag_display_position;
+	}
+
+	/**
+	* Build users and flags	A cache of user ids and the applicable flag id
+	* 
+	*/
+	public function build_users_and_flags()
+	{
+		if (($this->cache->get('_users_and_flags')) === false)
+		{
+			$sql = 'SELECT user_id, user_flag
+				FROM ' . USERS_TABLE . '
+			WHERE user_flag > 0
+			ORDER BY user_id';
+			$result = $this->db->sql_query($sql);
+
+			$users_and_flags = array();
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$users_and_flags[$row['user_id']] = $row['user_flag'];
+			}
+			$this->db->sql_freeresult($result);
+
+			// cache this data for 5 minutes, this improves performance
+			$this->cache->put('_users_and_flags', $users_and_flags, 300);
+		}		
 	}
 }

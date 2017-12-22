@@ -128,6 +128,10 @@ class listener implements EventSubscriberInterface
 			'core.search_modify_tpl_ary'				=> 'search_modify_tpl_ary',
 			'core.search_results_modify_search_title'	=> 'search_modify_search_title',
 			'core.ucp_pm_view_messsage'					=> 'ucp_pm_view_messsage',
+			'core.memberlist_team_modify_template_vars'	=> 'user_flags_modify_template_vars',
+			'core.memberlist_prepare_profile_data'		=> 'memberlist_prepare_profile_data',
+			'core.display_forums_modify_template_vars'	=> 'display_forums_modify_template_vars',
+			'core.viewforum_modify_topicrow'			=> 'viewforum_modify_topicrow',
 		);
 	}
 
@@ -142,6 +146,8 @@ class listener implements EventSubscriberInterface
 	{
 		// Need to ensure the flags are cached on page load
 		$this->nationalflags->cache_flags();
+		// Also build a cache of users and their flags
+		$this->nationalflags->build_users_and_flags();
 		$lang_set_ext = $event['lang_set_ext'];
 		$lang_set_ext[] = array(
 			'ext_name' => 'rmcgirr83/nationalflags',
@@ -482,7 +488,7 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Display flag for user selection
 	 *
-	 * @param object $user_flag The event object
+	 * @param object $user_flag The users flag number
 	 * @return null
 	 * @access private
 	 */
@@ -520,4 +526,85 @@ class listener implements EventSubscriberInterface
 			'AJAX_FLAG_INFO' 	=> $this->helper->route('rmcgirr83_nationalflags_getflag', array('flag_id' => 'FLAG_ID')),
 		));
 	}
+
+	/* user_flags_modify_template_vars
+	* @param 	object 	The event object
+	* @return	string	A flag image
+	* @access	public
+	*/
+	public function user_flags_modify_template_vars($event)
+	{
+		$users_flag_array = $this->nationalflags->get_users_and_flags_cache();
+		$user_id = $event['row']['user_id'];
+		$template_vars = $event['template_vars'];
+
+		if (in_array($user_id, array_keys($users_flag_array)) && $this->nationalflags->display_flags_on_forum())
+		{
+			$template_vars['USERNAME_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag(intval($users_flag_array[$user_id]), 20);
+		}
+
+		$event['template_vars'] = $template_vars;
+	}
+
+	/* memberlist_prepare_profile_data
+	* @param 	object 	The event object
+	* @return	string	A flag image
+	* @access	public
+	*/
+	public function memberlist_prepare_profile_data($event)
+	{
+		$users_flag_array = $this->nationalflags->get_users_and_flags_cache();
+		$user_id = $event['data']['user_id'];
+		$template_vars = $event['template_data'];
+
+		if (in_array($user_id, array_keys($users_flag_array)) && $this->nationalflags->display_flags_on_forum())
+		{			
+			$template_vars['USERNAME_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag(intval($users_flag_array[$user_id]), 16);
+		}
+
+		$event['template_data'] = $template_vars;
+	}	
+	
+	/* display_forums_modify_template_vars
+	* @param 	object 	The event object
+	* @return	string	A flag image
+	* @access	public
+	*/
+	public function display_forums_modify_template_vars($event)
+	{
+		$users_flag_array = $this->nationalflags->get_users_and_flags_cache();
+		$user_id = $event['row']['forum_last_poster_id'];
+		$template_vars = $event['forum_row'];
+
+		if (in_array($user_id, array_keys($users_flag_array)) && $this->nationalflags->display_flags_on_forum())
+		{			
+			$template_vars['LAST_POSTER_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag(intval($users_flag_array[$user_id]), 16);
+		}
+
+		$event['forum_row'] = $template_vars;
+	}
+
+	/* viewforum_modify_topicrow
+	* @param 	object 	The event object
+	* @return	string	A flag image
+	* @access	public
+	*/
+	public function viewforum_modify_topicrow($event)
+	{
+		$users_flag_array = $this->nationalflags->get_users_and_flags_cache();
+		$topic_starter = $event['row']['topic_poster'];
+		$last_topic_author = $event['row']['topic_last_poster_id'];
+		$template_vars = $event['topic_row'];
+
+		if (in_array($topic_starter, array_keys($users_flag_array)) && $this->nationalflags->display_flags_on_forum())
+		{			
+			$template_vars['TOPIC_AUTHOR_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag(intval($users_flag_array[$topic_starter]), 16);
+		}
+		if (in_array($last_topic_author, array_keys($users_flag_array)) && $this->nationalflags->display_flags_on_forum())
+		{
+			$template_vars['LAST_POST_AUTHOR_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag(intval($users_flag_array[$last_topic_author]), 16);
+		}
+
+		$event['topic_row'] = $template_vars;
+	}		
 }
