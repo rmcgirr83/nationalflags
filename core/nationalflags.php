@@ -307,7 +307,7 @@ class nationalflags
 	{
 		return $this->cache->get('_users_and_flags');
 	}
-	
+
 	/**
 	* Display Flag to guests
 	*/
@@ -342,7 +342,7 @@ class nationalflags
 
 	/**
 	* Build users and flags	A cache of user ids and the applicable flag id
-	* 
+	*
 	*/
 	public function build_users_and_flags()
 	{
@@ -363,6 +363,6 @@ class nationalflags
 
 			// cache this data for 5 minutes, this improves performance
 			$this->cache->put('_users_and_flags', $users_and_flags, 300);
-		}		
+		}
 	}
 }

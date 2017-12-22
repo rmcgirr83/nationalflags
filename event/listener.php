@@ -558,13 +558,13 @@ class listener implements EventSubscriberInterface
 		$template_vars = $event['template_data'];
 
 		if (in_array($user_id, array_keys($users_flag_array)) && $this->nationalflags->display_flags_on_forum())
-		{			
+		{
 			$template_vars['USERNAME_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag(intval($users_flag_array[$user_id]), 16);
 		}
 
 		$event['template_data'] = $template_vars;
-	}	
-	
+	}
+
 	/* display_forums_modify_template_vars
 	* @param 	object 	The event object
 	* @return	string	A flag image
@@ -577,7 +577,7 @@ class listener implements EventSubscriberInterface
 		$template_vars = $event['forum_row'];
 
 		if (in_array($user_id, array_keys($users_flag_array)) && $this->nationalflags->display_flags_on_forum())
-		{			
+		{
 			$template_vars['LAST_POSTER_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag(intval($users_flag_array[$user_id]), 16);
 		}
 
@@ -597,7 +597,7 @@ class listener implements EventSubscriberInterface
 		$template_vars = $event['topic_row'];
 
 		if (in_array($topic_starter, array_keys($users_flag_array)) && $this->nationalflags->display_flags_on_forum())
-		{			
+		{
 			$template_vars['TOPIC_AUTHOR_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag(intval($users_flag_array[$topic_starter]), 16);
 		}
 		if (in_array($last_topic_author, array_keys($users_flag_array)) && $this->nationalflags->display_flags_on_forum())
@@ -606,5 +606,5 @@ class listener implements EventSubscriberInterface
 		}
 
 		$event['topic_row'] = $template_vars;
-	}		
+	}
 }
