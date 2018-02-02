@@ -576,11 +576,13 @@ class listener implements EventSubscriberInterface
 		$user_id = $event['row']['forum_last_poster_id'];
 		$template_vars = $event['forum_row'];
 
-		if (in_array($user_id, array_keys($users_flag_array)) && $this->nationalflags->display_flags_on_forum())
+		if (count($users_flag_array))
 		{
-			$template_vars['LAST_POSTER_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag(intval($users_flag_array[$user_id]), 16);
+			if (in_array($user_id, array_keys($users_flag_array)) && $this->nationalflags->display_flags_on_forum())
+			{
+				$template_vars['LAST_POSTER_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag(intval($users_flag_array[$user_id]), 16);
+			}
 		}
-
 		$event['forum_row'] = $template_vars;
 	}
 
