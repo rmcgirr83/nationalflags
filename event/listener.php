@@ -109,6 +109,7 @@ class listener implements EventSubscriberInterface
 		return array(
 			'core.user_setup'							=> 'user_setup',
 			'core.index_modify_page_title'				=> 'index_modify_page_title',
+			'core.page_header'							=> 'page_header',
 			'core.page_header_after'					=> 'page_header_after',
 			'core.ucp_profile_modify_profile_info'		=> 'user_flag_profile',
 			'core.ucp_profile_validate_profile_info'	=> 'user_flag_profile_validate',
@@ -146,8 +147,6 @@ class listener implements EventSubscriberInterface
 	{
 		// Need to ensure the flags are cached on page load
 		$this->nationalflags->cache_flags();
-		// Also build a cache of users and their flags
-		$this->nationalflags->build_users_and_flags();
 		$lang_set_ext = $event['lang_set_ext'];
 		$lang_set_ext[] = array(
 			'ext_name' => 'rmcgirr83/nationalflags',
@@ -171,6 +170,18 @@ class listener implements EventSubscriberInterface
 		}
 		//display flags on the index page
 		$this->nationalflags->top_flags();
+	}
+
+	/**
+	 * Check for and create if needed users and flags cache
+	 *
+	 * @param object $event The event object
+	 * @retun null
+	 * @access public
+	 */
+	public function page_header($event)
+	{
+		$this->nationalflags->build_users_and_flags();
 	}
 
 	/**
