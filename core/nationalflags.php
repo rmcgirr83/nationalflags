@@ -350,8 +350,7 @@ class nationalflags
 		{
 			$sql = 'SELECT user_id, user_flag
 				FROM ' . USERS_TABLE . '
-			WHERE user_flag > 0
-			ORDER BY user_id';
+			WHERE user_flag > 0';
 			$result = $this->db->sql_query($sql);
 
 			$users_and_flags = array();
@@ -363,6 +362,34 @@ class nationalflags
 
 			// cache this data for 5 minutes, this improves performance
 			$this->cache->put('_users_and_flags', $users_and_flags, 300);
+		}
+	}
+
+	/**
+	* User flag id		The flag id a user has chosen
+	*
+	* @param	$user_id	int		the user id
+	* @param return			int 	the users flag id or false
+	*/
+	public function user_flag_id($user_id = 0)
+	{
+		$users_flag_array = $this->get_users_and_flags_cache();
+
+		$users = array();
+		$flag_id = 0;
+		if (!empty($users_flag_array))
+		{
+			$users = array_keys($users_flag_array);
+			$flag_id = isset($users_flag_array[$user_id]) ? intval($users_flag_array[$user_id]) : 0;
+		}
+
+		if (in_array($user_id, $users) && !empty($flag_id))
+		{
+			return $flag_id;
+		}
+		else
+		{
+			return false;
 		}
 	}
 }

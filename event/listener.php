@@ -546,19 +546,11 @@ class listener implements EventSubscriberInterface
 	*/
 	public function user_flags_modify_template_vars($event)
 	{
-		$users_flag_array = $this->nationalflags->get_users_and_flags_cache();
 		$user_id = $event['row']['user_id'];
+		$flag_id = $this->nationalflags->user_flag_id($user_id);
 		$template_vars = $event['template_vars'];
 
-		$users = array();
-		$flag_id = 0;
-		if (!empty($users_flag_array))
-		{
-			$users = array_keys($users_flag_array);
-			$flag_id = isset($users_flag_array[$user_id]) ? intval($users_flag_array[$user_id]) : 0;
-		}
-
-		if (in_array($user_id, $users) && !empty($flag_id) && $this->nationalflags->display_flags_on_forum())
+		if (!empty($flag_id) && $this->nationalflags->display_flags_on_forum())
 		{
 			$template_vars['USERNAME_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag($flag_id, 20);
 		}
@@ -573,19 +565,11 @@ class listener implements EventSubscriberInterface
 	*/
 	public function memberlist_prepare_profile_data($event)
 	{
-		$users_flag_array = $this->nationalflags->get_users_and_flags_cache();
 		$user_id = $event['data']['user_id'];
+		$flag_id = $this->nationalflags->user_flag_id($user_id);
 		$template_vars = $event['template_data'];
 
-		$users = array();
-		$flag_id = 0;
-		if (!empty($users_flag_array))
-		{
-			$users = array_keys($users_flag_array);
-			$flag_id = isset($users_flag_array[$user_id]) ? intval($users_flag_array[$user_id]): 0;
-		}
-
-		if (in_array($user_id, $users) && !empty($flag_id) && $this->nationalflags->display_flags_on_forum())
+		if (!empty($flag_id) && $this->nationalflags->display_flags_on_forum())
 		{
 			$template_vars['USERNAME_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag($flag_id, 16);
 		}
@@ -600,19 +584,11 @@ class listener implements EventSubscriberInterface
 	*/
 	public function display_forums_modify_template_vars($event)
 	{
-		$users_flag_array = $this->nationalflags->get_users_and_flags_cache();
 		$user_id = $event['row']['forum_last_poster_id'];
+		$flag_id = $this->nationalflags->user_flag_id($user_id);
 		$template_vars = $event['forum_row'];
 
-		$users = array();
-		$flag_id = 0;
-		if (!empty($users_flag_array))
-		{
-			$users = array_keys($users_flag_array);
-			$flag_id = isset($users_flag_array[$user_id]) ? intval($users_flag_array[$user_id]) : 0;
-		}
-
-		if (in_array($user_id, $users) && !empty($flag_id) && $this->nationalflags->display_flags_on_forum())
+		if (!empty($flag_id) && $this->nationalflags->display_flags_on_forum())
 		{
 			$template_vars['LAST_POSTER_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag($flag_id, 16);
 		}
@@ -627,25 +603,15 @@ class listener implements EventSubscriberInterface
 	*/
 	public function viewforum_modify_topicrow($event)
 	{
-		$users_flag_array = $this->nationalflags->get_users_and_flags_cache();
-		$topic_starter = $event['row']['topic_poster'];
-		$last_topic_author = $event['row']['topic_last_poster_id'];
+		$topic_starter = $this->nationalflags->user_flag_id($event['row']['topic_poster']);
+		$last_post_author = $this->nationalflags->user_flag_id($event['row']['topic_last_poster_id']);
 		$template_vars = $event['topic_row'];
 
-		$users = array();
-		$topic_starter = $last_post_author = 0;
-		if (!empty($users_flag_array))
-		{
-			$users = array_keys($users_flag_array);
-			$topic_starter = isset($users_flag_array[$topic_starter]) ? intval($users_flag_array[$topic_starter]) : 0;
-			$last_post_author = isset($users_flag_array[$last_topic_author]) ? intval($users_flag_array[$last_topic_author]) : 0;
-		}
-
-		if (in_array($topic_starter, $users) && !empty($topic_starter) && $this->nationalflags->display_flags_on_forum())
+		if (!empty($topic_starter) && $this->nationalflags->display_flags_on_forum())
 		{
 			$template_vars['TOPIC_AUTHOR_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag($topic_starter, 16);
 		}
-		if (in_array($last_topic_author, $users) && !empty($last_post_author) && $this->nationalflags->display_flags_on_forum())
+		if (!empty($last_post_author) && $this->nationalflags->display_flags_on_forum())
 		{
 			$template_vars['LAST_POST_AUTHOR_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag($last_post_author, 16);
 		}
