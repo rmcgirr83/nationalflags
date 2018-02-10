@@ -107,6 +107,7 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
+			'core.common'								=> 'common',
 			'core.user_setup'							=> 'user_setup',
 			'core.index_modify_page_title'				=> 'index_modify_page_title',
 			'core.page_header_after'					=> 'page_header_after',
@@ -136,6 +137,18 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
+	 * Check for and create if needed users and flags cache
+	 *
+	 * @param object $event The event object
+	 * @retun null
+	 * @access public
+	 */
+	public function common($event)
+	{
+		$this->nationalflags->build_users_and_flags();
+	}
+
+	/**
 	 * Set up the flags and add the lang vars
 	 *
 	 * @param object $event The event object
@@ -146,8 +159,7 @@ class listener implements EventSubscriberInterface
 	{
 		// Need to ensure the flags are cached on page load
 		$this->nationalflags->cache_flags();
-		// Also build a cache of users and their flags
-		$this->nationalflags->build_users_and_flags();
+
 		$lang_set_ext = $event['lang_set_ext'];
 		$lang_set_ext[] = array(
 			'ext_name' => 'rmcgirr83/nationalflags',
@@ -538,9 +550,17 @@ class listener implements EventSubscriberInterface
 		$user_id = $event['row']['user_id'];
 		$template_vars = $event['template_vars'];
 
-		if (in_array($user_id, array_keys($users_flag_array)) && $this->nationalflags->display_flags_on_forum())
+		$users = array();
+		$flag_id = 0;
+		if (!empty($users_flag_array))
 		{
-			$template_vars['USERNAME_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag(intval($users_flag_array[$user_id]), 20);
+			$users = array_keys($users_flag_array);
+			$flag_id = isset($users_flag_array[$user_id]) ? intval($users_flag_array[$user_id]) : 0;
+		}
+
+		if (in_array($user_id, $users) && !empty($flag_id) && $this->nationalflags->display_flags_on_forum())
+		{
+			$template_vars['USERNAME_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag($flag_id, 20);
 		}
 
 		$event['template_vars'] = $template_vars;
@@ -557,9 +577,17 @@ class listener implements EventSubscriberInterface
 		$user_id = $event['data']['user_id'];
 		$template_vars = $event['template_data'];
 
-		if (in_array($user_id, array_keys($users_flag_array)) && $this->nationalflags->display_flags_on_forum())
+		$users = array();
+		$flag_id = 0;
+		if (!empty($users_flag_array))
 		{
-			$template_vars['USERNAME_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag(intval($users_flag_array[$user_id]), 16);
+			$users = array_keys($users_flag_array);
+			$flag_id = isset($users_flag_array[$user_id]) ? intval($users_flag_array[$user_id]): 0;
+		}
+
+		if (in_array($user_id, $users) && !empty($flag_id) && $this->nationalflags->display_flags_on_forum())
+		{
+			$template_vars['USERNAME_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag($flag_id, 16);
 		}
 
 		$event['template_data'] = $template_vars;
@@ -576,9 +604,17 @@ class listener implements EventSubscriberInterface
 		$user_id = $event['row']['forum_last_poster_id'];
 		$template_vars = $event['forum_row'];
 
-		if (in_array($user_id, array_keys($users_flag_array)) && $this->nationalflags->display_flags_on_forum())
+		$users = array();
+		$flag_id = 0;
+		if (!empty($users_flag_array))
 		{
-			$template_vars['LAST_POSTER_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag(intval($users_flag_array[$user_id]), 16);
+			$users = array_keys($users_flag_array);
+			$flag_id = isset($users_flag_array[$user_id]) ? intval($users_flag_array[$user_id]) : 0;
+		}
+
+		if (in_array($user_id, $users) && !empty($flag_id) && $this->nationalflags->display_flags_on_forum())
+		{
+			$template_vars['LAST_POSTER_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag($flag_id, 16);
 		}
 
 		$event['forum_row'] = $template_vars;
@@ -596,13 +632,22 @@ class listener implements EventSubscriberInterface
 		$last_topic_author = $event['row']['topic_last_poster_id'];
 		$template_vars = $event['topic_row'];
 
-		if (in_array($topic_starter, array_keys($users_flag_array)) && $this->nationalflags->display_flags_on_forum())
+		$users = array();
+		$topic_starter = $last_post_author = 0;
+		if (!empty($users_flag_array))
 		{
-			$template_vars['TOPIC_AUTHOR_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag(intval($users_flag_array[$topic_starter]), 16);
+			$users = array_keys($users_flag_array);
+			$topic_starter = isset($users_flag_array[$topic_starter]) ? intval($users_flag_array[$topic_starter]) : 0;
+			$last_post_author = isset($users_flag_array[$last_topic_author]) ? intval($users_flag_array[$last_topic_author]) : 0;
 		}
-		if (in_array($last_topic_author, array_keys($users_flag_array)) && $this->nationalflags->display_flags_on_forum())
+
+		if (in_array($topic_starter, $users) && !empty($topic_starter) && $this->nationalflags->display_flags_on_forum())
 		{
-			$template_vars['LAST_POST_AUTHOR_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag(intval($users_flag_array[$last_topic_author]), 16);
+			$template_vars['TOPIC_AUTHOR_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag($topic_starter, 16);
+		}
+		if (in_array($last_topic_author, $users) && !empty($last_post_author) && $this->nationalflags->display_flags_on_forum())
+		{
+			$template_vars['LAST_POST_AUTHOR_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag($last_post_author, 16);
 		}
 
 		$event['topic_row'] = $template_vars;
