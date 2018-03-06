@@ -195,7 +195,10 @@ class admin_controller
 			'FLAGS_DISPLAY_MSG'	=> $this->config['flags_display_msg'] ? true : false,
 			'FLAGS_DISPLAY_TO_GUESTS'	=> $this->config['flags_display_to_guests'] ? true : false,
 			'FLAG_POSITION'	=> $this->flag_position($this->config['flag_position']),
-
+			'FLAGS_VIEWFORUM'	=> $this->config['flags_viewforum'] ? true : false,
+			'FLAGS_FORUMROW'	=> $this->config['flags_forumrow'] ? true : false,
+			'FLAGS_SEARCH'		=> $this->config['flags_search'] ? true : false,
+			'FLAGS_MEMBERLIST'	=> $this->config['flags_memberlist'] ? true : false,
 			'S_FLAGS'			=> true,
 
 			'U_ACTION'			=> $this->u_action,
@@ -217,6 +220,10 @@ class admin_controller
 		$this->config->set('flags_display_index', $this->request->variable('flags_display_index', 0));
 		$this->config->set('flags_display_to_guests', $this->request->variable('flags_display_to_guests', 0));
 		$this->config->set('flag_position', $this->request->variable('flag_position', 0));
+		$this->config->set('flags_viewforum', $this->request->variable('flags_viewforum', 0));
+		$this->config->set('flags_forumrow', $this->request->variable('flags_forumrow', 0));
+		$this->config->set('flags_search', $this->request->variable('flags_search', 0));
+		$this->config->set('flags_memberlist', $this->request->variable('flags_memberlist', 0));
 	}
 
 	/**

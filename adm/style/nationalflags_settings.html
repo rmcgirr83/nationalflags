@@ -30,18 +30,43 @@
 			<label><input type="radio" class="radio" name="flags_display_msg" value="0" <!-- IF not FLAGS_DISPLAY_MSG -->id="flags_display_msg" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
 		<dl>
+			<dt><label for="flags_position">{L_FLAGS_VIEWTOPIC_POSITION}{L_COLON}</label><br>{L_FLAGS_VIEWTOPIC_POSITION_EXPLAIN}</dt>
+			<dd><select id="flag_position" name="flag_position">{FLAG_POSITION}</select></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{L_FLAGS_DISPLAY_OPTIONS}</legend>
+		<dl>
 			<dt><label for="flags_display_to_guests">{L_FLAGS_DISPLAY_TO_GUESTS}{L_COLON}</label><br>{L_FLAGS_DISPLAY_TO_GUESTS_EXPLAIN}</dt>
 			<dd><label><input type="radio" class="radio" name="flags_display_to_guests" value="1" <!-- IF FLAGS_DISPLAY_TO_GUESTS -->id="flags_display_to_guests" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
 			<label><input type="radio" class="radio" name="flags_display_to_guests" value="0" <!-- IF not FLAGS_DISPLAY_TO_GUESTS -->id="flags_display_to_guests" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
 		<dl>
-			<dt><label for="flags_position">{L_FLAGS_VIEWTOPIC_POSITION}{L_COLON}</label><br>{L_FLAGS_VIEWTOPIC_POSITION_EXPLAIN}</dt>
-			<dd><select id="flag_position" name="flag_position">{FLAG_POSITION}</select></dd>
+			<dt><label for="flags_viewforum">{L_FLAGS_DISPLAY_VIEWFORUM}{L_COLON}</label></dt>
+			<dd><label><input type="radio" class="radio" name="flags_viewforum" value="1"<!-- IF FLAGS_VIEWFORUM --> id="flags_viewforum" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="flags_viewforum" value="0"<!-- IF not FLAGS_VIEWFORUM --> id="flags_viewforum" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
-		<p class="submit-buttons">
+		<dl>
+			<dt><label for="flags_forumrow">{L_FLAGS_DISPLAY_FORUMROW}{L_COLON}</label></dt>
+			<dd><label><input type="radio" class="radio" name="flags_forumrow" value="1"<!-- IF FLAGS_FORUMROW --> id="flags_forumrow" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="flags_forumrow" value="0"<!-- IF not FLAGS_FORUMROW --> id="flags_forumrow" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>
+		<dl>
+			<dt><label for="flags_search">{L_FLAGS_DISPLAY_SEARCH}{L_COLON}</label></dt>
+			<dd><label><input type="radio" class="radio" name="flags_search" value="1"<!-- IF FLAGS_SEARCH --> id="flags_search" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="flags_search" value="0"<!-- IF not FLAGS_SEARCH --> id="flags_search" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>
+		<dl>
+			<dt><label for="flags_memberlist">{L_FLAGS_DISPLAY_MEMBERLIST}{L_COLON}</label></dt>
+			<dd><label><input type="radio" class="radio" name="flags_memberlist" value="1"<!-- IF FLAGS_MEMBERLIST --> id="flags_memberlist" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="flags_memberlist" value="0"<!-- IF not FLAGS_MEMBERLIST --> id="flags_memberlist" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>		
+	</fieldset>
+	<fieldset class="submit-buttons">
+		<legend>{L_SUBMIT}</legend>
 			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
 			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
-		</p>
 		{S_FORM_TOKEN}
 	</fieldset>
 </form>

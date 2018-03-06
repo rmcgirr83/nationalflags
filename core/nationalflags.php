@@ -311,8 +311,12 @@ class nationalflags
 	/**
 	* Display Flag to guests
 	*/
-	public function display_flags_on_forum()
+	public function display_flags_on_forum($setting = true)
 	{
+		if (!$setting)
+		{
+			return false;
+		}
 		if (!$this->config['flags_display_to_guests'])
 		{
 			$check_display = ($this->user->data['user_id'] == ANONYMOUS || $this->user->data['is_bot']) ? false : true;
@@ -341,7 +345,7 @@ class nationalflags
 	}
 
 	/**
-	* Build users and flags	A cache of user ids and the applicable flag id
+	* Build users and flags		A cache of user ids and the applicable flag id
 	*
 	*/
 	public function build_users_and_flags()
@@ -391,5 +395,47 @@ class nationalflags
 		{
 			return false;
 		}
+	}
+
+	/**
+	 * Display flag for user selection
+	 *
+	 * @param object $user_flag The users flag number
+	 * @return null
+	 * @access public
+	 */
+	public function display_flag_options($user_flag)
+	{
+		$flags = $this->get_flag_cache();
+		$flag_name = $flag_image = '';
+
+		foreach ($flags as $key => $value)
+		{
+			if ($value['flag_default'])
+			{
+				$flag_name = $value['flag_name'];
+				$flag_image = $value['flag_image'];
+			}
+		}
+
+		if ($user_flag)
+		{
+			$flag_name = isset($this->user->lang[strtoupper(str_replace(" ", "_", $flags[$user_flag]['flag_name']))]) ? html_entity_decode($this->user->lang[strtoupper(str_replace(" ", "_", $flags[$user_flag]['flag_name']))]) : html_entity_decode($flags[$user_flag]['flag_name']);
+
+			$flag_name = $flag_name;
+			$flag_image = $flags[$user_flag]['flag_image'];
+		}
+
+		$s_flag_options = $this->list_flags($user_flag);
+
+		$this->template->assign_vars(array(
+			'USER_FLAG'		=> $user_flag,
+			'FLAG_IMAGE'	=> ($flag_image) ? $this->ext_path . 'flags/' . $flag_image : '',
+			'FLAG_NAME'		=> $flag_name,
+			'S_FLAG_OPTIONS'	=> $s_flag_options,
+			'S_FLAGS'			=> true,
+			'S_FLAG_REQUIRED'	=> ($this->config['flags_required']) ? true : false,
+			'AJAX_FLAG_INFO' 	=> $this->helper->route('rmcgirr83_nationalflags_getflag', array('flag_id' => 'FLAG_ID')),
+		));
 	}
 }
