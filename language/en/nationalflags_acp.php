@@ -64,6 +64,11 @@ $lang = array_merge($lang, array(
 	'FLAGS_NUM_DISPLAY_EXPLAIN'			=> 'The number of flags to display on the index page of the forum',
 	'FLAGS_ON_INDEX'					=> 'Display on Index',
 	'FLAGS_ON_INDEX_EXPLAIN'			=> 'Display a summary of flag users on index page',
+	'FLAGS_DISPLAY_OPTIONS'				=> 'Display Options',
+	'FLAGS_DISPLAY_VIEWFORUM'			=> 'Display flags when viewing topics within forums',
+	'FLAGS_DISPLAY_FORUMROW'			=> 'Display flags on index and forum views',
+	'FLAGS_DISPLAY_SEARCH'				=> 'Display flags within search of posts',
+	'FLAGS_DISPLAY_MEMBERLIST'			=> 'Display flags within the memberlist',
 	'FLAGS_DISPLAY_TO_GUESTS'			=> 'Display flags to guests',
 	'FLAGS_DISPLAY_TO_GUESTS_EXPLAIN'	=> 'Choosing Yes here will display the flags to guests and bots',
 
