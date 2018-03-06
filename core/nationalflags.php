@@ -109,7 +109,7 @@ class nationalflags
 
 		if ($flag_id)
 		{
-			$flag_name = isset($this->user->lang[strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name']))]) ? html_entity_decode($this->user->lang[strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name']))]) : html_entity_decode($flags_array[$flag_id]['flag_name']);
+			$flag_name = isset($this->user->lang[strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name']))]) ? html_entity_decode($this->user->lang[strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name']))]) : html_entity_decode($flags[$flag_id]['flag_name']);
 			$size = (!empty($size)) ? 'style="height:' . $size . 'px; width:auto;"' : '';
 			$flag = '<img class="flag_image" src="' . $this->ext_path_web . 'flags/' . $flags[$flag_id]['flag_image'] . '"' . $size . 'alt="' . $flag_name . '" title="' . $flag_name . '" />';
 
