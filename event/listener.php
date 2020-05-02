@@ -194,7 +194,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function page_header_after($event)
 	{
-		if (!$this->auth->acl_get('u_chgprofileinfo'))
+		if (!$this->user->data['is_registered'] || !$this->auth->acl_get('u_chgprofileinfo'))
 		{
 			return;
 		}
