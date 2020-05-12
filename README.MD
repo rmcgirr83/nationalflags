@@ -1,9 +1,9 @@
-phpBB-nationalflags
+nationalflags
 =========================
 
 phpBB extension which allows users to be able to choose a national flag and have a top (those with the most users selecting the flag) number of flags display on the index page of a phpBB forum.  Header is link to a listing of all users of a flag.  Clicking on user count of the flag displays the users that have that flag set.
 
-[![Build Status](https://travis-ci.org/rmcgirr83/phpBB-nationalflags.svg?branch=master)](https://travis-ci.org/rmcgirr83/phpBB-nationalflags)
+[![Build Status](https://travis-ci.org/rmcgirr83/nationalflags.svg?branch=master)](https://travis-ci.org/rmcgirr83/nationalflags)
 
 Index Page
 ![Screenshot](index_page.jpg)
@@ -21,7 +21,7 @@ Clone (or download and move) the repository into the folder ext/rmcgirr83/nation
 
 ```
 cd phpBB3
-git clone https://github.com/rmcgirr83/phpBB-nationalflags.git ext/rmcgirr83/nationalflags/
+git clone https://github.com/rmcgirr83/nationalflags.git ext/rmcgirr83/nationalflags/
 ```
 
 ### 2. activate
