@@ -36,7 +36,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'ACP_FLAGS_EXPLAIN'					=> 'Here you can add/edit and delete the different flags.',
 	'ACP_NO_UPLOAD'						=> '<br><strong>If you want to use images you should upload them to ext/rmcgirr83/nationalflags/flags before you add the new Flag.  The flag must have a lower case name, ie uk.gif</strong>',
-	'ACP_FLAGS_DONATE'					=> 'Please consider a <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=S4UTZ9YNKEDDN&item_name=National%20Flags" onclick="window.open(this.href); return false;"><strong>Donation</strong></a> if you like the Extension',
+	'ACP_FLAGS_DONATE'					=> 'Please consider a <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=S4UTZ9YNKEDDN&item_name=National%20Flags" target="_blank" rel="noopener"><strong>Donation</strong></a> if you like the Extension',
 	'ACP_FLAG_USERS'					=> 'Number of Users',
 
 	//Add/Edit Flags
@@ -66,7 +66,7 @@ $lang = array_merge($lang, array(
 	'FLAGS_ON_INDEX_EXPLAIN'			=> 'Display a summary of flag users on index page',
 	'FLAGS_DISPLAY_OPTIONS'				=> 'Display Options',
 	'FLAGS_DISPLAY_VIEWFORUM'			=> 'Display flags when viewing topics within forums',
-	'FLAGS_DISPLAY_FORUMROW'			=> 'Display flags on index and forum views',
+	'FLAGS_DISPLAY_FORUMROW'			=> 'Display flags on index and forum views (next to user names)',
 	'FLAGS_DISPLAY_SEARCH'				=> 'Display flags within search of posts',
 	'FLAGS_DISPLAY_MEMBERLIST'			=> 'Display flags within the memberlist',
 	'FLAGS_DISPLAY_TO_GUESTS'			=> 'Display flags to guests',
@@ -118,4 +118,11 @@ $lang = array_merge($lang, array(
 	'FLAG_IMAGE_WRONG_FILESIZE'				=> 'The flag size must be between 0 and %1d %2s.',
 	'FLAG_IMAGE_WRONG_SIZE'					=> 'The flag must be exactly %3$s wide and %4$s high. The submitted image is %5$s wide and %6$s high.',
 	'FLAGS_REQUIRE_540'			=> 'This extension requires at least PHP version 5.4.0 and phpBB version 3.1.4-RC1.  Please update your PHP version and/or your phpBB version in order to use the extension.',
+	'FLAGS_CACHETIME'			=> 'Flags cache time',
+	'FLAGS_CACHETIME_EXPLAIN'	=> 'The amount of time before the cache for the flags for users regenerates<br>Default setting is 86400 which is one day (60 seconds * 60 minutes * 24 hours)',
+	'FLAGS_CACHETIME_IN_SECS'	=> 'in seconds',
+	'TOO_SMALL_FLAGS_CACHETIME'	=> 'The number chosen for the cache time is too small',
+	'TOO_LARGE_FLAGS_CACHETIME'	=> 'The number chosen for the cache time is too large',	
+	'TOO_SMALL_FLAGS_NUM_DISPLAY'	=> 'The number chosen for the number of flags to display is too small',
+	'TOO_LARGE_FLAGS_NUM_DISPLAY'	=> 'The number chosen for the number of flags to display too large',		
 ));

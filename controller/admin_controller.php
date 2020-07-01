@@ -165,14 +165,26 @@ class admin_controller
 				include($this->root_path . 'includes/functions_user.' . $this->php_ext);
 			}
 
-			$check_row = array('flags_num_display' => $this->request->variable('flags_num_display', 0));
-			$validate_row = array('flags_num_display' => array('num', false, 1, 1000));
+			$check_row = array(
+				'flags_num_display' => $this->request->variable('flags_num_display', 0),
+				'flags_cachetime' => $this->request->variable('flags_cachetime', 0),
+			);
+			$validate_row = array(
+				'flags_num_display' => array('num', false, 1, 100),
+				'flags_cachetime' => array('num', false, 30, 86400),
+			);
 			$error = validate_data($check_row, $validate_row);
 			// Replace "error" strings with their real, localised form
 			$error = array_map(array($this->user, 'lang'), $error);
 
 			if (!sizeof($error))
 			{
+				// if the cache time has changed, then destroy the users_and_flags cache
+				$flags_cachetime = $this->request->variable('flags_cachetime', 0);
+				if ($flags_cachetime != $this->config['flags_cachetime'])
+				{
+					$this->cache->destroy('_users_and_flags');
+				}
 				// Set the options the user configured
 				$this->set_options();
 
@@ -194,11 +206,12 @@ class admin_controller
 			'FLAGS_REQUIRED'	=> $this->config['flags_required'] ? true : false,
 			'FLAGS_DISPLAY_MSG'	=> $this->config['flags_display_msg'] ? true : false,
 			'FLAGS_DISPLAY_TO_GUESTS'	=> $this->config['flags_display_to_guests'] ? true : false,
-			'FLAG_POSITION'	=> $this->flag_position($this->config['flag_position']),
+			'FLAG_POSITION'		=> $this->flag_position($this->config['flag_position']),
 			'FLAGS_VIEWFORUM'	=> $this->config['flags_viewforum'] ? true : false,
 			'FLAGS_FORUMROW'	=> $this->config['flags_forumrow'] ? true : false,
 			'FLAGS_SEARCH'		=> $this->config['flags_search'] ? true : false,
 			'FLAGS_MEMBERLIST'	=> $this->config['flags_memberlist'] ? true : false,
+			'FLAGS_CACHETIME'	=> $this->config['flags_cachetime'],
 			'S_FLAGS'			=> true,
 
 			'U_ACTION'			=> $this->u_action,
@@ -224,6 +237,7 @@ class admin_controller
 		$this->config->set('flags_forumrow', $this->request->variable('flags_forumrow', 0));
 		$this->config->set('flags_search', $this->request->variable('flags_search', 0));
 		$this->config->set('flags_memberlist', $this->request->variable('flags_memberlist', 0));
+		$this->config->set('flags_cachetime', $this->request->variable('flags_cachetime', 0));
 	}
 
 	/**

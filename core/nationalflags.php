@@ -191,7 +191,6 @@ class nationalflags
 	 */
 	public function top_flags()
 	{
-
 		// If setting in ACP is set to not allow guests and bots to view the flags
 		if (!$this->display_flags_on_forum())
 		{
@@ -207,7 +206,8 @@ class nationalflags
 		);
 
 		// we limit the number of flags to display to the number set in the ACP settings
-		$result = $this->db->sql_query_limit($this->db->sql_build_query('SELECT', $sql_array), $this->config['flags_num_display']);
+		// and cache the query based on setting in ACP
+		$result = $this->db->sql_query_limit($this->db->sql_build_query('SELECT', $sql_array), $this->config['flags_num_display'], 0, $this->config['flags_cachetime']);
 
 		$count = 0;
 		$flags = $this->get_flag_cache();
@@ -364,8 +364,8 @@ class nationalflags
 			}
 			$this->db->sql_freeresult($result);
 
-			// cache this data for 5 minutes, this improves performance
-			$this->cache->put('_users_and_flags', $users_and_flags, 300);
+			// cache this data based on entry in ACP settings, this improves performance
+			$this->cache->put('_users_and_flags', $users_and_flags, $this->config['flags_cachetime']);
 		}
 	}
 

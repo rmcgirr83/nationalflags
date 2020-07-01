@@ -140,7 +140,7 @@ class listener implements EventSubscriberInterface
 	 * Check for and create if needed users and flags cache
 	 *
 	 * @param object $event The event object
-	 * @retun null
+	 * @return null
 	 * @access public
 	 */
 	public function common($event)
