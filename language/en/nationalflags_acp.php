@@ -122,7 +122,7 @@ $lang = array_merge($lang, array(
 	'FLAGS_CACHETIME_EXPLAIN'	=> 'The amount of time before the cache for the flags for users regenerates<br>Default setting is 86400 which is one day (60 seconds * 60 minutes * 24 hours)',
 	'FLAGS_CACHETIME_IN_SECS'	=> 'in seconds',
 	'TOO_SMALL_FLAGS_CACHETIME'	=> 'The number chosen for the cache time is too small',
-	'TOO_LARGE_FLAGS_CACHETIME'	=> 'The number chosen for the cache time is too large',	
+	'TOO_LARGE_FLAGS_CACHETIME'	=> 'The number chosen for the cache time is too large',
 	'TOO_SMALL_FLAGS_NUM_DISPLAY'	=> 'The number chosen for the number of flags to display is too small',
-	'TOO_LARGE_FLAGS_NUM_DISPLAY'	=> 'The number chosen for the number of flags to display too large',		
+	'TOO_LARGE_FLAGS_NUM_DISPLAY'	=> 'The number chosen for the number of flags to display too large',
 ));
