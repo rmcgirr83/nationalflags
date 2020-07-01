@@ -229,10 +229,8 @@ class nationalflags
 			{
 				$fid = 'nationalflags'; // can be any unique string to identify your extension's collapsible element
 				$this->template->assign_vars(array(
-					'S_NATIONALFLAGS_HIDDEN' => in_array($fid, $this->operator->get_user_categories()),
-					'U_NATIONALFLAGS_COLLAPSE_URL' => $this->helper->route('phpbb_collapsiblecategories_main_controller', array(
-						'forum_id' => $fid,
-						'hash' => generate_link_hash("collapsible_$fid")))
+					'S_NATIONALFLAGS_HIDDEN' => $this->operator->is_collapsed($fid),
+					'U_NATIONALFLAGS_COLLAPSE_URL' => $this->operator->get_collapsible_link($fid),
 				));
 			}
 			$this->template->assign_vars(array(
