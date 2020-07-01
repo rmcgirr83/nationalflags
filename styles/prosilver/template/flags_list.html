@@ -1,23 +1,23 @@
-<!-- INCLUDE overall_header.html -->
+{% INCLUDE 'overall_header.html' %}
 <div class="forabg">
 	<div class="inner" id="flagusers">
 		<ul class="topiclist">
 			<li class="header">
-				<dl class="<!-- IF PHPBB_IS_32 -->row-item<!-- ELSE -->icon<!-- ENDIF -->">
+				<dl class="{% if PHPBB_IS_32 %}row-item{% else %}icon{% endif %}">
 					<dt>
-							{L_FLAGS}
+							{{ lang('FLAGS') }}
 					</dt>
 					<dd></dd>
 				</dl>
 			</li>
 		</ul>
 		<ul class="forums flags">
-		<!-- BEGIN flag -->
+		{% for flag in loops.flag %}
 			<li class="flagslist">
-				<a href="{flag.U_FLAG}">{flag.FLAG}</a><br>{flag.FLAG_USER_COUNT}
+				<a href="{{ flag.U_FLAG }}">{{ flag.FLAG }}</a><br>{{ flag.FLAG_USER_COUNT }}
 			</li>
-		<!-- END flag -->
+		{% endfor %}
 		</ul>
 	</div>
 </div>
-<!-- INCLUDE overall_footer.html -->
+{% INCLUDE 'overall_footer.html' %}

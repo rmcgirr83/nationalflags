@@ -1,7 +1,7 @@
-<!-- IF S_FLAG_MESSAGE -->
+{% if S_FLAG_MESSAGE %}
 <div id="information_flags" class="rules">
 	<div class="inner">
-		<strong>{L_INFORMATION}{L_COLON}</strong> {L_FLAG_PROFILE}
+		<strong>{{ lang('INFORMATION') }}{{ lang('COLON') }}</strong> {{ lang('FLAG_PROFILE') }}
 	</div>
 </div>
-<!-- ENDIF -->
+{% endif %}

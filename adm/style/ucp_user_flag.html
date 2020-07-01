@@ -1,9 +1,9 @@
-<!-- IF AJAX_FLAG_INFO -->
+{% if AJAX_FLAG_INFO %}
     <script>
-        var AJAX_FLAG_INFO = "{AJAX_FLAG_INFO}";
+        var AJAX_FLAG_INFO = "{{ AJAX_FLAG_INFO }}";
     </script>
 	<dl>
-		<dt><label for="user_flag"><strong>{L_USER_FLAG}{L_COLON}</strong></label><br><!-- IF FLAG_DEFAULT -->{L_USER_FLAG_EXPLAIN}<!-- ENDIF --></dt>
-		<dd><select name="user_flag" id="user_flag">{S_FLAG_OPTIONS}</select>&nbsp;<span id="flag_image" <!-- IF not FLAG_IMAGE -->style="display:none;"<!-- ENDIF -->><img src="{FLAG_IMAGE}" alt="{FLAG_NAME}" title="{FLAG_NAME}" style="vertical-align:middle;" /></span></dd>
+		<dt><label for="user_flag"><strong>{{ lang('USER_FLAG') }}{{ lang('COLON') }}</strong></label><br>{% if FLAG_DEFAULT %}{{ lang('USER_FLAG_EXPLAIN') }}{% endif %}</dt>
+		<dd><select name="user_flag" id="user_flag">{{ S_FLAG_OPTIONS }}</select>&nbsp;<span id="flag_image" {% if not FLAG_IMAGE %}style="display:none;"{% endif %}><img src="{{ FLAG_IMAGE }}" alt="{{ FLAG_NAME }}" title="{{ FLAG_NAME }}" style="vertical-align:middle;" /></span></dd>
 	</dl>
-<!-- ENDIF -->
+{% endif %}

@@ -1,118 +1,118 @@
-<!-- INCLUDE overall_header.html -->
-<!-- IF S_ADD_FLAG -->
+{% INCLUDE 'overall_header.html' %}
+{% if S_ADD_FLAG %}
 
-<a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
+<a href="{{ U_BACK }}" style="float: {{ S_CONTENT_FLOW_END }};">&laquo; {{ lang('BACK') }}</a>
 
-<h1>{L_TITLE}</h1>
+<h1>{{ lang('TITLE') }}</h1>
 
-<!-- IF !S_ERROR -->
+{% if !S_ERROR %}
 <div class="warningbox">
-	<p><!-- IF not S_UPLOAD_FLAG -->{L_ACP_NO_UPLOAD}<!-- ELSE --><!-- IF S_CAN_OVERWRITE -->{L_FLAG_UPLOAD_NOTICE}<!-- ELSE -->{L_FLAG_UPLOAD_NO_OVERWRITE}<!-- ENDIF --><!-- ENDIF --></p>
+	<p>{% if not S_UPLOAD_FLAG %}{{ lang('ACP_NO_UPLOAD') }}{% else %}{% if S_CAN_OVERWRITE %}{{ lang('FLAG_UPLOAD_NOTICE') }}{% else %}{{ lang('FLAG_UPLOAD_NO_OVERWRITE') }}{% endif %}{% endif %}</p>
 </div>
-<!-- ELSEIF S_ERROR -->
+{% elseif S_ERROR %}
 <div class="errorbox">
-	<h3>{L_ERROR}</h3>
-	<p>{ERROR_MSG}</p>
+	<h3>{{ lang('ERROR') }}</h3>
+	<p>{{ ERROR_MSG }}</p>
 </div>
-<!-- ENDIF -->
+{% endif %}
 
-<form id="acp_add_flag" method="post" action="{U_ACTION}" {S_FORM_ENCTYPE}>
+<form id="acp_add_flag" method="post" action="{{ U_ACTION }}" {{ S_FORM_ENCTYPE }}>
 	<fieldset>
-		<!-- IF FOUND_FLAG -->
+		{% if FOUND_FLAG %}
 		<dl>
-			<dt>{L_FLAG_FOUND}{L_COLON}</dt>
-			<dd>{FLAG_IMAGE}<br><img src="{FOUND_FLAG}" alt="{FLAG_NAME}" title="{FLAG_NAME}" /></dd>
+			<dt>{{ lang('FLAG_FOUND') }}{{ lang('COLON') }}</dt>
+			<dd>{{ FLAG_IMAGE }}<br><img src="{{ FOUND_FLAG }}" alt="{{ FLAG_NAME }}" title="{{ FLAG_NAME }}" /></dd>
 		</dl>
-		<!-- ENDIF -->
-		<!-- IF S_UPLOAD_FLAG -->
+		{% endif %}
+		{% if S_UPLOAD_FLAG %}
 		<dl>
-			<dt><label for="flag_upload">{L_FILENAME}{L_COLON}</label></dt>
+			<dt><label for="flag_upload">{{ lang('FILENAME') }}{{ lang('COLON') }}</label></dt>
 			<dd>
 				<input type="file" name="flag_upload" id="flag_upload" class="inputbox autowidth" />
-				<input type="hidden" name="old_flag" id="old_flag" value="{FLAG_IMAGE}" />
+				<input type="hidden" name="old_flag" id="old_flag" value="{{ FLAG_IMAGE }}" />
 			</dd>
 		</dl>
-		<!-- ENDIF -->
+		{% endif %}
 		<dl>
-			<dt><label for="flag_name">{L_FLAG_NAME}{L_COLON}</label><br><span>{L_FLAG_NAME_EXPLAIN}</span></dt>
-			<dd><input name="flag_name" type="text" id="flag_name" value="{FLAG_NAME}" maxlength="255" /></dd>
+			<dt><label for="flag_name">{{ lang('FLAG_NAME') }}{{ lang('COLON') }}</label><br><span>{{ lang('FLAG_NAME_EXPLAIN') }}</span></dt>
+			<dd><input name="flag_name" type="text" id="flag_name" value="{{ FLAG_NAME }}" maxlength="255" /></dd>
 		</dl>
-		<!-- IF S_ADD_FLAG and not S_UPLOAD_FLAG --><dl>
-			<dt><label for="flag_image">{L_FLAG_IMG}{L_COLON}</label><br><span>{L_FLAG_IMG_EXPLAIN}</span></dt>
-			<dd><input name="flag_image" type="text" id="flag_image" value="{FLAG_IMAGE}" maxlength="255" /></dd>
-		</dl><!-- ENDIF -->
+		{% if S_ADD_FLAG and not S_UPLOAD_FLAG %}<dl>
+			<dt><label for="flag_image">{{ lang('FLAG_IMG') }}{{ lang('COLON') }}</label><br><span>{{ lang('FLAG_IMG_EXPLAIN') }}</span></dt>
+			<dd><input name="flag_image" type="text" id="flag_image" value="{{ FLAG_IMAGE }}" maxlength="255" /></dd>
+		</dl>{% endif %}
 		<dl>
-			<dt><label for="flag_default">{L_FLAG_DEFAULT}{L_COLON}</label><br><span>{L_FLAG_DEFAULT_EXPLAIN}</span></dt>
-			<dd><label><input type="radio" class="radio" name="flag_default" value="1" <!-- IF FLAG_DEFAULT -->id="flag_default" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
-			<label><input type="radio" class="radio" name="flag_default" value="0" <!-- IF not FLAG_DEFAULT -->id="flag_default" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+			<dt><label for="flag_default">{{ lang('FLAG_DEFAULT') }}{{ lang('COLON') }}</label><br><span>{{ lang('FLAG_DEFAULT_EXPLAIN') }}</span></dt>
+			<dd><label><input type="radio" class="radio" name="flag_default" value="1" {% if FLAG_DEFAULT %}id="flag_default" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+			<label><input type="radio" class="radio" name="flag_default" value="0" {% if not FLAG_DEFAULT %}id="flag_default" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
 		</dl>
 
 		<p class="submit-buttons">
-			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
+			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />
 		</p>
-		{S_FORM_TOKEN}
+		{{ S_FORM_TOKEN }}
 	</fieldset>
 	<fieldset>
 		<dl>
-			<dt>{L_IMAGES_ON_SERVER}{L_COLON}</dt>
-			<dd>{FLAG_LIST}</dd>
+			<dt>{{ lang('IMAGES_ON_SERVER') }}{{ lang('COLON') }}</dt>
+			<dd>{{ FLAG_LIST }}</dd>
 		</dl>
 	</fieldset>
 </form>
 
-<!-- ELSEIF S_FLAGS -->
+{% elseif S_FLAGS %}
 
-<h1>{TOTAL_FLAGS} {L_ACP_FLAGS}</h1>
+<h1>{{ TOTAL_FLAGS }} {{ lang('ACP_FLAGS') }}</h1>
 
-<p>{L_ACP_FLAGS_EXPLAIN}<br>{L_ACP_FLAGS_DONATE}</p>
+<p>{{ lang('ACP_FLAGS_EXPLAIN') }}<br>{{ lang('ACP_FLAGS_DONATE') }}</p>
 
-<form id="acp_flags" method="post" action="{U_ACTION}">
+<form id="acp_flags" method="post" action="{{ U_ACTION }}">
 	<fieldset class="quick">
-		<input class="button2" name="add" type="submit" value="{L_FLAG_ADD}" />
+		<input class="button2" name="add" type="submit" value="{{ lang('FLAG_ADD') }}" />
 	</fieldset>
 	
-	<!-- IF .pagination -->
+	{% if loops.pagination|length %}
 	<div class="pagination top-pagination">
-		<!-- INCLUDE pagination.html -->
+		{% INCLUDE 'pagination.html' %}
 	</div>
-	<!-- ENDIF -->
+	{% endif %}
 
 	<table class="table1 fixed-width-table">
 		<thead>
 			<tr>
-				<th>{L_FLAG_NAME}</th>
-				<th>{L_FLAG_DEFAULT}</th>
-				<th>{L_ACP_FLAG_USERS}</th>
-				<th style="text-align: center;">{L_FLAG_IMG}</th>
-				<th style="text-align: center;">{L_OPTIONS}</th>
+				<th>{{ lang('FLAG_NAME') }}</th>
+				<th>{{ lang('FLAG_DEFAULT') }}</th>
+				<th>{{ lang('ACP_FLAG_USERS') }}</th>
+				<th style="text-align: center;">{{ lang('FLAG_IMG') }}</th>
+				<th style="text-align: center;">{{ lang('OPTIONS') }}</th>
 			</tr>
 		</thead>
 		<tbody>
-		<!-- BEGIN flags -->
-			<!-- IF flags.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-				<td>{flags.FLAG_NAME}</td>
-				<td><!-- IF flags.FLAG_DEFAULT -->{L_YES}<!-- ELSE -->{L_NO}<!-- ENDIF --></td>
-				<td>{flags.USER_COUNT}</td>
-				<td style="text-align: center;"><a href="{flags.U_FLAG}"><img src="{flags.FLAG_IMG}" alt="{flags.FLAG_NAME}" title="{flags.FLAG_NAME}" /></a></td>
+		{% for flags in loops.flags %}
+			{% if flags.S_ROW_COUNT is even %}<tr class="row1">{% else %}<tr class="row2">{% endif %}
+				<td>{{ flags.FLAG_NAME }}</td>
+				<td>{% if flags.FLAG_DEFAULT %}{{ lang('YES') }}{% else %}{{ lang('NO') }}{% endif %}</td>
+				<td>{{ flags.USER_COUNT }}</td>
+				<td style="text-align: center;"><a href="{{ flags.U_FLAG }}"><img src="{{ flags.FLAG_IMG }}" alt="{{ flags.FLAG_NAME }}" title="{{ flags.FLAG_NAME }}" /></a></td>
 				<td style="text-align: center; white-space: nowrap;">
-					&nbsp;<a href="{flags.U_EDIT}">{ICON_EDIT}</a> <a href="{flags.U_DELETE}">{ICON_DELETE}</a>
+					&nbsp;<a href="{{ flags.U_EDIT }}">{{ ICON_EDIT }}</a> <a href="{{ flags.U_DELETE }}">{{ ICON_DELETE }}</a>
 				</td>
 			</tr>
-		<!-- END flags -->
+		{% endfor %}
 		</tbody>
 	</table>
 
-	<!-- IF .pagination -->
+	{% if loops.pagination|length %}
 		<div class="pagination">
-			<!-- INCLUDE pagination.html -->
+			{% INCLUDE 'pagination.html' %}
 		</div>
-	<!-- ENDIF -->
+	{% endif %}
 
 	<fieldset class="quick">
-		<input class="button2" name="add" type="submit" value="{L_FLAG_ADD}" />
-		{S_FORM_TOKEN}
+		<input class="button2" name="add" type="submit" value="{{ lang('FLAG_ADD') }}" />
+		{{ S_FORM_TOKEN }}
 	</fieldset>
 
 </form>
-<!-- ENDIF -->
-<!-- INCLUDE overall_footer.html -->
+{% endif %}
+{% INCLUDE 'overall_footer.html' %}

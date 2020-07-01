@@ -40,15 +40,4 @@ class m7_update_data extends \phpbb\db\migration\migration
 			),
 		);
 	}
-
-	public function revert_schema()
-	{
-		return array(
-			'drop_columns' => array(
-				$this->table_prefix . 'flags'	=> array(
-					'flag_default'
-				),
-			),
-		);
-	}
 }
