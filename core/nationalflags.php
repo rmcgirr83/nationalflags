@@ -197,17 +197,16 @@ class nationalflags
 			return false;
 		}
 		// grab all the flags
-		$sql_array = array(
-			'SELECT'	=> 'u.user_flag, COUNT(u.user_flag) AS fnum',
-			'FROM'		=> array(USERS_TABLE => 'u'),
-			'WHERE'		=> $this->db->sql_in_set('u.user_type', array(USER_NORMAL, USER_FOUNDER)) . ' AND u.user_flag > 0',
-			'GROUP_BY'	=> 'u.user_flag',
-			'ORDER_BY'	=> 'fnum DESC, u.user_flag ASC',
-		);
+		$sql = 'SELECT f.*, COUNT(u.user_flag) as fnum
+			FROM ' . $this->flags_table . ' f
+				LEFT JOIN ' . USERS_TABLE . ' u on f.flag_id = u.user_flag
+			WHERE ' . $this->db->sql_in_set('u.user_type', array(USER_NORMAL, USER_FOUNDER)) . ' AND u.user_flag > 0
+			GROUP BY f.flag_id
+			ORDER BY fnum DESC, f.flag_name ASC';
 
 		// we limit the number of flags to display to the number set in the ACP settings
 		// and cache the query based on setting in ACP
-		$result = $this->db->sql_query_limit($this->db->sql_build_query('SELECT', $sql_array), $this->config['flags_num_display'], 0, $this->config['flags_cachetime']);
+		$result = $this->db->sql_query_limit($sql, $this->config['flags_num_display'], 0, $this->config['flags_cachetime']);
 
 		$count = 0;
 		$flags = $this->get_flag_cache();
@@ -216,9 +215,9 @@ class nationalflags
 		{
 			++$count;
 			$this->template->assign_block_vars('flag', array(
-				'FLAG' 			=> $this->get_user_flag($row['user_flag']),
+				'FLAG' 			=> $this->get_user_flag($row['flag_id']),
 				'FLAG_USERS'	=> $this->user->lang('FLAG_USERS', (int) $row['fnum']),
-				'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $flags[$row['user_flag']]['flag_id'])),
+				'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $flags[$row['flag_id']]['flag_id'])),
 			));
 		}
 		$this->db->sql_freeresult($result);
