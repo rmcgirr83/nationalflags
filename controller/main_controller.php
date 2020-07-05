@@ -234,7 +234,7 @@ class main_controller
 	protected function display_flag($flag_id, $start, $limit)
 	{
 		// Get users that have the flag
-		$sql = 'SELECT *
+		$sql = 'SELECT user_regdate, user_lastvisit, username, user_colour, user_posts, user_id
 			FROM ' . USERS_TABLE . '
 			WHERE user_flag = ' . (int) $flag_id . '
 				AND ' . $this->db->sql_in_set('user_type', array(USER_NORMAL, USER_FOUNDER)) . '

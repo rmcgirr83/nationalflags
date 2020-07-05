@@ -107,8 +107,8 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.common'								=> 'common',
 			'core.user_setup'							=> 'user_setup',
+			'core.user_setup_after'						=> 'user_setup_after',
 			'core.index_modify_page_title'				=> 'index_modify_page_title',
 			'core.page_header_after'					=> 'page_header_after',
 			'core.ucp_profile_modify_profile_info'		=> 'user_flag_profile',
@@ -143,7 +143,7 @@ class listener implements EventSubscriberInterface
 	 * @return null
 	 * @access public
 	 */
-	public function common($event)
+	public function user_setup_after($event)
 	{
 		$this->nationalflags->build_users_and_flags();
 	}
