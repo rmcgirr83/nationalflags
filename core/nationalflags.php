@@ -196,47 +196,70 @@ class nationalflags
 		{
 			return false;
 		}
-		// grab all the flags
-		$sql = 'SELECT f.*, COUNT(u.user_flag) as fnum
-			FROM ' . $this->flags_table . ' f
-				LEFT JOIN ' . USERS_TABLE . ' u on f.flag_id = u.user_flag
-			WHERE ' . $this->db->sql_in_set('u.user_type', array(USER_NORMAL, USER_FOUNDER)) . ' AND u.user_flag > 0
-			GROUP BY f.flag_id
-			ORDER BY fnum DESC, f.flag_name ASC';
 
-		// we limit the number of flags to display to the number set in the ACP settings
-		// and cache the query based on setting in ACP
-		$result = $this->db->sql_query_limit($sql, $this->config['flags_num_display'], 0, $this->config['flags_cachetime']);
+		$cached_flags = $this->get_flag_cache();
+		$cached_user_flags = $this->get_users_and_flags_cache();
 
-		$count = 0;
-		$flags = $this->get_flag_cache();
+		$cached_user_flags = array_count_values($cached_user_flags);
 
-		while ($row = $this->db->sql_fetchrow($result))
+		$flag_count = sizeof($cached_flags);
+
+		if (sizeof($cached_user_flags))
 		{
-			++$count;
-			$this->template->assign_block_vars('flag', array(
-				'FLAG' 			=> $this->get_user_flag($row['flag_id']),
-				'FLAG_USERS'	=> $this->user->lang('FLAG_USERS', (int) $row['fnum']),
-				'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $flags[$row['flag_id']]['flag_id'])),
-			));
-		}
-		$this->db->sql_freeresult($result);
-
-		if ($count)
-		{
-			if ($this->operator !== null)
+			for ($i = 1; $i <= $flag_count; ++$i)
 			{
-				$fid = 'nationalflags'; // can be any unique string to identify your extension's collapsible element
+				foreach ($cached_user_flags as $key => $value)
+				{
+					if ($key == (int) $cached_flags[$i]['flag_id'])
+					{
+						$cached_flags[$i]['user_count'] = (int) $value;
+					}
+					if (!isset($cached_flags[$i]['user_count']))
+					{
+						$cached_flags[$i]['user_count'] = 0;
+					}
+				}
+			}
+
+			$user_count = array_column($cached_flags, 'user_count');
+			$flag_name = array_column($cached_flags, 'flag_name');
+
+			// Sort the data with user count descending, flag name ascending
+			array_multisort($user_count, SORT_DESC, $flag_name, SORT_ASC, $cached_flags);
+
+			//build the display of flags with user count
+			$max_display = (int) $this->config['flags_num_display'];
+
+			$count = 0;
+			for ($i = 0; $i < $max_display; ++$i)
+			{
+				++$count;
+				if (!empty($cached_flags[$i]['user_count']))
+				{
+					$this->template->assign_block_vars('flag', array(
+						'FLAG' 			=> $this->get_user_flag($cached_flags[$i]['flag_id']),
+						'FLAG_USERS'	=> $this->user->lang('FLAG_USERS', (int) $cached_flags[$i]['user_count']),
+						'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $cached_flags[$i]['flag_id'])),
+					));
+				}
+			}
+
+			if ($count)
+			{
+				if ($this->operator !== null)
+				{
+					$fid = 'nationalflags'; // can be any unique string to identify your extension's collapsible element, must have version 2.0.0 of collapsible categories for this to work
+					$this->template->assign_vars(array(
+						'S_NATIONALFLAGS_HIDDEN' => $this->operator->is_collapsed($fid),
+						'U_NATIONALFLAGS_COLLAPSE_URL' => $this->operator->get_collapsible_link($fid),
+					));
+				}
 				$this->template->assign_vars(array(
-					'S_NATIONALFLAGS_HIDDEN' => $this->operator->is_collapsed($fid),
-					'U_NATIONALFLAGS_COLLAPSE_URL' => $this->operator->get_collapsible_link($fid),
+					'U_FLAGS'		=> $this->helper->route('rmcgirr83_nationalflags_display'),
+					'S_FLAGS'		=> true,
+					'PHPBB_IS_32'	=> ($this->files_factory !== null) ? true : false,
 				));
 			}
-			$this->template->assign_vars(array(
-				'U_FLAGS'		=> $this->helper->route('rmcgirr83_nationalflags_display'),
-				'S_FLAGS'		=> true,
-				'PHPBB_IS_32'	=> ($this->files_factory !== null) ? true : false,
-			));
 		}
 	}
 
