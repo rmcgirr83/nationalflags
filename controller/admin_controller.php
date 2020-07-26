@@ -10,6 +10,20 @@
 
 namespace rmcgirr83\nationalflags\controller;
 
+use phpbb\cache\service as cache_service;
+use phpbb\config\config;
+use phpbb\db\driver\driver_interface;
+use phpbb\pagination;
+use phpbb\controller\helper;
+use phpbb\request\request;
+use phpbb\template\template;
+use phpbb\user;
+use phpbb\log\log;
+use phpbb\extension\manager;
+use phpbb\path_helper;
+use rmcgirr83\nationalflags\core\nationalflags;
+use phpbb\files\factory;
+use phpbb\language\language;
 use rmcgirr83\nationalflags\core\flag_position_constants;
 
 /**
@@ -17,7 +31,6 @@ use rmcgirr83\nationalflags\core\flag_position_constants;
 */
 class admin_controller
 {
-
 	/**
 	* define our constants
 	**/
@@ -76,6 +89,9 @@ class admin_controller
 	/** @var \phpbb\files\factory */
 	protected $files_factory;
 
+	/** @var \phpbb\language\language */
+	protected $language;
+
 	/** @var string Custom form action */
 	protected $u_action;
 
@@ -98,26 +114,28 @@ class admin_controller
 	* @param string									$flags_table		Name of the table used to store flag data
 	* @param \rmcgirr83\nationalflags\core\nationalflags	$nationalflags	methods for the extension
 	* @param \phpbb\files\factory					$files_factory		File classes factory
+	* @param \phpbb\language\language				$language			Language object
 	* @return \rmcgirr83\nationalflags\controller\admin_controller
 	* @access public
 	*/
 	public function __construct(
-			\phpbb\cache\service $cache,
-			\phpbb\config\config $config,
-			\phpbb\db\driver\driver_interface $db,
-			\phpbb\pagination $pagination,
-			\phpbb\controller\helper $helper,
-			\phpbb\request\request $request,
-			\phpbb\template\template $template,
-			\phpbb\user $user,
-			\phpbb\log\log $log,
-			\phpbb\extension\manager $ext_manager,
-			\phpbb\path_helper $path_helper,
+			cache_service $cache,
+			config $config,
+			driver_interface $db,
+			pagination $pagination,
+			helper $helper,
+			request $request,
+			template $template,
+			user $user,
+			log $log,
+			manager $ext_manager,
+			path_helper $path_helper,
 			$root_path,
 			$php_ext,
 			$flags_table,
-			\rmcgirr83\nationalflags\core\nationalflags $nationalflags,
-			\phpbb\files\factory $files_factory = null)
+			nationalflags $nationalflags,
+			factory $files_factory,
+			language $language)
 	{
 		$this->cache = $cache;
 		$this->config = $config;
@@ -135,6 +153,7 @@ class admin_controller
 		$this->flags_table = $flags_table;
 		$this->nationalflags = $nationalflags;
 		$this->files_factory = $files_factory;
+		$this->language = $language;
 
 		$this->ext_path = $this->ext_manager->get_extension_path('rmcgirr83/nationalflags', true);
 		$this->ext_path_web = $this->path_helper->update_web_root_path($this->ext_path);
@@ -157,7 +176,7 @@ class admin_controller
 			// Test if the submitted form is valid
 			if (!check_form_key('nationalflags_settings'))
 			{
-				trigger_error($this->user->lang['FORM_INVALID'] . adm_back_link($this->u_action));
+				trigger_error($this->language->lang('FORM_INVALID') . adm_back_link($this->u_action));
 			}
 
 			if (!function_exists('validate_data'))
@@ -165,17 +184,13 @@ class admin_controller
 				include($this->root_path . 'includes/functions_user.' . $this->php_ext);
 			}
 
-			$check_row = array(
+			$check_row = [
 				'flags_num_display' => $this->request->variable('flags_num_display', 0),
-				'flags_cachetime' => $this->request->variable('flags_cachetime', 0),
-			);
-			$validate_row = array(
-				'flags_num_display' => array('num', false, 1, 100),
-				'flags_cachetime' => array('num', false, 30, 86400),
-			);
+			];
+			$validate_row = [
+				'flags_num_display' => ['num', false, 1, 100],
+			];
 			$error = validate_data($check_row, $validate_row);
-			// Replace "error" strings with their real, localised form
-			$error = array_map(array($this->user, 'lang'), $error);
 
 			if (!sizeof($error))
 			{
@@ -193,12 +208,12 @@ class admin_controller
 
 				// Option settings have been updated and logged
 				// Confirm this to the user and provide link back to previous page
-				trigger_error($this->user->lang('FLAG_SETTINGS_CHANGED') . adm_back_link($this->u_action));
+				trigger_error($this->language->lang('FLAG_SETTINGS_CHANGED') . adm_back_link($this->u_action));
 			}
 		}
 
 		// Set output vars for display in the template
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'ERROR'				=> isset($error) ? ((sizeof($error)) ? implode('<br>', $error) : '') : '',
 			'FLAGS_NUM_DISPLAY'	=> $this->config['flags_num_display'],
 			'FLAGS_DISPLAY_INDEX'	=> $this->config['flags_display_index'] ? true : false,
@@ -211,11 +226,10 @@ class admin_controller
 			'FLAGS_FORUMROW'	=> $this->config['flags_forumrow'] ? true : false,
 			'FLAGS_SEARCH'		=> $this->config['flags_search'] ? true : false,
 			'FLAGS_MEMBERLIST'	=> $this->config['flags_memberlist'] ? true : false,
-			'FLAGS_CACHETIME'	=> $this->config['flags_cachetime'],
 			'S_FLAGS'			=> true,
 
 			'U_ACTION'			=> $this->u_action,
-		));
+		]);
 	}
 
 	/**
@@ -237,7 +251,6 @@ class admin_controller
 		$this->config->set('flags_forumrow', $this->request->variable('flags_forumrow', 0));
 		$this->config->set('flags_search', $this->request->variable('flags_search', 0));
 		$this->config->set('flags_memberlist', $this->request->variable('flags_memberlist', 0));
-		$this->config->set('flags_cachetime', $this->request->variable('flags_cachetime', 0));
 	}
 
 	/**
@@ -268,10 +281,10 @@ class admin_controller
 
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$user_count = $this->user->lang('FLAG_USERS', (int) $row['user_count']);
+			$user_count = $this->language->lang('FLAG_USERS', (int) $row['user_count']);
 
 			$flag_default = !empty($row['flag_default']) ? true : false;
-			$this->template->assign_block_vars('flags', array(
+			$this->template->assign_block_vars('flags', [
 				'FLAG_NAME'		=> $row['flag_name'],
 				'FLAG_DEFAULT'	=> $flag_default,
 				'FLAG_IMG'		=> $this->ext_path_web . 'flags/' . $row['flag_image'],
@@ -279,18 +292,18 @@ class admin_controller
 				'USER_COUNT'	=> $user_count,
 				'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $row['flag_id'])),
 				'U_EDIT'		=> $this->u_action . "&amp;flag_id={$row['flag_id']}&amp;action=edit",
-				'U_DELETE'		=> $this->u_action . "&amp;flag_id={$row['flag_id']}&amp;action=delete",)
-			);
+				'U_DELETE'		=> $this->u_action . "&amp;flag_id={$row['flag_id']}&amp;action=delete"
+			]);
 		}
 		$this->db->sql_freeresult($result);
 
 		$start = $this->pagination->validate_start($start, $this->config['topics_per_page'], $total_count);
 		$this->pagination->generate_template_pagination($pagination_url, 'pagination', 'start', $total_count, $this->config['topics_per_page'], $start);
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'TOTAL_FLAGS'	=> $total_count,
 			'S_FLAGS'	=> true,
-		));
+		]);
 	}
 
 	/**
@@ -304,13 +317,13 @@ class admin_controller
 		// Add form key
 		add_form_key('add_flag');
 
-		$errors = array();
+		$errors = [];
 
-		$flag_row = array(
+		$flag_row = [
 			'flag_name'			=> ucfirst($this->request->variable('flag_name', '', true)),
 			'flag_image'		=> (!$this->can_upload_flag()) ? $this->request->variable('flag_image', '') : '',
 			'flag_default'		=> $this->request->variable('flag_default', 0),
-		);
+		];
 
 		if ($this->request->is_set_post('submit'))
 		{
@@ -336,8 +349,8 @@ class admin_controller
 			}
 		}
 
-		$this->template->assign_vars(array(
-			'L_TITLE'		=> $this->user->lang['FLAG_ADD'],
+		$this->template->assign_vars([
+			'L_TITLE'		=> $this->language->lang('FLAG_ADD'),
 			'U_ACTION'		=> $this->u_action . '&amp;action=add',
 			'U_BACK'		=> $this->u_action,
 			'FLAG_NAME'		=> $flag_row['flag_name'],
@@ -349,7 +362,7 @@ class admin_controller
 			'S_ERROR'		=> (sizeof($errors)) ? true : false,
 			'S_UPLOAD_FLAG'	=> $this->can_upload_flag(),
 			'S_FORM_ENCTYPE'	=> ' enctype="multipart/form-data"',
-		));
+		]);
 	}
 
 	/**
@@ -371,19 +384,19 @@ class admin_controller
 
 		if (!$row)
 		{
-			trigger_error($this->user->lang['FLAG_ERROR_NOT_EXIST'] . adm_back_link($this->u_action . '&amp;mode=manage'), E_USER_WARNING);
+			trigger_error($this->language->lang('FLAG_ERROR_NOT_EXIST') . adm_back_link($this->u_action . '&amp;mode=manage'), E_USER_WARNING);
 		}
 
 		// Add form key
 		add_form_key('edit_flag');
 
-		$errors = array();
+		$errors = [];
 
-		$flag_row = array(
+		$flag_row = [
 			'flag_name'			=> ucfirst($this->request->variable('flag_name', '', true)),
 			'flag_image'		=> (!$this->can_upload_flag()) ? $this->request->variable('flag_image', $row['flag_image']) : '',
 			'flag_default'		=> $this->request->variable('flag_default', 0),
-		);
+		];
 
 		if ($this->request->is_set_post('submit'))
 		{
@@ -413,8 +426,8 @@ class admin_controller
 		}
 
 		$found_flag = $this->ext_path_web . 'flags/' . $row['flag_image'];
-		$this->template->assign_vars(array(
-			'L_TITLE'		=> $this->user->lang['FLAG_EDIT'],
+		$this->template->assign_vars([
+			'L_TITLE'		=> $this->language->lang('FLAG_EDIT'),
 			'U_ACTION'		=> $this->u_action . "&amp;flag_id=$flag_id&amp;action=edit",
 			'U_BACK'		=> $this->u_action . '&amp;mode=manage',
 			'ERROR_MSG'		=> (sizeof($errors)) ? implode('<br>', $errors) : '',
@@ -430,7 +443,7 @@ class admin_controller
 			'S_UPLOAD_FLAG'	=> $this->can_upload_flag(),
 			'S_ERROR'		=> (sizeof($errors)) ? true : false,
 			'S_FORM_ENCTYPE'	=> ' enctype="multipart/form-data"',
-			)
+			]
 		);
 	}
 
@@ -477,15 +490,15 @@ class admin_controller
 			$row = $this->db->sql_fetchrow($result);
 			$this->db->sql_freeresult($result);
 
-			$message = $this->user->lang['MSG_CONFIRM'];
+			$message = $this->language->lang('MSG_CONFIRM');
 			if (!empty($row['flag_count']))
 			{
-				$message .= $this->user->lang('MSG_FLAG_CONFIRM_DELETE', (int) $row['flag_count']);
+				$message .= $this->language->lang('MSG_FLAG_CONFIRM_DELETE', (int) $row['flag_count']);
 			}
-			confirm_box(false, $message, build_hidden_fields(array(
+			confirm_box(false, $message, build_hidden_fields([
 				'id'		=> (int) $flag_id,
 				'mode'		=> 'manage',
-				'action'	=> 'delete'))
+				'action'	=> 'delete'])
 			);
 			// Use a redirect to take the user back to the previous page
 			// if the user chose to not delete the flag from the confirmation page.
@@ -507,19 +520,19 @@ class admin_controller
 	{
 		if (!check_form_key($form_key))
 		{
-			$errors[] = $this->user->lang['FORM_INVALID'];
+			$errors[] = $this->language->lang('FORM_INVALID');
 		}
 
 		if (empty($flag_name))
 		{
-			$errors[] = $this->user->lang['FLAG_ERROR_NO_FLAG_NAME'];
+			$errors[] = $this->language->lang('FLAG_ERROR_NO_FLAG_NAME');
 		}
 
 		if (!$this->can_upload_flag())
 		{
 			if (empty($flag_image))
 			{
-				$errors[] = $this->user->lang['FLAG_ERROR_NO_FLAG_IMG'];
+				$errors[] = $this->language->lang('FLAG_ERROR_NO_FLAG_IMG');
 			}
 		}
 
@@ -533,7 +546,7 @@ class admin_controller
 
 			if ($this->db->sql_fetchrow($result))
 			{
-				$errors[] = $this->user->lang['FLAG_NAME_EXISTS'];
+				$errors[] = $this->language->lang('FLAG_NAME_EXISTS');
 			}
 			$this->db->sql_freeresult($result);
 		}
@@ -583,26 +596,15 @@ class admin_controller
 
 		//Set upload directory
 		$upload_dir = $this->ext_path_web . 'flags';
-		$upload_dir = str_replace(array('../', '..\\', './', '.\\'), '', $upload_dir);
+		$upload_dir = str_replace(['../', '..\\', './', '.\\'], '', $upload_dir);
 
-		if ($this->files_factory !== null)
-		{
-			$upload = $this->files_factory->get('upload')
-				->set_error_prefix('FLAG_IMAGE_')
-				->set_allowed_extensions(array('gif', 'png', 'jpeg', 'jpg'))
-				->set_allowed_dimensions(self::MAX_WIDTH, self::MAX_HEIGHT, self::MAX_WIDTH, self::MAX_HEIGHT);
-		}
-		else
-		{
-			if (!class_exists('fileupload'))
-			{
-				include($this->root_path . 'includes/functions_upload.' . $this->php_ext);
-			}
-			$upload = new \fileupload('FLAG_IMAGE_', array('gif', 'png', 'jpeg', 'jpg'), false, self::MAX_WIDTH, self::MAX_HEIGHT, self::MAX_WIDTH, self::MAX_HEIGHT);
-		}
+		$upload = $this->files_factory->get('upload')
+			->set_error_prefix('FLAG_IMAGE_')
+			->set_allowed_extensions(['gif', 'png', 'jpeg', 'jpg'])
+			->set_allowed_dimensions(self::MAX_WIDTH, self::MAX_HEIGHT, self::MAX_WIDTH, self::MAX_HEIGHT);
 
 		// Uploading from a form, form name
-		$file = ($this->files_factory !== null) ? $upload->handle_upload('files.types.form', 'flag_upload') : $upload->form_upload('flag_upload');
+		$file = $upload->handle_upload('files.types.form', 'flag_upload');
 
 		// if the flag_upload field is empty and we are editing...return the old flag
 		$name = $file->get('realname');
@@ -647,12 +649,12 @@ class admin_controller
 	*/
 	private function log_message($log_message, $flag_name, $user_message)
 	{
-		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, $log_message, time(), array($flag_name));
+		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, $log_message, time(), [$flag_name]);
 
 		$this->cache->destroy('_user_flags');
 		$this->nationalflags->cache_flags();
 
-		trigger_error($this->user->lang[$user_message] . adm_back_link($this->u_action));
+		trigger_error($this->language->lang($user_message) . adm_back_link($this->u_action));
 	}
 	/**
 	* Display drop down of areas to display the flag
@@ -666,7 +668,7 @@ class admin_controller
 		foreach ($flag_position_constants as $name => $value)
 		{
 			$selected = ($value == $flag_position) ? ' selected="selected"' : '';
-			$position_name = $this->user->lang('FLAG_POSITION_' . $name);
+			$position_name = $this->language->lang('FLAG_POSITION_' . $name);
 			$s_flag_position .= "<option value='{$value}'$selected>$position_name</option>";
 		}
 

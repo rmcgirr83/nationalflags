@@ -10,6 +10,19 @@
 
 namespace rmcgirr83\nationalflags\controller;
 
+use phpbb\auth\auth;
+use phpbb\config\config;
+use phpbb\db\driver\driver_interface;
+use phpbb\pagination;
+use phpbb\controller\helper;
+use phpbb\language\language;
+use phpbb\request\request;
+use phpbb\extension\manager;
+use phpbb\path_helper;
+use phpbb\template\template;
+use phpbb\user;
+use rmcgirr83\nationalflags\core\nationalflags;
+use phpbb\files\factory;
 use phpbb\exception\http_exception;
 
 /**
@@ -31,6 +44,9 @@ class main_controller
 
 	/** @var \phpbb\controller\helper */
 	protected $helper;
+
+	/** @var \phpbb\language\language */
+	protected $language;
 
 	/* @var \phpbb\request\request */
 	protected $request;
@@ -76,6 +92,7 @@ class main_controller
 	* @param \phpbb\db\driver\driver			$db				Database object
 	* @param \phpbb\pagination					$pagination		Pagination object
 	* @param \phpbb\controller\helper           $helper         Controller helper object
+	* @param \phpbb\language\language           $language       Language object
 	* @param \phpbb\request\request				$request		Request object
 	* @param \phpbb\extension\manager			$ext_manager	Extension manager object
 	* @param \phpbb\path_helper					$path_helper	Path helper object
@@ -89,27 +106,29 @@ class main_controller
 	* @access public
 	*/
 	public function __construct(
-			\phpbb\auth\auth $auth,
-			\phpbb\config\config $config,
-			\phpbb\db\driver\driver_interface $db,
-			\phpbb\pagination $pagination,
-			\phpbb\controller\helper $helper,
-			\phpbb\request\request $request,
-			\phpbb\extension\manager $ext_manager,
-			\phpbb\path_helper $path_helper,
-			\phpbb\template\template $template,
-			\phpbb\user $user,
+			auth $auth,
+			config $config,
+			driver_interface $db,
+			pagination $pagination,
+			helper $helper,
+			language $language,
+			request $request,
+			manager $ext_manager,
+			path_helper $path_helper,
+			template $template,
+			user $user,
 			$root_path,
 			$php_ext,
 			$flags_table,
-			\rmcgirr83\nationalflags\core\nationalflags $nationalflags,
-			\phpbb\files\factory $files_factory = null)
+			nationalflags $nationalflags,
+			factory $files_factory)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
 		$this->db = $db;
 		$this->pagination = $pagination;
 		$this->helper = $helper;
+		$this->language = $language;
 		$this->request = $request;
 		$this->ext_manager	 = $ext_manager;
 		$this->path_helper	 = $path_helper;
@@ -141,12 +160,12 @@ class main_controller
 		$sql = 'SELECT f.flag_id, f.flag_name, f.flag_image, COUNT(u.user_flag) as user_count
 			FROM ' . $this->flags_table . ' f
 			LEFT JOIN ' . USERS_TABLE . ' u on f.flag_id = u.user_flag
-		WHERE ' . $this->db->sql_in_set('u.user_type', array(USER_NORMAL, USER_FOUNDER)) . ' AND u.user_flag > 0
+		WHERE ' . $this->db->sql_in_set('u.user_type', [USER_NORMAL, USER_FOUNDER]) . ' AND u.user_flag > 0
 		GROUP BY f.flag_id
 		ORDER BY user_count DESC, f.flag_name ASC';
 		$result = $this->db->sql_query($sql);
 
-		$flags = array();
+		$flags = [];
 		$countries = $users_count = 0;
 		while ($row = $this->db->sql_fetchrow($result))
 		{
@@ -154,36 +173,35 @@ class main_controller
 			$flag_id = $row['flag_id'];
 			$user_count = $row['user_count'];
 			$users_count = $users_count + $user_count;
-			$user_flag_count = $this->user->lang('FLAG_USERS', (int) $user_count);
+			$user_flag_count = $this->language->lang('FLAG_USERS', (int) $user_count);
 
 			$flag_image = $this->nationalflags->get_user_flag($row['flag_id']);
 
-			$this->template->assign_block_vars('flag', array(
+			$this->template->assign_block_vars('flag', [
 				'FLAG' 				=> $flag_image,
 				'FLAG_USER_COUNT'	=> $user_flag_count,
-				'U_FLAG'			=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $row['flag_id'])),
-			));
+				'U_FLAG'			=> $this->helper->route('rmcgirr83_nationalflags_getflags', ['flag_id' => $row['flag_id']]),
+			]);
 		}
 		$this->db->sql_freeresult($result);
 
-		$flag_users = $this->user->lang('FLAG_USERS', (int) $users_count);
+		$flag_users = $this->language->lang('FLAG_USERS', (int) $users_count);
 
-		$countries = $this->user->lang('FLAGS', (int) $countries);
+		$countries = $this->language->lang('FLAGS', (int) $countries);
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'L_FLAGS'	=> $countries . '&nbsp;&nbsp;' . $flag_users,
 			'S_FLAGS'		=> true,
-			'PHPBB_IS_32'	=> ($this->files_factory !== null) ? true : false,
-		));
+		]);
 
 		// Assign breadcrumb template vars for the flags page
-		$this->template->assign_block_vars('navlinks', array(
+		$this->template->assign_block_vars('navlinks', [
 			'U_VIEW_FORUM'		=> $this->helper->route('rmcgirr83_nationalflags_display'),
-			'FORUM_NAME'		=> $this->user->lang('NATIONAL_FLAGS'),
-		));
+			'FORUM_NAME'		=> $this->language->lang('NATIONAL_FLAGS'),
+		]);
 
 		// Send all data to the template file
-		return $this->helper->render('flags_list.html', $this->user->lang('NATIONAL_FLAGS'));
+		return $this->helper->render('flags_list.html', $this->language->lang('NATIONAL_FLAGS'));
 	}
 
 	/**
@@ -213,7 +231,7 @@ class main_controller
 		$page_title = $flag_name;
 		if ($page > 1)
 		{
-			$page_title .= ' - ' . $this->user->lang('PAGE_TITLE_NUMBER', $page);
+			$page_title .= ' - ' . $this->language->lang('PAGE_TITLE_NUMBER', $page);
 		}
 
 		$this->display_flag($flag_id, ($page - 1) * $this->config['posts_per_page'], $this->config['posts_per_page']);
@@ -237,7 +255,7 @@ class main_controller
 		$sql = 'SELECT user_regdate, user_lastvisit, username, user_colour, user_posts, user_id
 			FROM ' . USERS_TABLE . '
 			WHERE user_flag = ' . (int) $flag_id . '
-				AND ' . $this->db->sql_in_set('user_type', array(USER_NORMAL, USER_FOUNDER)) . '
+				AND ' . $this->db->sql_in_set('user_type', [USER_NORMAL, USER_FOUNDER]) . '
 			ORDER BY username_clean';
 		$result = $this->db->sql_query_limit($sql, $limit, $start);
 		$rows = $this->db->sql_fetchrowset($result);
@@ -257,59 +275,58 @@ class main_controller
 			$username = ($this->auth->acl_get('u_viewprofile')) ? get_username_string('full', $user_id, $userrow['username'], $userrow['user_colour']) : get_username_string('no_profile', $user_id, $userrow['username'], $userrow['user_colour']);
 			$user_avatar = ($this->user->optionget('viewavatars')) ? phpbb_get_user_avatar($this->avatar_img_resize($userrow)) : '';
 
-			$this->template->assign_block_vars('user_row', array(
+			$this->template->assign_block_vars('user_row', [
 				'JOINED'		=> $this->user->format_date($userrow['user_regdate']),
 				'VISITED'		=> (empty($userrow['user_lastvisit'])) ? ' - ' : $this->user->format_date($userrow['user_lastvisit']),
 				'POSTS'			=> ($userrow['user_posts']) ? $userrow['user_posts'] : 0,
 				'USERNAME_FULL'		=> $username,
 				'USER_AVATAR'		=> $user_avatar,
 				'U_SEARCH_USER'		=> ($this->auth->acl_get('u_search')) ? append_sid("{$this->root_path}search.$this->php_ext", "author_id=$user_id&amp;sr=posts") : '',
-			));
+			]);
 		}
 
-		$this->pagination->generate_template_pagination(array(
-			'routes' => array(
+		$this->pagination->generate_template_pagination([
+			'routes' => [
 				'rmcgirr83_nationalflags_getflags',
 				'rmcgirr83_nationalflags_getflags_page',
-			),
-			'params' => array(
+			],
+			'params' => [
 				'flag_id' => $flag_id,
-			),
-		), 'pagination', 'page', $total_users, $limit, $start);
+			],
+		], 'pagination', 'page', $total_users, $limit, $start);
 
 		$flag_image = $this->nationalflags->get_user_flag((int) $flag_id);
 
 		$users_count = $total_users;
 
-		$total_users = $this->user->lang('FLAG_USERS', (int) $total_users);
+		$total_users = $this->language->lang('FLAG_USERS', (int) $total_users);
 
 		$flags_array = $this->nationalflags->get_flag_cache();
 
-		$flag_name = isset($this->user->lang[strtoupper(str_replace(" ", "_", $flags_array[$flag_id]['flag_name']))]) ? html_entity_decode($this->user->lang[strtoupper(str_replace(" ", "_", $flags_array[$flag_id]['flag_name']))]) : html_entity_decode($flags_array[$flag_id]['flag_name']);
+		$flag_name = ($this->language->lang(strtoupper(str_replace(" ", "_", $flags_array[$flag_id]['flag_name']))) !== null) ? html_entity_decode($this->language->lang(strtoupper(str_replace(" ", "_", $flags_array[$flag_id]['flag_name'])))) : html_entity_decode($flags_array[$flag_id]['flag_name']);
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'FLAG'			=> $flag_name,
 			'FLAG_IMAGE'	=> $flag_image,
 			'TOTAL_USERS'	=> $total_users,
 			'S_VIEWONLINE'	=> $this->auth->acl_get('u_viewonline'),
 			'S_FLAGS'		=> true,
 			'S_FLAG_USERS'	=> (!empty($users_count)) ? true : false,
-			'MESSAGE_TEXT'	=> (empty($users_count)) ? $this->user->lang['NO_USER_HAS_FLAG'] : '',
-			'PHPBB_IS_32'	=> ($this->files_factory !== null) ? true : false,
-		));
+			'MESSAGE_TEXT'	=> (empty($users_count)) ? $this->language->lang('NO_USER_HAS_FLAG') : '',
+		]);
 
 		// Assign breadcrumb template vars for the flags page
-		$this->template->assign_block_vars('navlinks', array(
+		$this->template->assign_block_vars('navlinks', [
 			'U_VIEW_FORUM'		=> $this->helper->route('rmcgirr83_nationalflags_display'),
-			'FORUM_NAME'		=> $this->user->lang('NATIONAL_FLAGS'),
-		));
+			'FORUM_NAME'		=> $this->language->lang('NATIONAL_FLAGS'),
+		]);
 
-		$flag_name = isset($this->user->lang[strtoupper(str_replace(" ", "_", $flags_array[$flag_id]['flag_name']))]) ? html_entity_decode($this->user->lang[strtoupper(str_replace(" ", "_", $flags_array[$flag_id]['flag_name']))]) : html_entity_decode($flags_array[$flag_id]['flag_name']);
+		$flag_name = ($this->language->lang(strtoupper(str_replace(" ", "_", $flags_array[$flag_id]['flag_name']))) !== null) ? html_entity_decode($this->language->lang(strtoupper(str_replace(" ", "_", $flags_array[$flag_id]['flag_name'])))) : html_entity_decode($flags_array[$flag_id]['flag_name']);
 		// Assign breadcrumb template vars for the flags page
-		$this->template->assign_block_vars('navlinks', array(
-			'U_VIEW_FORUM'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $flag_id)),
+		$this->template->assign_block_vars('navlinks', [
+			'U_VIEW_FORUM'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', ['flag_id' => $flag_id]),
 			'FORUM_NAME'		=> $flag_name,
-		));
+		]);
 	}
 
 	/* Generate and resize avatar
@@ -341,12 +358,12 @@ class main_controller
 		else
 		{
 			$no_avatar = "{$this->path_helper->get_web_root_path()}styles/" . rawurlencode($this->user->style['style_path']) . '/theme/images/no_avatar.gif';
-			$avatar = array(
+			$avatar = [
 				'user_avatar' => $no_avatar,
 				'user_avatar_type' => AVATAR_REMOTE,
 				'user_avatar_width' => self::MAX_SIZE,
 				'user_avatar_height' => self::MAX_SIZE,
-			);
+			];
 		}
 		return $avatar;
 	}

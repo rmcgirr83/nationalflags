@@ -4,7 +4,13 @@
 <a href="{{ U_BACK }}" style="float: {{ S_CONTENT_FLOW_END }};">&laquo; {{ lang('BACK') }}</a>
 
 <h1>{{ lang('TITLE') }}</h1>
-
+<fieldset>
+	<legend>{{ lang('BUY_ME_A_BEER') }}</legend>
+	<dl>
+		<dt><label>{{ lang('BUY ME A BEER_SHORT') }}{{ lang('COLON') }}</label><br /><span>{{ L_BUY_ME_A_BEER_EXPLAIN }}</span></dt>
+		<dd><a href="{{ lang('BUY_ME_A_BEER_URL') }}" target="_blank" rel="noreferrer noopener"><img src="{{ lang('PAYPAL_IMAGE_URL') }}" border="0" alt="{{ lang('PAYPAL_ALT') }}" style="cursor:pointer;margin-top:15px;"></a></dd>
+	</dl>
+</fieldset>
 {% if !S_ERROR %}
 <div class="warningbox">
 	<p>{% if not S_UPLOAD_FLAG %}{{ lang('ACP_NO_UPLOAD') }}{% else %}{% if S_CAN_OVERWRITE %}{{ lang('FLAG_UPLOAD_NOTICE') }}{% else %}{{ lang('FLAG_UPLOAD_NO_OVERWRITE') }}{% endif %}{% endif %}</p>
@@ -62,15 +68,22 @@
 
 {% elseif S_FLAGS %}
 
+<fieldset>
+	<legend>{{ lang('BUY_ME_A_BEER') }}</legend>
+	<dl>
+		<dt><label>{{ lang('BUY ME A BEER_SHORT') }}{{ lang('COLON') }}</label><br /><span>{{ L_BUY_ME_A_BEER_EXPLAIN }}</span></dt>
+		<dd><a href="{{ lang('BUY_ME_A_BEER_URL') }}" target="_blank" rel="noreferrer noopener"><img src="{{ lang('PAYPAL_IMAGE_URL') }}" border="0" alt="{{ lang('PAYPAL_ALT') }}" style="cursor:pointer;margin-top:15px;"></a></dd>
+	</dl>
+</fieldset>
 <h1>{{ TOTAL_FLAGS }} {{ lang('ACP_FLAGS') }}</h1>
 
-<p>{{ lang('ACP_FLAGS_EXPLAIN') }}<br>{{ lang('ACP_FLAGS_DONATE') }}</p>
+<p>{{ lang('ACP_FLAGS_EXPLAIN') }}</p>
 
 <form id="acp_flags" method="post" action="{{ U_ACTION }}">
 	<fieldset class="quick">
 		<input class="button2" name="add" type="submit" value="{{ lang('FLAG_ADD') }}" />
 	</fieldset>
-	
+
 	{% if loops.pagination|length %}
 	<div class="pagination top-pagination">
 		{% INCLUDE 'pagination.html' %}

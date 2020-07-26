@@ -4,7 +4,7 @@
 		{% if S_FLAG_USERS %}
 		<div class="action-bar">
 			<div class="pagination">
-				{{ TOTAL_USERS }} 
+				{{ TOTAL_USERS }}
 				{% if loops.pagination|length %}
 					{% INCLUDE 'pagination.html' %}
 				{% else %}
@@ -12,12 +12,12 @@
 				{% endif %}
 			</div>
 		</div>
-		
+
 		<div class="forabg">
 			<div class="inner">
 			<ul class="topiclist">
 				<li class="header">
-					<dl class="{% if PHPBB_IS_32 %}row-item{% else %}icon{% endif %}">
+					<dl class="row-item">
 						<dt>{{ lang('USERNAME') }}</dt>
 						<dd class="topics">{{ lang('POSTS') }}</dd>
 						<dd class="lastpost"><span>{{ lang('JOINED') }}</span></dd>
@@ -43,13 +43,13 @@
 			</ul>
 			</div>
 		</div>
-	
+
 		<div class="action-bar">
 			<div class="pagination">
 				{{ TOTAL_USERS }}
-				{% if loops.pagination|length %} 
+				{% if loops.pagination|length %}
 					{% INCLUDE 'pagination.html' %}
-				{% else %} 
+				{% else %}
 					 &bull; {{ PAGE_NUMBER }}
 				{% endif %}
 			</div>

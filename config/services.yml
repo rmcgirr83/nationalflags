@@ -20,7 +20,8 @@ services:
             - '%core.php_ext%'
             - '%rmcgirr83.nationalflags.table.nationalflags%'
             - '@rmcgirr83.nationalflags.nationalflags'
-            - '@?files.factory'
+            - '@files.factory'
+            - '@language'
 
     rmcgirr83.nationalflags.main.controller:
         class: rmcgirr83\nationalflags\controller\main_controller
@@ -30,6 +31,7 @@ services:
             - '@dbal.conn'
             - '@pagination'
             - '@controller.helper'
+            - '@language'
             - '@request'
             - '@ext.manager'
             - '@path_helper'
@@ -39,7 +41,7 @@ services:
             - '%core.php_ext%'
             - '%rmcgirr83.nationalflags.table.nationalflags%'
             - '@rmcgirr83.nationalflags.nationalflags'
-            - '@?files.factory'
+            - '@files.factory'
 
     rmcgirr83.nationalflags.listener:
         class: rmcgirr83\nationalflags\event\listener
@@ -48,6 +50,7 @@ services:
             - '@config'
             - '@controller.helper'
             - '@dbal.conn'
+            - '@language'
             - '@request'
             - '@template'
             - '@user'
@@ -65,10 +68,10 @@ services:
             - '@controller.helper'
             - '@cache'
             - '@dbal.conn'
+            - '@language'
             - '@template'
             - '@user'
             - '%rmcgirr83.nationalflags.table.nationalflags%'
             - '@ext.manager'
             - '@path_helper'
-            - '@?files.factory'
             - '@?phpbb.collapsiblecategories.operator'

@@ -2,7 +2,7 @@
 /**
 *
 * @package National Flags
-* @copyright (c) 2018 Rich Mcgirr (RMcGirr83)
+* @copyright (c) 2020 Rich Mcgirr (RMcGirr83)
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */

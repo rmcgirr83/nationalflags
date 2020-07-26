@@ -9,6 +9,15 @@
 
 namespace rmcgirr83\nationalflags\core;
 
+use phpbb\config\config;
+use phpbb\controller\helper;
+use phpbb\cache\service as cache_service;
+use phpbb\db\driver\driver_interface;
+use phpbb\language\language;
+use phpbb\template\template;
+use phpbb\user;
+use phpbb\extension\manager;
+use phpbb\path_helper;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use rmcgirr83\nationalflags\core\flag_position_constants;
 
@@ -29,8 +38,11 @@ class nationalflags
 	/** @var \phpbb\cache\service */
 	protected $cache;
 
-	/** @var \phpbb\db\driver\driver */
+	/** @var \phpbb\db\driver\driver_interface; */
 	protected $db;
+
+	/** @var \phpbb\language\language */
+	protected $language;
 
 	/** @var \phpbb\template\template */
 	protected $template;
@@ -51,46 +63,43 @@ class nationalflags
 	/** @var \phpbb\path_helper */
 	protected $path_helper;
 
-	/** @var \phpbb\files\factory */
-	protected $files_factory;
-
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\config\config			$config				Config object
-	 * @param \phpbb\controller\helper		$helper				Controller helper object
-	 * @param \phpbb\cache\service			$cache				Cache object
-	 * @param \phpbb\db\driver\driver		$db					Database object
-	 * @param \phpbb\template\template		$template			Template object
-	 * @param \phpbb\user					$user				User object
-	 * @param string						$flags_table		Name of the table used to store flag data
-	 * @param \phpbb\extension\manager		$ext_manager		Extension manager object
-	 * @param \phpbb\path_helper			$path_helper		Path helper object
-	* @param \phpbb\files\factory			$files_factory		File classes factory
+	 * @param \phpbb\config\config					$config				Config object
+	 * @param \phpbb\controller\helper				$helper				Controller helper object
+	 * @param \phpbb\cache\service					$cache				Cache object
+	 * @param \phpbb\db\driver\driver_interface		$db					Database object
+	 * @param \phpbb\language\language				$language			Language object
+	 * @param \phpbb\template\template				$template			Template object
+	 * @param \phpbb\user							$user				User object
+	 * @param string								$flags_table		Name of the table used to store flag data
+	 * @param \phpbb\extension\manager				$ext_manager		Extension manager object
+	 * @param \phpbb\path_helper					$path_helper		Path helper object
 	 */
 	public function __construct(
-			\phpbb\config\config $config,
-			\phpbb\controller\helper $helper,
-			\phpbb\cache\service $cache,
-			\phpbb\db\driver\driver_interface $db,
-			\phpbb\template\template $template,
-			\phpbb\user $user,
+			config $config,
+			helper $helper,
+			cache_service $cache,
+			driver_interface $db,
+			language $language,
+			template $template,
+			user $user,
 			$flags_table,
-			\phpbb\extension\manager $ext_manager,
-			\phpbb\path_helper $path_helper,
-			\phpbb\files\factory $files_factory = null,
+			manager $ext_manager,
+			path_helper $path_helper,
 			\phpbb\collapsiblecategories\operator\operator $operator = null)
 	{
 		$this->config = $config;
 		$this->helper = $helper;
 		$this->cache = $cache;
 		$this->db = $db;
+		$this->language = $language;
 		$this->template = $template;
 		$this->user = $user;
 		$this->flags_table = $flags_table;
 		$this->ext_manager	 = $ext_manager;
 		$this->path_helper	 = $path_helper;
-		$this->files_factory = $files_factory;
 		$this->operator = $operator;
 
 		$this->ext_path = $this->ext_manager->get_extension_path('rmcgirr83/nationalflags', true);
@@ -109,7 +118,7 @@ class nationalflags
 
 		if ($flag_id)
 		{
-			$flag_name = isset($this->user->lang[strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name']))]) ? html_entity_decode($this->user->lang[strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name']))]) : html_entity_decode($flags[$flag_id]['flag_name']);
+			$flag_name = ($this->language->lang(strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name']))) !== null) ? html_entity_decode($this->language->lang(strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name'])))) : html_entity_decode($flags[$flag_id]['flag_name']);
 			$size = (!empty($size)) ? 'style="height:' . $size . 'px; width:auto;"' : '';
 			$flag = '<img class="flag_image" src="' . $this->ext_path_web . 'flags/' . $flags[$flag_id]['flag_image'] . '" ' . $size . ' alt="' . $flag_name . '" title="' . $flag_name . '" />';
 
@@ -134,15 +143,15 @@ class nationalflags
 			ORDER BY flag_id';
 			$result = $this->db->sql_query($sql);
 
-			$user_flags = array();
+			$user_flags = [];
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-				$user_flags[$row['flag_id']] = array(
+				$user_flags[$row['flag_id']] = [
 					'flag_id'		=> $row['flag_id'],
 					'flag_name'		=> $row['flag_name'],
 					'flag_image'	=> $row['flag_image'],
 					'flag_default'	=> $row['flag_default'],
-				);
+				];
 			}
 			$this->db->sql_freeresult($result);
 
@@ -165,7 +174,7 @@ class nationalflags
 		ORDER BY flag_name';
 		$result = $this->db->sql_query($sql);
 
-		$flag_options = '<option value="0">' . $this->user->lang['FLAG_EXPLAIN'] . '</option>';
+		$flag_options = '<option value="0">' . $this->language->lang('FLAG_EXPLAIN') . '</option>';
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$selected = ($row['flag_id'] == $flag_id && !$this->flag_is_set) ? ' selected="selected"' : '';
@@ -177,7 +186,7 @@ class nationalflags
 			{
 				$selected = ' selected="selected"';
 			}
-			$flag_name = isset($this->user->lang[strtoupper(str_replace(" ", "_", $row['flag_name']))]) ? html_entity_decode($this->user->lang[strtoupper(str_replace(" ", "_", $row['flag_name']))]) : $row['flag_name'];
+			$flag_name = ($this->language->lang(strtoupper(str_replace(" ", "_", $row['flag_name']))) !== null) ? html_entity_decode($this->language->lang(strtoupper(str_replace(" ", "_", $row['flag_name'])))) : $row['flag_name'];
 			$flag_options .= '<option value="' . $row['flag_id'] . '" ' . $selected . '>' . $flag_name . '</option>';
 		}
 		$this->db->sql_freeresult($result);
@@ -206,18 +215,22 @@ class nationalflags
 
 		if (sizeof($cached_user_flags))
 		{
-			for ($i = 1; $i <= $flag_count; ++$i)
+			$cached_flags_keys = array_keys($cached_flags);
+
+			foreach ($cached_user_flags as $key => $value)
 			{
-				foreach ($cached_user_flags as $key => $value)
+				if (in_array($key, $cached_flags_keys))
 				{
-					if ($key == (int) $cached_flags[$i]['flag_id'])
-					{
-						$cached_flags[$i]['user_count'] = (int) $value;
-					}
-					if (!isset($cached_flags[$i]['user_count']))
-					{
-						$cached_flags[$i]['user_count'] = 0;
-					}
+					$cached_flags[$key]['user_count'] = (int) $value;
+				}
+			}
+
+			//need to add bogus user_count to cached_flags for the sort
+			foreach ($cached_flags as $key => $value)
+			{
+				if (!isset($value['user_count']))
+				{
+					$cached_flags[$key]['user_count'] = 0;
 				}
 			}
 
@@ -256,8 +269,7 @@ class nationalflags
 				}
 				$this->template->assign_vars(array(
 					'U_FLAGS'		=> $this->helper->route('rmcgirr83_nationalflags_display'),
-					'S_FLAGS'		=> true,
-					'PHPBB_IS_32'	=> ($this->files_factory !== null) ? true : false,
+					'S_FLAGS'		=> true
 				));
 			}
 		}
@@ -282,27 +294,27 @@ class nationalflags
 		{
 			if ($this->config['flags_required'])
 			{
-				return new JsonResponse(array(
-					'error' => $this->user->lang['MUST_CHOOSE_FLAG'],
-				));
+				return new JsonResponse([
+					'error' => $this->language->lang('MUST_CHOOSE_FLAG'),
+				]);
 			}
 			else
 			{
-				return new JsonResponse(array(
-					'error' => $this->user->lang['NO_SUCH_FLAG'],
-				));
+				return new JsonResponse([
+					'error' => $this->language->lang('NO_SUCH_FLAG'),
+				]);
 			}
 		}
 
 		$flag_img = $this->ext_path . 'flags/' . $flags[$flag_id]['flag_image'];
 		$flag_img = str_replace('./', generate_board_url() . '/', $flag_img); //fix paths
 
-		$flag_name = isset($this->user->lang[strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name']))]) ? $this->user->lang[strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name']))] : $flags[$flag_id]['flag_name'];
+		$flag_name = ($this->language->lang(strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name']))) !== null) ? $this->language->lang(strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name']))) : $flags[$flag_id]['flag_name'];
 
-		$json = new JsonResponse(array(
+		$json = new JsonResponse([
 				'flag_image'     => $flag_img,
 				'flag_name'     => $flag_name,
-		));
+		]);
 		return $json;
 	}
 
@@ -367,6 +379,8 @@ class nationalflags
 	/**
 	* Build users and flags		A cache of user ids and the applicable flag id
 	*
+	* @return null
+	* @access public
 	*/
 	public function build_users_and_flags()
 	{
@@ -377,15 +391,15 @@ class nationalflags
 			WHERE user_flag > 0';
 			$result = $this->db->sql_query($sql);
 
-			$users_and_flags = array();
+			$users_and_flags = [];
 			while ($row = $this->db->sql_fetchrow($result))
 			{
 				$users_and_flags[$row['user_id']] = $row['user_flag'];
 			}
 			$this->db->sql_freeresult($result);
 
-			// cache this data based on entry in ACP settings, this improves performance
-			$this->cache->put('_users_and_flags', $users_and_flags, $this->config['flags_cachetime']);
+			// cache this data forever, cache is only destroyed when a user registers or updates their profile
+			$this->cache->put('_users_and_flags', $users_and_flags);
 		}
 	}
 
@@ -399,7 +413,7 @@ class nationalflags
 	{
 		$users_flag_array = $this->get_users_and_flags_cache();
 
-		$users = array();
+		$users = [];
 		$flag_id = 0;
 		if (!empty($users_flag_array))
 		{
@@ -440,7 +454,7 @@ class nationalflags
 
 		if ($user_flag)
 		{
-			$flag_name = isset($this->user->lang[strtoupper(str_replace(" ", "_", $flags[$user_flag]['flag_name']))]) ? html_entity_decode($this->user->lang[strtoupper(str_replace(" ", "_", $flags[$user_flag]['flag_name']))]) : html_entity_decode($flags[$user_flag]['flag_name']);
+			$flag_name = ($this->language->lang(strtoupper(str_replace(" ", "_", $flags[$user_flag]['flag_name']))) !== null) ? html_entity_decode($this->language->lang(strtoupper(str_replace(" ", "_", $flags[$user_flag]['flag_name'])))) : html_entity_decode($flags[$user_flag]['flag_name']);
 
 			$flag_name = $flag_name;
 			$flag_image = $flags[$user_flag]['flag_image'];
@@ -448,14 +462,26 @@ class nationalflags
 
 		$s_flag_options = $this->list_flags($user_flag);
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'USER_FLAG'		=> $user_flag,
 			'FLAG_IMAGE'	=> ($flag_image) ? $this->ext_path . 'flags/' . $flag_image : '',
 			'FLAG_NAME'		=> $flag_name,
 			'S_FLAG_OPTIONS'	=> $s_flag_options,
 			'S_FLAGS'			=> true,
 			'S_FLAG_REQUIRED'	=> ($this->config['flags_required']) ? true : false,
-			'AJAX_FLAG_INFO' 	=> $this->helper->route('rmcgirr83_nationalflags_getflag', array('flag_id' => 'FLAG_ID')),
-		));
+			'AJAX_FLAG_INFO' 	=> $this->helper->route('rmcgirr83_nationalflags_getflag', ['flag_id' => 'FLAG_ID']),
+		]);
+	}
+
+	/**
+	* Trash the cache		destroys the users and flags cache
+	*						called on registration and if a user changes their flag choice in profile
+	*
+	* @return null
+	* @access public
+	*/
+	public function trash_the_cache()
+	{
+		$this->cache->destroy('_users_and_flags');
 	}
 }

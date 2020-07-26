@@ -13,6 +13,16 @@ namespace rmcgirr83\nationalflags\event;
 /**
 * @ignore
 */
+use phpbb\auth\auth;
+use phpbb\config\config;
+use phpbb\controller\helper;
+use phpbb\db\driver\driver_interface;
+use phpbb\language\language;
+use phpbb\request\request;
+use phpbb\template\template;
+use phpbb\user;
+use phpbb\extension\manager;
+use rmcgirr83\nationalflags\core\nationalflags;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -31,6 +41,9 @@ class listener implements EventSubscriberInterface
 
 	/** @var \phpbb\db\driver\driver */
 	protected $db;
+
+	/** @var \phpbb\language\language */
+	protected $language;
 
 	/** @var \phpbb\request\request */
 	protected $request;
@@ -60,6 +73,7 @@ class listener implements EventSubscriberInterface
 	* @param \phpbb\config\config               $config         Config object
 	* @param \phpbb\controller\helper           $helper         Controller helper object
 	* @param \phpbb\db\driver\driver			$db				Database object
+	* @param \phpbb\language\language			$language		Language object
 	* @param \phpbb\request\request				$request		Request object
 	* @param \phpbb\template\template           $template       Template object
 	* @param \phpbb\user                        $user           User object
@@ -70,22 +84,24 @@ class listener implements EventSubscriberInterface
 	* @access public
 	*/
 	public function __construct(
-			\phpbb\auth\auth $auth,
-			\phpbb\config\config $config,
-			\phpbb\controller\helper $helper,
-			\phpbb\db\driver\driver_interface $db,
-			\phpbb\request\request $request,
-			\phpbb\template\template $template,
-			\phpbb\user $user,
-			\phpbb\extension\manager $ext_manager,
+			auth $auth,
+			config $config,
+			helper $helper,
+			driver_interface $db,
+			language $language,
+			request $request,
+			template $template,
+			user $user,
+			manager $ext_manager,
 			$phpbb_root_path,
 			$php_ext,
-			\rmcgirr83\nationalflags\core\nationalflags $nationalflags)
+			nationalflags $nationalflags)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
 		$this->helper = $helper;
 		$this->db = $db;
+		$this->language = $language;
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
@@ -145,6 +161,10 @@ class listener implements EventSubscriberInterface
 	 */
 	public function user_setup_after($event)
 	{
+		// Need to ensure the flags are cached on page load
+		$this->nationalflags->cache_flags();
+
+		// Regenerate the users and flags cache too
 		$this->nationalflags->build_users_and_flags();
 	}
 
@@ -157,15 +177,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function user_setup($event)
 	{
-		// Need to ensure the flags are cached on page load
-		$this->nationalflags->cache_flags();
-
-		$lang_set_ext = $event['lang_set_ext'];
-		$lang_set_ext[] = array(
-			'ext_name' => 'rmcgirr83/nationalflags',
-			'lang_set' => 'common',
-		);
-		$event['lang_set_ext'] = $lang_set_ext;
+		$this->language->add_lang('common', 'rmcgirr83/nationalflags');
 	}
 
 	/**
@@ -209,7 +221,7 @@ class listener implements EventSubscriberInterface
 		{
 			$this->template->assign_vars(array(
 				'S_FLAG_MESSAGE'	=> (empty($this->user->data['user_flag'])) ? true : false,
-				'L_FLAG_PROFILE'	=> $this->user->lang('USER_NEEDS_FLAG', '<a href="' . append_sid("{$this->root_path}ucp.$this->php_ext", 'i=profile') . '">', '</a>'),
+				'L_FLAG_PROFILE'	=> $this->language->lang('USER_NEEDS_FLAG', '<a href="' . append_sid("{$this->root_path}ucp.$this->php_ext", 'i=profile') . '">', '</a>'),
 			));
 		}
 	}
@@ -266,7 +278,7 @@ class listener implements EventSubscriberInterface
 		if ($event['submit'] && empty($event['data']['user_flag']) && $this->config['flags_required'])
 		{
 			$array = $event['error'];
-			$array[] = $this->user->lang['MUST_CHOOSE_FLAG'];
+			$array[] = $this->language->lang('MUST_CHOOSE_FLAG');
 			$event['error'] = $array;
 		}
 	}
@@ -280,6 +292,9 @@ class listener implements EventSubscriberInterface
 	 */
 	public function user_flag_profile_sql($event)
 	{
+		//call function to trash the users_and_flags cache so it's regenerated
+		$this->nationalflags->trash_the_cache();
+
 		$event['sql_ary'] = array_merge($event['sql_ary'], array(
 				'user_flag' => $event['data']['user_flag'],
 		));
@@ -294,6 +309,9 @@ class listener implements EventSubscriberInterface
 	 */
 	public function user_flag_registration_sql($event)
 	{
+		//call function to trash the users_and_flags cache so it's regenerated
+		$this->nationalflags->trash_the_cache();
+
 		$event['user_row'] = array_merge($event['user_row'], array(
 				'user_flag' => $this->request->variable('user_flag', 0),
 		));
@@ -312,7 +330,7 @@ class listener implements EventSubscriberInterface
 		{
 			if (strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/flags') === 0)
 			{
-				$event['location'] = $this->user->lang('FLAGS_VIEWONLINE');
+				$event['location'] = $this->language->lang('FLAGS_VIEWONLINE');
 				$event['location_url'] = $this->helper->route('rmcgirr83_nationalflags_display');
 			}
 		}

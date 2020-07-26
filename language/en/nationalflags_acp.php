@@ -16,7 +16,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -33,10 +33,9 @@ if (empty($lang) || !is_array($lang))
 // Some characters you may want to copy&paste:
 // ’ » “ ” …
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_FLAGS_EXPLAIN'					=> 'Here you can add/edit and delete the different flags.',
 	'ACP_NO_UPLOAD'						=> '<br><strong>If you want to use images you should upload them to ext/rmcgirr83/nationalflags/flags before you add the new Flag.  The flag must have a lower case name, ie uk.gif</strong>',
-	'ACP_FLAGS_DONATE'					=> 'Please consider a <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=S4UTZ9YNKEDDN&item_name=National%20Flags" target="_blank" rel="noopener"><strong>Donation</strong></a> if you like the Extension',
 	'ACP_FLAG_USERS'					=> 'Number of Users',
 
 	//Add/Edit Flags
@@ -85,13 +84,12 @@ $lang = array_merge($lang, array(
 	'FLAG_POSITION_AFTER_CONTACT_FIELDS'	=> 'After contact fields', //0
 
 	//Logs, messages and errors
-
 	'MSG_FLAGS_DELETED'					=> 'Flag has been deleted.',
 	'MSG_CONFIRM'						=> '<strong>Are you sure you want to delete this flag?</strong>',
-	'MSG_FLAG_CONFIRM_DELETE'			=> array(
+	'MSG_FLAG_CONFIRM_DELETE'			=> [
 		1	=> '<br><strong>%d</strong> user has this flag and will have to select a different flag if you choose to delete this one.',
 		2	=> '<br><strong>%d</strong> users have this flag and will have to select a different flag if you choose to delete this one.',
-	),
+	],
 	'MSG_FLAG_EDITED'					=> 'Flag has been edited.',
 	'MSG_FLAG_ADDED'					=> 'New flag has been added.',
 	'FLAG_ERROR_NO_FLAG_NAME'			=> 'No flag name defined, this is a required field.',
@@ -117,12 +115,14 @@ $lang = array_merge($lang, array(
 	'FLAG_IMAGE_URL_NOT_FOUND'				=> 'The file cannot be found.',
 	'FLAG_IMAGE_WRONG_FILESIZE'				=> 'The flag size must be between 0 and %1d %2s.',
 	'FLAG_IMAGE_WRONG_SIZE'					=> 'The flag must be exactly %3$s wide and %4$s high. The submitted image is %5$s wide and %6$s high.',
-	'FLAGS_REQUIRE_540'			=> 'This extension requires at least PHP version 5.4.0 and phpBB version 3.1.4-RC1.  Please update your PHP version and/or your phpBB version in order to use the extension.',
+	'FLAGS_REQUIRE_540'			=> 'This extension requires at least PHP version 7.1 and phpBB version 3.2.0 or higher.  Please update your PHP version and/or your phpBB version in order to use the extension.',
+	// leaving this here for now, may institute a cache in a later version, following aren't in use at the moment
 	'FLAGS_CACHETIME'			=> 'Flags cache time',
 	'FLAGS_CACHETIME_EXPLAIN'	=> 'The amount of time before the cache for the flags for users regenerates. Setting is based on hours * minutes * seconds.<br>Minimum allowed is <b>300</b> seconds (5 minutes, 1 hour * 5 minutes * 60 seonds)<br>Maximum allowed is <b>86400</b> seconds (24 hours, 24 hours * 60 minutes *  60 seconds)',
 	'FLAGS_CACHETIME_IN_SECS'	=> 'in seconds',
 	'TOO_SMALL_FLAGS_CACHETIME'	=> 'The number chosen for the cache time is too small',
 	'TOO_LARGE_FLAGS_CACHETIME'	=> 'The number chosen for the cache time is too large',
+	// end comment
 	'TOO_SMALL_FLAGS_NUM_DISPLAY'	=> 'The number chosen for the number of flags to display is too small',
 	'TOO_LARGE_FLAGS_NUM_DISPLAY'	=> 'The number chosen for the number of flags to display too large',
-));
+]);

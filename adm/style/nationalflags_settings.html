@@ -1,6 +1,12 @@
 {% INCLUDE 'overall_header.html' %}
 <h1>{{ lang('ACP_FLAG_SETTINGS') }}</h1>
-<p>{{ lang('ACP_FLAGS_DONATE') }}</p>
+<fieldset>
+	<legend>{{ lang('BUY_ME_A_BEER') }}</legend>
+	<dl>
+		<dt><label>{{ lang('BUY ME A BEER_SHORT') }}{{ lang('COLON') }}</label><br /><span>{{ L_BUY_ME_A_BEER_EXPLAIN }}</span></dt>
+		<dd><a href="{{ lang('BUY_ME_A_BEER_URL') }}" target="_blank" rel="noreferrer noopener"><img src="{{ lang('PAYPAL_IMAGE_URL') }}" border="0" alt="{{ lang('PAYPAL_ALT') }}" style="cursor:pointer;margin-top:15px;"></a></dd>
+	</dl>
+</fieldset>
 
 {% if ERROR %}
 	<div class="errorbox"><h3>{{ lang('WARNING') }}</h3>
@@ -19,10 +25,6 @@
 			<dt><label id="flags_num_display" for="flags_num_display">{{ lang('FLAGS_NUM_DISPLAY') }}</label><br>{{ lang('FLAGS_NUM_DISPLAY_EXPLAIN') }}</dt>
 			<dd><input type="number" name="flags_num_display" id="flags_num_display" min="1" max="100" value="{{ FLAGS_NUM_DISPLAY }}" /></dd>
 		</dl>
-		<dl>
-			<dt><label id="flags_cachetime" for="flags_cachetime">{{ lang('FLAGS_CACHETIME') }}</label><br>{{ lang('FLAGS_CACHETIME_EXPLAIN') }}</dt>
-			<dd><input type="number" id="flags_cachetime" name="flags_cachetime" min="300" max="86400" value="{{ FLAGS_CACHETIME }}"> {{ lang('FLAGS_CACHETIME_IN_SECS') }}</dd>
-		</dl>		
 		<dl>
 			<dt><label for="flags_required">{{ lang('FLAGS_REQUIRED') }}{{ lang('COLON') }}</label><br>{{ lang('FLAGS_REQUIRED_EXPLAIN') }}</dt>
 			<dd><label><input type="radio" class="radio" name="flags_required" value="1" {% if FLAGS_REQUIRED %}id="flags_required" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
@@ -65,7 +67,7 @@
 			<dt><label for="flags_memberlist">{{ lang('FLAGS_DISPLAY_MEMBERLIST') }}{{ lang('COLON') }}</label></dt>
 			<dd><label><input type="radio" class="radio" name="flags_memberlist" value="1"{% if FLAGS_MEMBERLIST %} id="flags_memberlist" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
 				<label><input type="radio" class="radio" name="flags_memberlist" value="0"{% if not FLAGS_MEMBERLIST %} id="flags_memberlist" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
-		</dl>		
+		</dl>
 	</fieldset>
 	<fieldset class="submit-buttons">
 		<legend>{{ lang('SUBMIT') }}</legend>
