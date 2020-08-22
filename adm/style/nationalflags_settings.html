@@ -39,6 +39,11 @@
 			<dt><label for="flags_position">{{ lang('FLAGS_VIEWTOPIC_POSITION') }}{{ lang('COLON') }}</label><br>{{ lang('FLAGS_VIEWTOPIC_POSITION_EXPLAIN') }}</dt>
 			<dd><select id="flag_position" name="flag_position">{{ FLAG_POSITION }}</select></dd>
 		</dl>
+		<dl>
+			<dt><label for="flags_avatars">{{ lang('FLAGS_DISPLAY_AVATARS') }}{{ lang('COLON') }}</label><br>{{ lang('FLAGS_DISPLAY_AVATARS_EXPLAIN') }}</dt>
+			<dd><label><input type="radio" class="radio" name="flags_avatars" value="1"{% if FLAGS_AVATARS %} id="flags_avatars" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="flags_avatars" value="0"{% if not FLAGS_AVATARS %} id="flags_avatars" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+		</dl>
 	</fieldset>
 
 	<fieldset>

@@ -57,6 +57,8 @@ $lang = array_merge($lang, [
 	//Settings
 	'FLAGS_REQUIRED'					=> 'Required field',
 	'FLAGS_REQUIRED_EXPLAIN'			=> 'Choosing Yes here will force new registrants as well as those that visit their user profile to choose a flag',
+	'FLAGS_DISPLAY_AVATARS'				=> 'Display avatars',
+	'FLAGS_DISPLAY_AVATARS_EXPLAIN'		=> 'If set to yes, avatars for users will display on the flag page. If a user doesn’t have an avatar then the default no-avatar for the style will display.',
 	'FLAGS_DISPLAY_MSG'					=> 'Display a message',
 	'FLAGS_DISPLAY_MSG_EXPLAIN'			=> 'Choosing Yes here will display a message on the forum for a user to choose a flag',
 	'FLAGS_NUM_DISPLAY'					=> 'Number of flags',

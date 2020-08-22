@@ -275,6 +275,19 @@ class main_controller
 			$username = ($this->auth->acl_get('u_viewprofile')) ? get_username_string('full', $user_id, $userrow['username'], $userrow['user_colour']) : get_username_string('no_profile', $user_id, $userrow['username'], $userrow['user_colour']);
 			$user_avatar = ($this->user->optionget('viewavatars')) ? phpbb_get_user_avatar($this->avatar_img_resize($userrow)) : '';
 
+			if (empty($user_avatar))
+			{
+				$no_avatar = "{$this->path_helper->get_web_root_path()}styles/" . rawurlencode($this->user->style['style_path']) . '/theme/images/no_avatar.gif';
+				$avatar = [
+					'user_avatar' => $no_avatar,
+					'user_avatar_type' => AVATAR_REMOTE,
+					'user_avatar_width' => self::MAX_SIZE,
+					'user_avatar_height' => self::MAX_SIZE,
+				];
+
+				$user_avatar = '<img class="avatar" src="' . $avatar['user_avatar'] . '" width="' . $avatar['user_avatar_width'] . '" height="' . $avatar['user_avatar_height'] . '" alt="' . $this->language->lang('USER_AVATAR') . '" />';
+			}
+
 			$this->template->assign_block_vars('user_row', [
 				'JOINED'		=> $this->user->format_date($userrow['user_regdate']),
 				'VISITED'		=> (empty($userrow['user_lastvisit'])) ? ' - ' : $this->user->format_date($userrow['user_lastvisit']),
@@ -354,16 +367,6 @@ class main_controller
 				}
 				$avatar['user_avatar_height'] = $avatar_height;
 			}
-		}
-		else
-		{
-			$no_avatar = "{$this->path_helper->get_web_root_path()}styles/" . rawurlencode($this->user->style['style_path']) . '/theme/images/no_avatar.gif';
-			$avatar = [
-				'user_avatar' => $no_avatar,
-				'user_avatar_type' => AVATAR_REMOTE,
-				'user_avatar_width' => self::MAX_SIZE,
-				'user_avatar_height' => self::MAX_SIZE,
-			];
 		}
 		return $avatar;
 	}
