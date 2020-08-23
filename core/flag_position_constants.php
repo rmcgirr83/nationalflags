@@ -11,7 +11,7 @@ namespace rmcgirr83\nationalflags\core;
 
 class flag_position_constants
 {
-	public static function getFlagPosition()
+	public static function get_flag_position()
 	{
 		return array(
 			'AFTER_CONTACT_FIELDS' => 0,

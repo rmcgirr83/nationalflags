@@ -21,6 +21,7 @@ services:
             - '%rmcgirr83.nationalflags.table.nationalflags%'
             - '@rmcgirr83.nationalflags.nationalflags'
             - '@files.factory'
+            - '@filesystem'
             - '@language'
 
     rmcgirr83.nationalflags.main.controller:

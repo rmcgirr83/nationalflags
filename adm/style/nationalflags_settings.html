@@ -18,31 +18,31 @@
 	<fieldset>
 		<dl>
 			<dt><label for="flags_display_index">{{ lang('FLAGS_ON_INDEX') }}{{ lang('COLON') }}</label><br>{{ lang('FLAGS_ON_INDEX_EXPLAIN') }}</dt>
-			<dd><label><input type="radio" class="radio" name="flags_display_index" value="1" {% if FLAGS_DISPLAY_INDEX %}id="flags_display_index" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-			<label><input type="radio" class="radio" name="flags_display_index" value="0" {% if not FLAGS_DISPLAY_INDEX %}id="flags_display_index" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+			<dd><label><input type="radio" class="radio" name="flags_display_index" value="1" {% if FLAGS_DISPLAY_INDEX %}checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+			<label><input type="radio" class="radio" name="flags_display_index" value="0" {% if not FLAGS_DISPLAY_INDEX %}checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
 		</dl>
 		<dl>
-			<dt><label id="flags_num_display" for="flags_num_display">{{ lang('FLAGS_NUM_DISPLAY') }}</label><br>{{ lang('FLAGS_NUM_DISPLAY_EXPLAIN') }}</dt>
-			<dd><input type="number" name="flags_num_display" id="flags_num_display" min="1" max="100" value="{{ FLAGS_NUM_DISPLAY }}" /></dd>
+			<dt><label for="flags_num_display">{{ lang('FLAGS_NUM_DISPLAY') }}</label><br>{{ lang('FLAGS_NUM_DISPLAY_EXPLAIN') }}</dt>
+			<dd><input type="number" name="flags_num_display" min="1" max="100" value="{{ FLAGS_NUM_DISPLAY }}" /></dd>
 		</dl>
 		<dl>
 			<dt><label for="flags_required">{{ lang('FLAGS_REQUIRED') }}{{ lang('COLON') }}</label><br>{{ lang('FLAGS_REQUIRED_EXPLAIN') }}</dt>
-			<dd><label><input type="radio" class="radio" name="flags_required" value="1" {% if FLAGS_REQUIRED %}id="flags_required" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-			<label><input type="radio" class="radio" name="flags_required" value="0" {% if not FLAGS_REQUIRED %}id="flags_required" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+			<dd><label><input type="radio" class="radio" name="flags_required" value="1" {% if FLAGS_REQUIRED %}checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+			<label><input type="radio" class="radio" name="flags_required" value="0" {% if not FLAGS_REQUIRED %}checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
 		</dl>
 		<dl>
 			<dt><label for="flags_display_msg">{{ lang('FLAGS_DISPLAY_MSG') }}{{ lang('COLON') }}</label><br>{{ lang('FLAGS_DISPLAY_MSG_EXPLAIN') }}</dt>
-			<dd><label><input type="radio" class="radio" name="flags_display_msg" value="1" {% if FLAGS_DISPLAY_MSG %}id="flags_display_msg" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-			<label><input type="radio" class="radio" name="flags_display_msg" value="0" {% if not FLAGS_DISPLAY_MSG %}id="flags_display_msg" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+			<dd><label><input type="radio" class="radio" name="flags_display_msg" value="1" {% if FLAGS_DISPLAY_MSG %}checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+			<label><input type="radio" class="radio" name="flags_display_msg" value="0" {% if not FLAGS_DISPLAY_MSG %}checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
 		</dl>
 		<dl>
 			<dt><label for="flags_position">{{ lang('FLAGS_VIEWTOPIC_POSITION') }}{{ lang('COLON') }}</label><br>{{ lang('FLAGS_VIEWTOPIC_POSITION_EXPLAIN') }}</dt>
-			<dd><select id="flag_position" name="flag_position">{{ FLAG_POSITION }}</select></dd>
+			<dd><select name="flag_position">{{ FLAG_POSITION }}</select></dd>
 		</dl>
 		<dl>
 			<dt><label for="flags_avatars">{{ lang('FLAGS_DISPLAY_AVATARS') }}{{ lang('COLON') }}</label><br>{{ lang('FLAGS_DISPLAY_AVATARS_EXPLAIN') }}</dt>
-			<dd><label><input type="radio" class="radio" name="flags_avatars" value="1"{% if FLAGS_AVATARS %} id="flags_avatars" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-				<label><input type="radio" class="radio" name="flags_avatars" value="0"{% if not FLAGS_AVATARS %} id="flags_avatars" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+			<dd><label><input type="radio" class="radio" name="flags_avatars" value="1"{% if FLAGS_AVATARS %}checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="flags_avatars" value="0"{% if not FLAGS_AVATARS %}checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
 		</dl>
 	</fieldset>
 
@@ -50,28 +50,28 @@
 		<legend>{{ lang('FLAGS_DISPLAY_OPTIONS') }}</legend>
 		<dl>
 			<dt><label for="flags_display_to_guests">{{ lang('FLAGS_DISPLAY_TO_GUESTS') }}{{ lang('COLON') }}</label><br>{{ lang('FLAGS_DISPLAY_TO_GUESTS_EXPLAIN') }}</dt>
-			<dd><label><input type="radio" class="radio" name="flags_display_to_guests" value="1" {% if FLAGS_DISPLAY_TO_GUESTS %}id="flags_display_to_guests" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-			<label><input type="radio" class="radio" name="flags_display_to_guests" value="0" {% if not FLAGS_DISPLAY_TO_GUESTS %}id="flags_display_to_guests" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+			<dd><label><input type="radio" class="radio" name="flags_display_to_guests" value="1" {% if FLAGS_DISPLAY_TO_GUESTS %}checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+			<label><input type="radio" class="radio" name="flags_display_to_guests" value="0" {% if not FLAGS_DISPLAY_TO_GUESTS %}checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
 		</dl>
 		<dl>
 			<dt><label for="flags_viewforum">{{ lang('FLAGS_DISPLAY_VIEWFORUM') }}{{ lang('COLON') }}</label></dt>
-			<dd><label><input type="radio" class="radio" name="flags_viewforum" value="1"{% if FLAGS_VIEWFORUM %} id="flags_viewforum" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-				<label><input type="radio" class="radio" name="flags_viewforum" value="0"{% if not FLAGS_VIEWFORUM %} id="flags_viewforum" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+			<dd><label><input type="radio" class="radio" name="flags_viewforum" value="1"{% if FLAGS_VIEWFORUM %}checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="flags_viewforum" value="0"{% if not FLAGS_VIEWFORUM %}checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
 		</dl>
 		<dl>
 			<dt><label for="flags_forumrow">{{ lang('FLAGS_DISPLAY_FORUMROW') }}{{ lang('COLON') }}</label></dt>
-			<dd><label><input type="radio" class="radio" name="flags_forumrow" value="1"{% if FLAGS_FORUMROW %} id="flags_forumrow" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-				<label><input type="radio" class="radio" name="flags_forumrow" value="0"{% if not FLAGS_FORUMROW %} id="flags_forumrow" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+			<dd><label><input type="radio" class="radio" name="flags_forumrow" value="1"{% if FLAGS_FORUMROW %}checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="flags_forumrow" value="0"{% if not FLAGS_FORUMROW %}checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
 		</dl>
 		<dl>
 			<dt><label for="flags_search">{{ lang('FLAGS_DISPLAY_SEARCH') }}{{ lang('COLON') }}</label></dt>
-			<dd><label><input type="radio" class="radio" name="flags_search" value="1"{% if FLAGS_SEARCH %} id="flags_search" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-				<label><input type="radio" class="radio" name="flags_search" value="0"{% if not FLAGS_SEARCH %} id="flags_search" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+			<dd><label><input type="radio" class="radio" name="flags_search" value="1"{% if FLAGS_SEARCH %}checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="flags_search" value="0"{% if not FLAGS_SEARCH %}checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
 		</dl>
 		<dl>
 			<dt><label for="flags_memberlist">{{ lang('FLAGS_DISPLAY_MEMBERLIST') }}{{ lang('COLON') }}</label></dt>
-			<dd><label><input type="radio" class="radio" name="flags_memberlist" value="1"{% if FLAGS_MEMBERLIST %} id="flags_memberlist" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-				<label><input type="radio" class="radio" name="flags_memberlist" value="0"{% if not FLAGS_MEMBERLIST %} id="flags_memberlist" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+			<dd><label><input type="radio" class="radio" name="flags_memberlist" value="1"{% if FLAGS_MEMBERLIST %}checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="flags_memberlist" value="0"{% if not FLAGS_MEMBERLIST %}checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
 		</dl>
 	</fieldset>
 	<fieldset class="submit-buttons">

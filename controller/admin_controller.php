@@ -23,6 +23,7 @@ use phpbb\extension\manager;
 use phpbb\path_helper;
 use rmcgirr83\nationalflags\core\nationalflags;
 use phpbb\files\factory;
+use phpbb\filesystem\filesystem;
 use phpbb\language\language;
 use rmcgirr83\nationalflags\core\flag_position_constants;
 
@@ -89,6 +90,9 @@ class admin_controller
 	/** @var \phpbb\files\factory */
 	protected $files_factory;
 
+	/** @var \phpbb\filesystem\filesystem */
+	protected $filesystem;
+
 	/** @var \phpbb\language\language */
 	protected $language;
 
@@ -114,6 +118,7 @@ class admin_controller
 	* @param string									$flags_table		Name of the table used to store flag data
 	* @param \rmcgirr83\nationalflags\core\nationalflags	$nationalflags	methods for the extension
 	* @param \phpbb\files\factory					$files_factory		File classes factory
+	* @param \phpbb\filessystem\filesystem			$filesystem			Filesystem classes filesystem
 	* @param \phpbb\language\language				$language			Language object
 	* @return \rmcgirr83\nationalflags\controller\admin_controller
 	* @access public
@@ -135,6 +140,7 @@ class admin_controller
 			$flags_table,
 			nationalflags $nationalflags,
 			factory $files_factory,
+			filesystem $filesystem,
 			language $language)
 	{
 		$this->cache = $cache;
@@ -153,6 +159,7 @@ class admin_controller
 		$this->flags_table = $flags_table;
 		$this->nationalflags = $nationalflags;
 		$this->files_factory = $files_factory;
+		$this->filesystem = $filesystem;
 		$this->language = $language;
 
 		$this->ext_path = $this->ext_manager->get_extension_path('rmcgirr83/nationalflags', true);
@@ -194,12 +201,6 @@ class admin_controller
 
 			if (!sizeof($error))
 			{
-				// if the cache time has changed, then destroy the users_and_flags cache
-				$flags_cachetime = $this->request->variable('flags_cachetime', 0);
-				if ($flags_cachetime != $this->config['flags_cachetime'])
-				{
-					$this->cache->destroy('_users_and_flags');
-				}
 				// Set the options the user configured
 				$this->set_options();
 
@@ -215,6 +216,7 @@ class admin_controller
 		// Set output vars for display in the template
 		$this->template->assign_vars([
 			'ERROR'				=> isset($error) ? ((sizeof($error)) ? implode('<br>', $error) : '') : '',
+			'FLAGS_AVATARS'		=> $this->config['flags_avatars'] ? true : false,
 			'FLAGS_NUM_DISPLAY'	=> $this->config['flags_num_display'],
 			'FLAGS_DISPLAY_INDEX'	=> $this->config['flags_display_index'] ? true : false,
 			'ALLOW_FLAGS'		=> $this->config['allow_flags'] ? true : false,
@@ -251,6 +253,7 @@ class admin_controller
 		$this->config->set('flags_forumrow', $this->request->variable('flags_forumrow', 0));
 		$this->config->set('flags_search', $this->request->variable('flags_search', 0));
 		$this->config->set('flags_memberlist', $this->request->variable('flags_memberlist', 0));
+		$this->config->set('flags_avatars', $this->request->variable('flags_avatars', 0));
 	}
 
 	/**
@@ -561,7 +564,7 @@ class admin_controller
 	*/
 	protected function can_upload_flag()
 	{
-		return (file_exists($this->ext_path_web . 'flags') && phpbb_is_writable($this->ext_path_web . 'flags') && (@ini_get('file_uploads') || strtolower(@ini_get('file_uploads')) == 'on'));
+		return (file_exists($this->ext_path_web . 'flags') && $this->filesystem->is_writable($this->ext_path_web . 'flags') && (@ini_get('file_uploads') || strtolower(@ini_get('file_uploads')) == 'on'));
 	}
 
 	/**
@@ -580,7 +583,7 @@ class admin_controller
 		}
 		array_multisort($flag, SORT_NATURAL, $data);
 
-		return implode(', ', $flag);
+		return implode($this->language->lang('COMMA_SEPARATOR'), $flag);
 	}
 
 	/**
@@ -662,7 +665,7 @@ class admin_controller
 	private function flag_position($flag_position)
 	{
 
-		$flag_position_constants = flag_position_constants::getFlagPosition();
+		$flag_position_constants = flag_position_constants::get_flag_position();
 
 		$s_flag_position = '';
 		foreach ($flag_position_constants as $name => $value)

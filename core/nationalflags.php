@@ -186,7 +186,9 @@ class nationalflags
 			{
 				$selected = ' selected="selected"';
 			}
+
 			$flag_name = ($this->language->lang(strtoupper(str_replace(" ", "_", $row['flag_name']))) !== null) ? html_entity_decode($this->language->lang(strtoupper(str_replace(" ", "_", $row['flag_name'])))) : $row['flag_name'];
+
 			$flag_options .= '<option value="' . $row['flag_id'] . '" ' . $selected . '>' . $flag_name . '</option>';
 		}
 		$this->db->sql_freeresult($result);
@@ -210,8 +212,6 @@ class nationalflags
 		$cached_user_flags = $this->get_users_and_flags_cache();
 
 		$cached_user_flags = array_count_values($cached_user_flags);
-
-		$flag_count = sizeof($cached_flags);
 
 		if (sizeof($cached_user_flags))
 		{
@@ -282,7 +282,7 @@ class nationalflags
 	 *
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
 	 */
-	public function getFlag($flag_id)
+	public function get_flag($flag_id)
 	{
 		$flags = $this->get_flag_cache();
 
@@ -406,8 +406,8 @@ class nationalflags
 	/**
 	* User flag id		The flag id a user has chosen
 	*
-	* @param	$user_id	int		the user id
-	* @param return			int 	the users flag id or false
+	* @param int user_id	$user_id	the user id
+	* @param return			int 		the users flag id or false
 	*/
 	public function user_flag_id($user_id = 0)
 	{
@@ -441,6 +441,7 @@ class nationalflags
 	public function display_flag_options($user_flag)
 	{
 		$flags = $this->get_flag_cache();
+
 		$flag_name = $flag_image = '';
 
 		foreach ($flags as $key => $value)
@@ -463,13 +464,13 @@ class nationalflags
 		$s_flag_options = $this->list_flags($user_flag);
 
 		$this->template->assign_vars([
-			'USER_FLAG'		=> $user_flag,
-			'FLAG_IMAGE'	=> ($flag_image) ? $this->ext_path . 'flags/' . $flag_image : '',
-			'FLAG_NAME'		=> $flag_name,
+			'USER_FLAG'			=> $user_flag,
+			'FLAG_IMAGE'		=> ($flag_image) ? $this->ext_path . 'flags/' . $flag_image : '',
+			'FLAG_NAME'			=> $flag_name,
 			'S_FLAG_OPTIONS'	=> $s_flag_options,
 			'S_FLAGS'			=> true,
 			'S_FLAG_REQUIRED'	=> ($this->config['flags_required']) ? true : false,
-			'AJAX_FLAG_INFO' 	=> $this->helper->route('rmcgirr83_nationalflags_getflag', ['flag_id' => 'FLAG_ID']),
+			'AJAX_FLAG_INFO' 	=> $this->helper->route('rmcgirr83_nationalflags_getflag', ['flag_id' => $user_flag]),
 		]);
 	}
 

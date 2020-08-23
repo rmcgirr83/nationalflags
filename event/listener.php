@@ -58,7 +58,7 @@ class listener implements EventSubscriberInterface
 	protected $ext_manager;
 
 	/** @var string phpBB root path */
-	protected $phpbb_root_path;
+	protected $root_path;
 
 	/** @var string phpEx */
 	protected $php_ext;
@@ -77,9 +77,9 @@ class listener implements EventSubscriberInterface
 	* @param \phpbb\request\request				$request		Request object
 	* @param \phpbb\template\template           $template       Template object
 	* @param \phpbb\user                        $user           User object
-	* @param \phpbb\extension\manager			$ext_manager		Extension manager object
-	* @param string                             $phpbb_root_path	phpBB root path
-	* @param string                             $php_ext			phpEx
+	* @param \phpbb\extension\manager			$ext_manager	Extension manager object
+	* @param string                             $root_path		phpBB root path
+	* @param string                             $php_ext		phpEx
 	* @param \rmcgirr83\nationalflags\core\nationalflags	$nationalflags	methods to be used by class
 	* @access public
 	*/
@@ -93,7 +93,7 @@ class listener implements EventSubscriberInterface
 			template $template,
 			user $user,
 			manager $ext_manager,
-			$phpbb_root_path,
+			$root_path,
 			$php_ext,
 			nationalflags $nationalflags)
 	{
@@ -106,7 +106,7 @@ class listener implements EventSubscriberInterface
 		$this->template = $template;
 		$this->user = $user;
 		$this->ext_manager	 = $ext_manager;
-		$this->root_path = $phpbb_root_path;
+		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 		$this->nationalflags = $nationalflags;
 
@@ -122,8 +122,7 @@ class listener implements EventSubscriberInterface
 	 */
 	static public function getSubscribedEvents()
 	{
-		return array(
-			'core.user_setup'							=> 'user_setup',
+		return [
 			'core.user_setup_after'						=> 'user_setup_after',
 			'core.index_modify_page_title'				=> 'index_modify_page_title',
 			'core.page_header_after'					=> 'page_header_after',
@@ -149,7 +148,7 @@ class listener implements EventSubscriberInterface
 			'core.memberlist_prepare_profile_data'		=> 'memberlist_prepare_profile_data',
 			'core.display_forums_modify_template_vars'	=> 'display_forums_modify_template_vars',
 			'core.viewforum_modify_topicrow'			=> 'viewforum_modify_topicrow',
-		);
+		];
 	}
 
 	/**
@@ -161,23 +160,12 @@ class listener implements EventSubscriberInterface
 	 */
 	public function user_setup_after($event)
 	{
+		$this->language->add_lang('common', 'rmcgirr83/nationalflags');
 		// Need to ensure the flags are cached on page load
 		$this->nationalflags->cache_flags();
 
 		// Regenerate the users and flags cache too
 		$this->nationalflags->build_users_and_flags();
-	}
-
-	/**
-	 * Set up the flags and add the lang vars
-	 *
-	 * @param object $event The event object
-	 * @return null
-	 * @access public
-	 */
-	public function user_setup($event)
-	{
-		$this->language->add_lang('common', 'rmcgirr83/nationalflags');
 	}
 
 	/**

@@ -20,6 +20,7 @@ class m12_update_data extends \phpbb\db\migration\migration
 	{
 		return array(
 			array('config.add', array('flags_avatars', 1)),
+			array('config.remove', array('flags_cachetime')),
 		);
 	}
 }

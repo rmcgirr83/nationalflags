@@ -148,7 +148,7 @@ class main_controller
 	 *
 	 * @access public
 	 */
-	public function displayFlags()
+	public function display_flags()
 	{
 		// If setting in ACP is set to not allow guests and bots to view the flags
 		if (!$this->nationalflags->display_flags_on_forum())
@@ -165,12 +165,10 @@ class main_controller
 		ORDER BY user_count DESC, f.flag_name ASC';
 		$result = $this->db->sql_query($sql);
 
-		$flags = [];
 		$countries = $users_count = 0;
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			++$countries;
-			$flag_id = $row['flag_id'];
 			$user_count = $row['user_count'];
 			$users_count = $users_count + $user_count;
 			$user_flag_count = $this->language->lang('FLAG_USERS', (int) $user_count);
@@ -201,7 +199,7 @@ class main_controller
 		]);
 
 		// Send all data to the template file
-		return $this->helper->render('flags_list.html', $this->language->lang('NATIONAL_FLAGS'));
+		return $this->helper->render('@rmcgirr83_nationalflags\flags_list.html', $this->language->lang('NATIONAL_FLAGS'));
 	}
 
 	/**
@@ -211,7 +209,7 @@ class main_controller
 	 * @param $page		int		page number we are on
 	 * @access public
 	 */
-	public function getFlags($flag_id, $page = 0)
+	public function get_flags($flag_id, $page = 0)
 	{
 		// If setting in ACP is set to not allow guests and bots to view the flags
 		if (!$this->nationalflags->display_flags_on_forum())
@@ -237,7 +235,7 @@ class main_controller
 		$this->display_flag($flag_id, ($page - 1) * $this->config['posts_per_page'], $this->config['posts_per_page']);
 
 		// Send all data to the template file
-		return $this->helper->render('flag_users.html', $page_title);
+		return $this->helper->render('@rmcgirr83_nationalflags\flag_users.html', $page_title);
 	}
 
 	/**
@@ -252,7 +250,7 @@ class main_controller
 	protected function display_flag($flag_id, $start, $limit)
 	{
 		// Get users that have the flag
-		$sql = 'SELECT user_regdate, user_lastvisit, username, user_colour, user_posts, user_id
+		$sql = 'SELECT user_regdate, user_lastvisit, username, user_colour, user_posts, user_id, user_avatar, user_avatar_height, user_avatar_type, user_avatar_width
 			FROM ' . USERS_TABLE . '
 			WHERE user_flag = ' . (int) $flag_id . '
 				AND ' . $this->db->sql_in_set('user_type', [USER_NORMAL, USER_FOUNDER]) . '
@@ -273,19 +271,24 @@ class main_controller
 			$user_id = $userrow['user_id'];
 
 			$username = ($this->auth->acl_get('u_viewprofile')) ? get_username_string('full', $user_id, $userrow['username'], $userrow['user_colour']) : get_username_string('no_profile', $user_id, $userrow['username'], $userrow['user_colour']);
-			$user_avatar = ($this->user->optionget('viewavatars')) ? phpbb_get_user_avatar($this->avatar_img_resize($userrow)) : '';
 
-			if (empty($user_avatar))
+			$user_avatar = '';
+			if ($this->config['flags_avatars'])
 			{
-				$no_avatar = "{$this->path_helper->get_web_root_path()}styles/" . rawurlencode($this->user->style['style_path']) . '/theme/images/no_avatar.gif';
-				$avatar = [
-					'user_avatar' => $no_avatar,
-					'user_avatar_type' => AVATAR_REMOTE,
-					'user_avatar_width' => self::MAX_SIZE,
-					'user_avatar_height' => self::MAX_SIZE,
-				];
+				$user_avatar = ($this->user->optionget('viewavatars')) ? phpbb_get_user_avatar($this->avatar_img_resize($userrow)) : '';
 
-				$user_avatar = '<img class="avatar" src="' . $avatar['user_avatar'] . '" width="' . $avatar['user_avatar_width'] . '" height="' . $avatar['user_avatar_height'] . '" alt="' . $this->language->lang('USER_AVATAR') . '" />';
+				if (empty($user_avatar))
+				{
+					$no_avatar = "{$this->path_helper->get_web_root_path()}styles/" . rawurlencode($this->user->style['style_path']) . '/theme/images/no_avatar.gif';
+					$avatar = [
+						'user_avatar' => $no_avatar,
+						'user_avatar_type' => AVATAR_REMOTE,
+						'user_avatar_width' => self::MAX_SIZE,
+						'user_avatar_height' => self::MAX_SIZE,
+					];
+
+					$user_avatar = '<img class="avatar" src="' . $avatar['user_avatar'] . '" width="' . $avatar['user_avatar_width'] . '" height="' . $avatar['user_avatar_height'] . '" alt="' . $this->language->lang('USER_AVATAR') . '" />';
+				}
 			}
 
 			$this->template->assign_block_vars('user_row', [

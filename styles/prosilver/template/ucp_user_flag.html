@@ -1,6 +1,6 @@
 {% if AJAX_FLAG_INFO %}
     <script>
-        var AJAX_FLAG_INFO = "{{ AJAX_FLAG_INFO }}";
+        var AJAX_FLAG_INFO = "{{ AJAX_FLAG_INFO|escape('js') }}";
     </script>
 	<dl>
 		<dt><label for="user_flag"><strong>{{ lang('USER_FLAG') }}{{ lang('COLON') }}{% if S_FLAG_REQUIRED %} *{% endif %}</strong></label><br>{% if FLAG_DEFAULT %}{{ lang('USER_FLAG_EXPLAIN') }}{% endif %}</dt>

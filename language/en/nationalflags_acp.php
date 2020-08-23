@@ -118,12 +118,7 @@ $lang = array_merge($lang, [
 	'FLAG_IMAGE_WRONG_FILESIZE'				=> 'The flag size must be between 0 and %1d %2s.',
 	'FLAG_IMAGE_WRONG_SIZE'					=> 'The flag must be exactly %3$s wide and %4$s high. The submitted image is %5$s wide and %6$s high.',
 	'FLAGS_REQUIRE_540'			=> 'This extension requires at least PHP version 7.1 and phpBB version 3.2.0 or higher.  Please update your PHP version and/or your phpBB version in order to use the extension.',
-	// leaving this here for now, may institute a cache in a later version, following aren't in use at the moment
-	'FLAGS_CACHETIME'			=> 'Flags cache time',
-	'FLAGS_CACHETIME_EXPLAIN'	=> 'The amount of time before the cache for the flags for users regenerates. Setting is based on hours * minutes * seconds.<br>Minimum allowed is <b>300</b> seconds (5 minutes, 1 hour * 5 minutes * 60 seonds)<br>Maximum allowed is <b>86400</b> seconds (24 hours, 24 hours * 60 minutes *  60 seconds)',
-	'FLAGS_CACHETIME_IN_SECS'	=> 'in seconds',
-	'TOO_SMALL_FLAGS_CACHETIME'	=> 'The number chosen for the cache time is too small',
-	'TOO_LARGE_FLAGS_CACHETIME'	=> 'The number chosen for the cache time is too large',
+
 	// end comment
 	'TOO_SMALL_FLAGS_NUM_DISPLAY'	=> 'The number chosen for the number of flags to display is too small',
 	'TOO_LARGE_FLAGS_NUM_DISPLAY'	=> 'The number chosen for the number of flags to display too large',
