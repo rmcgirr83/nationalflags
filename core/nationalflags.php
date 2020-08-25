@@ -363,7 +363,7 @@ class nationalflags
 	*/
 	public function flag_display_position()
 	{
-		$flag_position_constants = flag_position_constants::getFlagPosition();
+		$flag_position_constants = flag_position_constants::get_flag_position();
 
 		$flag_display_position = '';
 		foreach ($flag_position_constants as $name => $value)
