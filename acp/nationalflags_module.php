@@ -34,9 +34,6 @@ class nationalflags_module
 		// Make the $u_action url available in the admin controller
 		$admin_controller->set_page_url($this->u_action);
 
-		$template->assign_vars([
-			'L_BUY_ME_A_BEER_EXPLAIN'	=> $language->lang('BUY ME A BEER_EXPLAIN', '<a href="https://paypal.me/RMcGirr83" target="_blank" rel=”noreferrer noopener”>', '</a>')
-		]);
 		// Load the "settings" or "manage" module modes
 		switch ($mode)
 		{
