@@ -18,7 +18,7 @@ class nationalflags_module
 	{
 		global $phpbb_container, $language, $request, $template;
 
-		$language->add_lang(['nationalflags_acp', 'common'], 'rmcgirr83/nationalflags');
+		$language->add_lang(['acp/nationalflags_acp', 'common'], 'rmcgirr83/nationalflags');
 		$language->add_lang('posting');
 
 		// Get an instance of the admin controller
