@@ -577,13 +577,19 @@ class admin_controller
 
 		$data = $this->cache->get('_user_flags');
 
-		foreach ($data as $key => $row)
+		// because some nubs try and remove all the flags via the db so don't show an error in the ACP
+		if (sizeof($data))
 		{
-			$flag[$key] = $row['flag_image'];
-		}
-		array_multisort($flag, SORT_NATURAL, $data);
+			foreach ($data as $key => $row)
+			{
+				$flag[$key] = $row['flag_image'];
+			}
+			array_multisort($flag, SORT_NATURAL, $data);
 
-		return implode($this->language->lang('COMMA_SEPARATOR'), $flag);
+			return implode($this->language->lang('COMMA_SEPARATOR'), $flag);
+		}
+
+		return false;
 	}
 
 	/**
@@ -624,6 +630,7 @@ class admin_controller
 			$errors = array_merge($errors, $file->error);
 			return false;
 		}
+
 		// phpbb_chmod doesn't work well here on some servers so be explicit
 		@chmod($this->ext_path_web . 'flags/' . $file->get('uploadname'), 0644);
 
@@ -659,6 +666,7 @@ class admin_controller
 
 		trigger_error($this->language->lang($user_message) . adm_back_link($this->u_action));
 	}
+
 	/**
 	* Display drop down of areas to display the flag
 	*/
