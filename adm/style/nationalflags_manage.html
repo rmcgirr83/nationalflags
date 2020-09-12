@@ -31,25 +31,25 @@
 		{% endif %}
 		{% if S_UPLOAD_FLAG %}
 		<dl>
-			<dt><label for="flag_upload">{{ lang('FILENAME') }}{{ lang('COLON') }}</label></dt>
+			<dt><label>{{ lang('FILENAME') }}{{ lang('COLON') }}</label></dt>
 			<dd>
-				<input type="file" name="flag_upload" id="flag_upload" class="inputbox autowidth" />
-				<input type="hidden" name="old_flag" id="old_flag" value="{{ FLAG_IMAGE }}" />
+				<input type="file" name="flag_upload" class="inputbox autowidth" />
+				<input type="hidden" name="old_flag" value="{{ FLAG_IMAGE }}" />
 			</dd>
 		</dl>
 		{% endif %}
 		<dl>
-			<dt><label for="flag_name">{{ lang('FLAG_NAME') }}{{ lang('COLON') }}</label><br><span>{{ lang('FLAG_NAME_EXPLAIN') }}</span></dt>
-			<dd><input name="flag_name" type="text" id="flag_name" value="{{ FLAG_NAME }}" maxlength="255" /></dd>
+			<dt><label>{{ lang('FLAG_NAME') }}{{ lang('COLON') }}</label><br><span>{{ lang('FLAG_NAME_EXPLAIN') }}</span></dt>
+			<dd><input name="flag_name" type="text" value="{{ FLAG_NAME }}" maxlength="255" /></dd>
 		</dl>
 		{% if S_ADD_FLAG and not S_UPLOAD_FLAG %}<dl>
-			<dt><label for="flag_image">{{ lang('FLAG_IMG') }}{{ lang('COLON') }}</label><br><span>{{ lang('FLAG_IMG_EXPLAIN') }}</span></dt>
-			<dd><input name="flag_image" type="text" id="flag_image" value="{{ FLAG_IMAGE }}" maxlength="255" /></dd>
+			<dt><label>{{ lang('FLAG_IMG') }}{{ lang('COLON') }}</label><br><span>{{ lang('FLAG_IMG_EXPLAIN') }}</span></dt>
+			<dd><input name="flag_image" type="text" value="{{ FLAG_IMAGE }}" maxlength="255" /></dd>
 		</dl>{% endif %}
 		<dl>
-			<dt><label for="flag_default">{{ lang('FLAG_DEFAULT') }}{{ lang('COLON') }}</label><br><span>{{ lang('FLAG_DEFAULT_EXPLAIN') }}</span></dt>
-			<dd><label><input type="radio" class="radio" name="flag_default" value="1" {% if FLAG_DEFAULT %}id="flag_default" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-			<label><input type="radio" class="radio" name="flag_default" value="0" {% if not FLAG_DEFAULT %}id="flag_default" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+			<dt><label>{{ lang('FLAG_DEFAULT') }}{{ lang('COLON') }}</label><br><span>{{ lang('FLAG_DEFAULT_EXPLAIN') }}</span></dt>
+			<dd><label><input type="radio" class="radio" name="flag_default" value="1" {% if FLAG_DEFAULT %}checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+			<label><input type="radio" class="radio" name="flag_default" value="0" {% if not FLAG_DEFAULT %}checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
 		</dl>
 
 		<p class="submit-buttons">
