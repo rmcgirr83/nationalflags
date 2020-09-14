@@ -5,9 +5,12 @@ root = true
 
 [*]
 end_of_line = lf
-indent_size = 4
-indent_style = tab
 insert_final_newline = true
+
+[*.{php,js,css,json,html,txt,md,yml}]
+charset = utf-8
+indent_style = tab
+indent_size = 4
 trim_trailing_whitespace = true
 
 [*.md]
