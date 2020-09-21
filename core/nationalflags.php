@@ -118,7 +118,7 @@ class nationalflags
 
 		if ($flag_id)
 		{
-			$flag_name = ($this->language->lang(strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name']))) !== null) ? html_entity_decode($this->language->lang(strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name'])))) : html_entity_decode($flags[$flag_id]['flag_name']);
+			$flag_name = $this->flag_name_lang_var($flags[$flag_id]['flag_name']);
 			$size = (!empty($size)) ? 'style="height:' . $size . 'px; width:auto;"' : '';
 			$flag = '<img class="flag_image" src="' . $this->ext_path_web . 'flags/' . $flags[$flag_id]['flag_image'] . '" ' . $size . ' alt="' . $flag_name . '" title="' . $flag_name . '" />';
 
@@ -187,7 +187,7 @@ class nationalflags
 				$selected = ' selected="selected"';
 			}
 
-			$flag_name = ($this->language->lang(strtoupper(str_replace(" ", "_", $row['flag_name']))) !== null) ? html_entity_decode($this->language->lang(strtoupper(str_replace(" ", "_", $row['flag_name'])))) : $row['flag_name'];
+			$flag_name = $this->flag_name_lang_var($row['flag_name']);
 
 			$flag_options .= '<option value="' . $row['flag_id'] . '" ' . $selected . '>' . $flag_name . '</option>';
 		}
@@ -309,7 +309,7 @@ class nationalflags
 		$flag_img = $this->ext_path . 'flags/' . $flags[$flag_id]['flag_image'];
 		$flag_img = str_replace('./', generate_board_url() . '/', $flag_img); //fix paths
 
-		$flag_name = ($this->language->lang(strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name']))) !== null) ? $this->language->lang(strtoupper(str_replace(" ", "_", $flags[$flag_id]['flag_name']))) : $flags[$flag_id]['flag_name'];
+		$flag_name = $this->flag_name_lang_var($flags[$flag_id]['flag_name']);
 
 		$json = new JsonResponse([
 				'flag_image'     => $flag_img,
@@ -455,9 +455,8 @@ class nationalflags
 
 		if ($user_flag)
 		{
-			$flag_name = ($this->language->lang(strtoupper(str_replace(" ", "_", $flags[$user_flag]['flag_name']))) !== null) ? html_entity_decode($this->language->lang(strtoupper(str_replace(" ", "_", $flags[$user_flag]['flag_name'])))) : html_entity_decode($flags[$user_flag]['flag_name']);
+			$flag_name = $this->flag_name_lang_var($flags[$user_flag]['flag_name']);
 
-			$flag_name = $flag_name;
 			$flag_image = $flags[$user_flag]['flag_image'];
 		}
 
@@ -484,5 +483,21 @@ class nationalflags
 	public function trash_the_cache()
 	{
 		$this->cache->destroy('_users_and_flags');
+	}
+
+	/**
+	 * Check for translated flag name for the user
+	 *
+	 * @return string	translated flag name
+	 * @access public
+	 */
+	public function flag_name_lang_var($flag_name = '')
+	{
+		if (array_key_exists((strtoupper(str_replace(" ", "_", $flag_name))), $this->language->get_lang_array()))
+		{
+			$flag_name = html_entity_decode($this->language->lang(strtoupper(str_replace(" ", "_", $flag_name))));
+		}
+
+		return $flag_name;
 	}
 }

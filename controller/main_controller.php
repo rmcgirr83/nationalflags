@@ -319,7 +319,7 @@ class main_controller
 
 		$flags_array = $this->nationalflags->get_flag_cache();
 
-		$flag_name = ($this->language->lang(strtoupper(str_replace(" ", "_", $flags_array[$flag_id]['flag_name']))) !== null) ? html_entity_decode($this->language->lang(strtoupper(str_replace(" ", "_", $flags_array[$flag_id]['flag_name'])))) : html_entity_decode($flags_array[$flag_id]['flag_name']);
+		$flag_name = $this->nationalflags->flag_name_lang_var($flags_array[$flag_id]['flag_name']);
 
 		$this->template->assign_vars([
 			'FLAG'			=> $flag_name,
@@ -337,7 +337,8 @@ class main_controller
 			'FORUM_NAME'		=> $this->language->lang('NATIONAL_FLAGS'),
 		]);
 
-		$flag_name = ($this->language->lang(strtoupper(str_replace(" ", "_", $flags_array[$flag_id]['flag_name']))) !== null) ? html_entity_decode($this->language->lang(strtoupper(str_replace(" ", "_", $flags_array[$flag_id]['flag_name'])))) : html_entity_decode($flags_array[$flag_id]['flag_name']);
+		$flag_name = $this->nationalflags->flag_name_lang_var($flags_array[$flag_id]['flag_name']);
+
 		// Assign breadcrumb template vars for the flags page
 		$this->template->assign_block_vars('navlinks', [
 			'U_VIEW_FORUM'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', ['flag_id' => $flag_id]),
