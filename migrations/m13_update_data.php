@@ -31,7 +31,7 @@ class m13_update_data extends \phpbb\db\migration\migration
 		{
 			$sql_ary = [
 				[
-					'flag_name'		=> 'Curaçao',
+					'flag_name'		=> 'CuraÃ§ao',
 					'flag_image'	=> 'cw.png',
 				],
 			];
