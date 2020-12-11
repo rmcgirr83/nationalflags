@@ -9,20 +9,20 @@
 
 namespace rmcgirr83\nationalflags\migrations;
 
-class m13_update_data extends \phpbb\db\migration\migration
+class m14_update_data extends \phpbb\db\migration\migration
 {
 	static public function depends_on()
 	{
-		return array('\rmcgirr83\nationalflags\migrations\m12_update_data');
+		return ['\rmcgirr83\nationalflags\migrations\m13_update_data'];
 	}
 
 	public function update_data()
 	{
-		return array(
-			array('custom', array(
-				array(&$this, 'flag_update_image')
-			)),
-		);
+		return [
+			['custom', [
+				[&$this, 'flag_update_image']
+			]],
+		];
 	}
 
 	public function flag_update_image()
@@ -31,17 +31,17 @@ class m13_update_data extends \phpbb\db\migration\migration
 		{
 			$sql_ary = [
 				[
-					'flag_name'		=> 'Curaçao',
+					'flag_name'		=> 'CuraÃ§ao',
 					'flag_image'	=> 'cw.png',
 				],
 			];
 			foreach ($sql_ary as $num => $flag)
 			{
 				$sql = 'UPDATE ' . $this->table_prefix . 'flags
-					SET ' . $this->db->sql_build_array('UPDATE', array(
-								'flag_image'	=> (string) $flag['flag_image'])
+					SET ' . $this->db->sql_build_array('UPDATE', [
+								'flag_name'	=> (string) $flag['flag_name']]
 							) .
-					" WHERE flag_name = '" . (string) $flag['flag_name'] . "'";
+					" WHERE flag_image = '" . (string) $flag['flag_image'] . "'";
 				$this->db->sql_query($sql);
 			}
 		}
