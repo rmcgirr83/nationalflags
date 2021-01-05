@@ -1,0 +1,11 @@
+parameters:
+    flag_constants:
+        after_contact_fields: 0
+        after_avatar: 1
+        before_avatar: 2
+        after_user_name: 3
+        before_user_name: 4
+        above_rank: 5
+        below_rank: 6
+        after_profile_fields: 7
+        before_profile_fields: 8

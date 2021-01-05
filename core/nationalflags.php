@@ -12,14 +12,13 @@ namespace rmcgirr83\nationalflags\core;
 use phpbb\config\config;
 use phpbb\controller\helper;
 use phpbb\cache\service as cache_service;
-use phpbb\db\driver\driver_interface;
+use phpbb\db\driver\driver_interface as db;
 use phpbb\language\language;
 use phpbb\template\template;
 use phpbb\user;
 use phpbb\extension\manager;
 use phpbb\path_helper;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use rmcgirr83\nationalflags\core\flag_position_constants;
 
 class nationalflags
 {
@@ -29,25 +28,25 @@ class nationalflags
 	 */
 	protected $flag_is_set = false;
 
-	/** @var \phpbb\config\config */
+	/** @var config $config */
 	protected $config;
 
-	/** @var \phpbb\controller\helper */
+	/** @var helper $helper */
 	protected $helper;
 
-	/** @var \phpbb\cache\service */
+	/** @var cache $cache */
 	protected $cache;
 
-	/** @var \phpbb\db\driver\driver_interface; */
+	/** @var db $db */
 	protected $db;
 
-	/** @var \phpbb\language\language */
+	/** @var language $language */
 	protected $language;
 
-	/** @var \phpbb\template\template */
+	/** @var template $template */
 	protected $template;
 
-	/** @var \phpbb\user */
+	/** @var user $user */
 	protected $user;
 
 	/**
@@ -57,11 +56,14 @@ class nationalflags
 	 */
 	protected $flags_table;
 
-	/** @var \phpbb\extension\manager "Extension Manager" */
+	/** @var ext_manager $ext_manager */
 	protected $ext_manager;
 
-	/** @var \phpbb\path_helper */
+	/** @var path_helper $path_helper */
 	protected $path_helper;
+
+	/** @var array */
+	protected $flag_constants;
 
 	/**
 	 * Constructor
@@ -76,18 +78,20 @@ class nationalflags
 	 * @param string								$flags_table		Name of the table used to store flag data
 	 * @param \phpbb\extension\manager				$ext_manager		Extension manager object
 	 * @param \phpbb\path_helper					$path_helper		Path helper object
+	 * @param array									$flag_constants			Constants used by the extension
 	 */
 	public function __construct(
 			config $config,
 			helper $helper,
 			cache_service $cache,
-			driver_interface $db,
+			db $db,
 			language $language,
 			template $template,
 			user $user,
-			$flags_table,
+			string $flags_table,
 			manager $ext_manager,
 			path_helper $path_helper,
+			array $flag_constants,
 			\phpbb\collapsiblecategories\operator\operator $operator = null)
 	{
 		$this->config = $config;
@@ -100,6 +104,7 @@ class nationalflags
 		$this->flags_table = $flags_table;
 		$this->ext_manager	 = $ext_manager;
 		$this->path_helper	 = $path_helper;
+		$this->flag_constants = $flag_constants;
 		$this->operator = $operator;
 
 		$this->ext_path = $this->ext_manager->get_extension_path('rmcgirr83/nationalflags', true);
@@ -363,14 +368,13 @@ class nationalflags
 	*/
 	public function flag_display_position()
 	{
-		$flag_position_constants = flag_position_constants::get_flag_position();
 
 		$flag_display_position = '';
-		foreach ($flag_position_constants as $name => $value)
+		foreach ($this->flag_constants as $name => $value)
 		{
 			if ($value == $this->config['flag_position'])
 			{
-				$flag_display_position = 'FLAG_POSITION_' . $name;
+				$flag_display_position = 'FLAG_POSITION_' . strtoupper($name);
 			}
 		}
 		return $flag_display_position;

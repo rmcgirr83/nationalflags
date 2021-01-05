@@ -12,7 +12,7 @@ namespace rmcgirr83\nationalflags\controller;
 
 use phpbb\auth\auth;
 use phpbb\config\config;
-use phpbb\db\driver\driver_interface;
+use phpbb\db\driver\driver_interface as db;
 use phpbb\pagination;
 use phpbb\controller\helper;
 use phpbb\language\language;
@@ -30,37 +30,37 @@ use phpbb\exception\http_exception;
 */
 class main_controller
 {
-	/** @var \phpbb\auth\auth */
+	/** @var auth $auth */
 	protected $auth;
 
-	/** @var \phpbb\config\config */
+	/** @var config $config */
 	protected $config;
 
-	/** @var \phpbb\db\driver\driver */
+	/** @var db $db */
 	protected $db;
 
-	/** @var \phpbb\pagination */
+	/** @var pagination $pagination */
 	protected $pagination;
 
-	/** @var \phpbb\controller\helper */
+	/** @var helper $helper */
 	protected $helper;
 
-	/** @var \phpbb\language\language */
+	/** @var language $language */
 	protected $language;
 
-	/* @var \phpbb\request\request */
+	/* @var request $request */
 	protected $request;
 
-	/** @var \phpbb\extension\manager "Extension Manager" */
+	/** @var ext_manager $ext_manager */
 	protected $ext_manager;
 
-	/** @var \phpbb\path_helper */
+	/** @var path_helper $path_helper */
 	protected $path_helper;
 
-	/** @var \phpbb\template\template */
+	/** @var template $template */
 	protected $template;
 
-	/** @var \phpbb\user */
+	/** @var user $user */
 	protected $user;
 
 	/** @var string phpBB root path */
@@ -76,10 +76,10 @@ class main_controller
 	*/
 	protected $flags_table;
 
-	/* @var \rmcgirr83\nationalflags\core\nationalflags */
+	/* @var nationalflags $nationalflags */
 	protected $nationalflags;
 
-	/** @var \phpbb\files\factory */
+	/** @var files_factory $files_factory */
 	protected $files_factory;
 
 	const MAX_SIZE = 30; // Max size img
@@ -108,7 +108,7 @@ class main_controller
 	public function __construct(
 			auth $auth,
 			config $config,
-			driver_interface $db,
+			db $db,
 			pagination $pagination,
 			helper $helper,
 			language $language,
@@ -117,9 +117,9 @@ class main_controller
 			path_helper $path_helper,
 			template $template,
 			user $user,
-			$root_path,
-			$php_ext,
-			$flags_table,
+			string $root_path,
+			string $php_ext,
+			string $flags_table,
 			nationalflags $nationalflags,
 			factory $files_factory)
 	{

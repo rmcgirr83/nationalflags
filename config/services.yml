@@ -1,5 +1,6 @@
 imports:
     - { resource: tables.yml }
+    - { resource: flag_constants.yml }
 
 services:
     rmcgirr83.nationalflags.admin.controller:
@@ -18,6 +19,7 @@ services:
             - '@path_helper'
             - '%core.root_path%'
             - '%core.php_ext%'
+            - '%flag_constants%'
             - '%rmcgirr83.nationalflags.table.nationalflags%'
             - '@rmcgirr83.nationalflags.nationalflags'
             - '@files.factory'
@@ -75,4 +77,5 @@ services:
             - '%rmcgirr83.nationalflags.table.nationalflags%'
             - '@ext.manager'
             - '@path_helper'
+            - %flag_constants%
             - '@?phpbb.collapsiblecategories.operator'

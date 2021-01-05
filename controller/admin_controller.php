@@ -12,7 +12,7 @@ namespace rmcgirr83\nationalflags\controller;
 
 use phpbb\cache\service as cache_service;
 use phpbb\config\config;
-use phpbb\db\driver\driver_interface;
+use phpbb\db\driver\driver_interface as db;
 use phpbb\pagination;
 use phpbb\controller\helper;
 use phpbb\request\request;
@@ -25,7 +25,6 @@ use rmcgirr83\nationalflags\core\nationalflags;
 use phpbb\files\factory;
 use phpbb\filesystem\filesystem;
 use phpbb\language\language;
-use rmcgirr83\nationalflags\core\flag_position_constants;
 
 /**
 * Admin controller
@@ -38,37 +37,37 @@ class admin_controller
 	const MAX_WIDTH = 32;
 	const MAX_HEIGHT = 32;
 
-	/** @var \phpbb\cache\service */
+	/** @var cache $cache */
 	protected $cache;
 
-	/** @var \phpbb\config\config */
+	/** @var config $config */
 	protected $config;
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var db $db */
 	protected $db;
 
-	/** @var \phpbb\pagination */
+	/** @var pagination $pagination */
 	protected $pagination;
 
-	/** @var \phpbb\controller\helper */
+	/** @var helper $helper*/
 	protected $helper;
 
-	/** @var \phpbb\request\request */
+	/** @var request $request */
 	protected $request;
 
-	/** @var \phpbb\template\template */
+	/** @var template $template */
 	protected $template;
 
-	/** @var \phpbb\user */
+	/** @var user $user */
 	protected $user;
 
-	/** @var \phpbb\log\log */
+	/** @var log $log */
 	protected $log;
 
-	/** @var \phpbb\extension\manager "Extension Manager" */
+	/** @var ext_manager $ext_manager */
 	protected $ext_manager;
 
-	/** @var \phpbb\path_helper */
+	/** @var path_helper $path_helper */
 	protected $path_helper;
 
 	/** @var string phpBB root path */
@@ -77,6 +76,9 @@ class admin_controller
 	/** @var string phpEx */
 	protected $php_ext;
 
+	/** @var array flag_constants */
+	protected $flag_constants;
+
 	/**
 	 * The database table the flags are stored in
 	 *
@@ -84,16 +86,16 @@ class admin_controller
 	 */
 	protected $flags_table;
 
-	/* @var \rmcgirr83\nationalflags\core\nationalflags */
+	/* @var nationalflags $nationalflags */
 	protected $nationalflags;
 
-	/** @var \phpbb\files\factory */
+	/** @var files_factory $files_factory */
 	protected $files_factory;
 
-	/** @var \phpbb\filesystem\filesystem */
+	/** @var  filesystem $filesystem */
 	protected $filesystem;
 
-	/** @var \phpbb\language\language */
+	/** @var language $language */
 	protected $language;
 
 	/** @var string Custom form action */
@@ -115,6 +117,7 @@ class admin_controller
 	* @param \phpbb\path_helper						$path_helper		Path helper object
 	* @param string                             	$root_path      	phpBB root path
 	* @param string                             	$php_ext        	phpEx
+	* @param array									$flag_constants		Constants for the extension
 	* @param string									$flags_table		Name of the table used to store flag data
 	* @param \rmcgirr83\nationalflags\core\nationalflags	$nationalflags	methods for the extension
 	* @param \phpbb\files\factory					$files_factory		File classes factory
@@ -126,7 +129,7 @@ class admin_controller
 	public function __construct(
 			cache_service $cache,
 			config $config,
-			driver_interface $db,
+			db $db,
 			pagination $pagination,
 			helper $helper,
 			request $request,
@@ -135,9 +138,10 @@ class admin_controller
 			log $log,
 			manager $ext_manager,
 			path_helper $path_helper,
-			$root_path,
-			$php_ext,
-			$flags_table,
+			string $root_path,
+			string $php_ext,
+			array $flag_constants,
+			string $flags_table,
 			nationalflags $nationalflags,
 			factory $files_factory,
 			filesystem $filesystem,
@@ -156,6 +160,7 @@ class admin_controller
 		$this->path_helper	 = $path_helper;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
+		$this->flag_constants = $flag_constants;
 		$this->flags_table = $flags_table;
 		$this->nationalflags = $nationalflags;
 		$this->files_factory = $files_factory;
@@ -672,14 +677,11 @@ class admin_controller
 	*/
 	private function flag_position($flag_position)
 	{
-
-		$flag_position_constants = flag_position_constants::get_flag_position();
-
 		$s_flag_position = '';
-		foreach ($flag_position_constants as $name => $value)
+		foreach ($this->flag_constants as $name => $value)
 		{
 			$selected = ($value == $flag_position) ? ' selected="selected"' : '';
-			$position_name = $this->language->lang('FLAG_POSITION_' . $name);
+			$position_name = $this->language->lang('FLAG_POSITION_' . strtoupper($name));
 			$s_flag_position .= "<option value='{$value}'$selected>$position_name</option>";
 		}
 
