@@ -87,22 +87,22 @@ class main_controller
 	/**
 	* Constructor
 	*
-	* @param \phpbb\auth\auth					$auth			Auth object
-	* @param \phpbb\config\config               $config         Config object
-	* @param \phpbb\db\driver\driver			$db				Database object
-	* @param \phpbb\pagination					$pagination		Pagination object
-	* @param \phpbb\controller\helper           $helper         Controller helper object
-	* @param \phpbb\language\language           $language       Language object
-	* @param \phpbb\request\request				$request		Request object
-	* @param \phpbb\extension\manager			$ext_manager	Extension manager object
-	* @param \phpbb\path_helper					$path_helper	Path helper object
-	* @param \phpbb\template\template           $template       Template object
-	* @param \phpbb\user                        $user           User object
-	* @param string                             $root_path      phpBB root path
-	* @param string                             $php_ext        phpEx
-	* @param string								$flags_table	Name of the table used to store flag data
-	* @param \rmcgirr83\nationalflags\core\nationalflags	$nationalflags	methods to be used by class
-	* @param \phpbb\files\factory				$files_factory	File classes factory
+	* @param auth					$auth			Auth object
+	* @param config               	$config         Config object
+	* @param db						$db				Database object
+	* @param pagination				$pagination		Pagination object
+	* @param helper           		$helper         Controller helper object
+	* @param language           	$language       Language object
+	* @param request				$request		Request object
+	* @param ext_manager			$ext_manager	Extension manager object
+	* @param path_helper			$path_helper	Path helper object
+	* @param template           	$template       Template object
+	* @param user                   $user           User object
+	* @param string                 $root_path      phpBB root path
+	* @param string                 $php_ext        phpEx
+	* @param string					$flags_table	Name of the table used to store flag data
+	* @param nationalflags			$nationalflags	methods to be used by class
+	* @param files_factory			$files_factory	File classes factory
 	* @access public
 	*/
 	public function __construct(

@@ -68,17 +68,17 @@ class nationalflags
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\config\config					$config				Config object
-	 * @param \phpbb\controller\helper				$helper				Controller helper object
-	 * @param \phpbb\cache\service					$cache				Cache object
-	 * @param \phpbb\db\driver\driver_interface		$db					Database object
-	 * @param \phpbb\language\language				$language			Language object
-	 * @param \phpbb\template\template				$template			Template object
-	 * @param \phpbb\user							$user				User object
-	 * @param string								$flags_table		Name of the table used to store flag data
-	 * @param \phpbb\extension\manager				$ext_manager		Extension manager object
-	 * @param \phpbb\path_helper					$path_helper		Path helper object
-	 * @param array									$flag_constants			Constants used by the extension
+	 * @param config					$config				Config object
+	 * @param helper					$helper				Controller helper object
+	 * @param cache						$cache				Cache object
+	 * @param db						$db					Database object
+	 * @param language					$language			Language object
+	 * @param template					$template			Template object
+	 * @param user						$user				User object
+	 * @param string					$flags_table		Name of the table used to store flag data
+	 * @param ext_manager				$ext_manager		Extension manager object
+	 * @param path_helper				$path_helper		Path helper object
+	 * @param array						$flag_constants			Constants used by the extension
 	 */
 	public function __construct(
 			config $config,
@@ -285,7 +285,7 @@ class nationalflags
 	 * Ajax function
 	 * @param $flag_id
 	 *
-	 * @return \Symfony\Component\HttpFoundation\JsonResponse
+	 * @return JsonResponse
 	 */
 	public function get_flag($flag_id)
 	{

@@ -69,18 +69,18 @@ class listener implements EventSubscriberInterface
 	/**
 	* Constructor
 	*
-	* @param \phpbb\auth\auth					$auth			Auth object
-	* @param \phpbb\config\config               $config         Config object
-	* @param \phpbb\controller\helper           $helper         Controller helper object
-	* @param \phpbb\db\driver\driver			$db				Database object
-	* @param \phpbb\language\language			$language		Language object
-	* @param \phpbb\request\request				$request		Request object
-	* @param \phpbb\template\template           $template       Template object
-	* @param \phpbb\user                        $user           User object
-	* @param \phpbb\extension\manager			$ext_manager	Extension manager object
-	* @param string                             $root_path		phpBB root path
-	* @param string                             $php_ext		phpEx
-	* @param \rmcgirr83\nationalflags\core\nationalflags	$nationalflags	methods to be used by class
+	* @param auth					$auth			Auth object
+	* @param config               	$config         Config object
+	* @param helper           		$helper         Controller helper object
+	* @param db						$db				Database object
+	* @param language				$language		Language object
+	* @param request				$request		Request object
+	* @param template          		$template       Template object
+	* @param user                   $user           User object
+	* @param ext_manager			$ext_manager	Extension manager object
+	* @param string                 $root_path		phpBB root path
+	* @param string                 $php_ext		phpEx
+	* @param nationalflags			$nationalflags	methods to be used by class
 	* @access public
 	*/
 	public function __construct(

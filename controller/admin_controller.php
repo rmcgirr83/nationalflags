@@ -104,25 +104,25 @@ class admin_controller
 	/**
 	* Constructor
 	*
-	* @param \phpbb\cache\service					$cache				Cache object
-	* @param \phpbb\config\config					$config				Config object
-	* @param \phpbb\db\driver\driver_interface		$db					Database object
-	* @param \phpbb\pagination						$pagination			Pagination object
-	* @param \phpbb\controller\helper           	$helper     	    Controller helper object
-	* @param \phpbb\request\request					$request			Request object
-	* @param \phpbb\template\template				$template			Template object
-	* @param \phpbb\user							$user				User object
-	* @param \phpbb\log								$log				Log object
-	* @param \phpbb\extension\manager				$ext_manager		Extension manager object
-	* @param \phpbb\path_helper						$path_helper		Path helper object
-	* @param string                             	$root_path      	phpBB root path
-	* @param string                             	$php_ext        	phpEx
-	* @param array									$flag_constants		Constants for the extension
-	* @param string									$flags_table		Name of the table used to store flag data
-	* @param \rmcgirr83\nationalflags\core\nationalflags	$nationalflags	methods for the extension
-	* @param \phpbb\files\factory					$files_factory		File classes factory
-	* @param \phpbb\filessystem\filesystem			$filesystem			Filesystem classes filesystem
-	* @param \phpbb\language\language				$language			Language object
+	* @param cache						$cache				Cache object
+	* @param config						$config				Config object
+	* @param db							$db					Database object
+	* @param pagination					$pagination			Pagination object
+	* @param helper           			$helper     	    Controller helper object
+	* @param request					$request			Request object
+	* @param template					$template			Template object
+	* @param user						$user				User object
+	* @param log						$log				Log object
+	* @param ext_manager				$ext_manager		Extension manager object
+	* @param path_helper				$path_helper		Path helper object
+	* @param string                    	$root_path      	phpBB root path
+	* @param string                    	$php_ext        	phpEx
+	* @param array						$flag_constants		Constants for the extension
+	* @param string						$flags_table		Name of the table used to store flag data
+	* @param nationalflags				$nationalflags		methods for the extension
+	* @param files_factory				$files_factory		File classes factory
+	* @param filesystem					$filesystem			Filesystem classes filesystem
+	* @param language					$language			Language object
 	* @return \rmcgirr83\nationalflags\controller\admin_controller
 	* @access public
 	*/
