@@ -9,40 +9,42 @@
 
 namespace rmcgirr83\nationalflags\migrations;
 
-// this file is encoded incorrectly and doesn't perform in the manner it should. Migration file m15 should correct the issue with the cedilla.
-class m13_update_data extends \phpbb\db\migration\migration
+class m15_update_data extends \phpbb\db\migration\migration
 {
 	static public function depends_on()
 	{
-		return array('\rmcgirr83\nationalflags\migrations\m12_update_data');
+		return ['\rmcgirr83\nationalflags\migrations\m14_update_data'];
 	}
 
 	public function update_data()
 	{
-		return array(
-			array('custom', array(
-				array(&$this, 'flag_update_image')
-			)),
-		);
+		return [
+			['custom', [
+				[&$this, 'flag_update_image']
+			]],
+		];
 	}
 
 	public function flag_update_image()
 	{
+		// Instead of updating on name, we'll update based on flag image name
 		if ($this->db_tools->sql_table_exists($this->table_prefix . 'flags'))
 		{
 			$sql_ary = [
 				[
-					'flag_name'		=> 'Curaçao',
+					'old_flag_image'	=> 'CW.png',
+					'flag_name'		=> 'Curacao',
 					'flag_image'	=> 'cw.png',
 				],
 			];
 			foreach ($sql_ary as $num => $flag)
 			{
 				$sql = 'UPDATE ' . $this->table_prefix . 'flags
-					SET ' . $this->db->sql_build_array('UPDATE', array(
-								'flag_image'	=> (string) $flag['flag_image'])
+					SET ' . $this->db->sql_build_array('UPDATE', [
+								'flag_name'	=> (string) $flag['flag_name'],
+								'flag_image' => (string) $flag['flag_image']]
 							) .
-					" WHERE flag_name = '" . (string) $flag['flag_name'] . "'";
+					" WHERE flag_image = '" . (string) $flag['old_flag_image'] . "'";
 				$this->db->sql_query($sql);
 			}
 		}

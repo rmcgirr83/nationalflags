@@ -337,8 +337,6 @@ class main_controller
 			'FORUM_NAME'		=> $this->language->lang('NATIONAL_FLAGS'),
 		]);
 
-		$flag_name = $this->nationalflags->flag_name_lang_var($flags_array[$flag_id]['flag_name']);
-
 		// Assign breadcrumb template vars for the flags page
 		$this->template->assign_block_vars('navlinks', [
 			'U_VIEW_FORUM'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', ['flag_id' => $flag_id]),

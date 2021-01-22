@@ -9,6 +9,9 @@
 
 namespace rmcgirr83\nationalflags\migrations;
 
+/* Due to m13 being encoded incorrectly the query in this file doesn't find anything in the database so nothing is updated.
+ *  Migration file m15 corrects the issue with the cedilla.
+ */
 class m14_update_data extends \phpbb\db\migration\migration
 {
 	static public function depends_on()
