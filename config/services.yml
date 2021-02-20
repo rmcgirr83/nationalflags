@@ -77,5 +77,5 @@ services:
             - '%rmcgirr83.nationalflags.table.nationalflags%'
             - '@ext.manager'
             - '@path_helper'
-            - %flag_constants%
+            - '%flag_constants%'
             - '@?phpbb.collapsiblecategories.operator'

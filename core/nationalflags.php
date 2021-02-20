@@ -18,6 +18,7 @@ use phpbb\template\template;
 use phpbb\user;
 use phpbb\extension\manager;
 use phpbb\path_helper;
+use phpbb\collapsiblecategories\operator\operator as cc_operator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class nationalflags
@@ -65,6 +66,9 @@ class nationalflags
 	/** @var array */
 	protected $flag_constants;
 
+	/** @var cc_operator */
+	protected $cc_operator;
+
 	/**
 	 * Constructor
 	 *
@@ -78,7 +82,8 @@ class nationalflags
 	 * @param string					$flags_table		Name of the table used to store flag data
 	 * @param ext_manager				$ext_manager		Extension manager object
 	 * @param path_helper				$path_helper		Path helper object
-	 * @param array						$flag_constants			Constants used by the extension
+	 * @param array						$flag_constants		Constants used by the extension
+	 * @param cc_operator				$cc_operator
 	 */
 	public function __construct(
 			config $config,
@@ -92,7 +97,7 @@ class nationalflags
 			manager $ext_manager,
 			path_helper $path_helper,
 			array $flag_constants,
-			\phpbb\collapsiblecategories\operator\operator $operator = null)
+			cc_operator $cc_operator = null)
 	{
 		$this->config = $config;
 		$this->helper = $helper;
@@ -105,7 +110,7 @@ class nationalflags
 		$this->ext_manager	 = $ext_manager;
 		$this->path_helper	 = $path_helper;
 		$this->flag_constants = $flag_constants;
-		$this->operator = $operator;
+		$this->cc_operator = $cc_operator;
 
 		$this->ext_path = $this->ext_manager->get_extension_path('rmcgirr83/nationalflags', true);
 		$this->ext_path_web = $this->path_helper->update_web_root_path($this->ext_path);
@@ -264,12 +269,12 @@ class nationalflags
 
 			if ($count)
 			{
-				if ($this->operator !== null)
+				if ($this->cc_operator !== null)
 				{
 					$fid = 'nationalflags'; // can be any unique string to identify your extension's collapsible element, must have version 2.0.0 of collapsible categories for this to work
 					$this->template->assign_vars(array(
-						'S_NATIONALFLAGS_HIDDEN' => $this->operator->is_collapsed($fid),
-						'U_NATIONALFLAGS_COLLAPSE_URL' => $this->operator->get_collapsible_link($fid),
+						'S_NATIONALFLAGS_HIDDEN' => $this->cc_operator->is_collapsed($fid),
+						'U_NATIONALFLAGS_COLLAPSE_URL' => $this->cc_operator->get_collapsible_link($fid),
 					));
 				}
 				$this->template->assign_vars(array(
