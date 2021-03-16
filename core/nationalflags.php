@@ -397,7 +397,8 @@ class nationalflags
 		{
 			$sql = 'SELECT user_id, user_flag
 				FROM ' . USERS_TABLE . '
-			WHERE user_flag > 0';
+				WHERE user_flag > 0
+					AND ' . $this->db->sql_in_set('user_type', [USER_NORMAL, USER_FOUNDER]);
 			$result = $this->db->sql_query($sql);
 
 			$users_and_flags = [];
