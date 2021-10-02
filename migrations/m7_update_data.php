@@ -18,37 +18,37 @@ class m7_update_data extends \phpbb\db\migration\migration
 
 	static public function depends_on()
 	{
-		return array('\rmcgirr83\nationalflags\migrations\m6_update_data');
+		return ['\rmcgirr83\nationalflags\migrations\m6_update_data'];
 	}
 
 	public function update_data()
 	{
-		return array(
-			array('config.update', array('nationalflags_version', '2.0.0')),
-			array('config.remove', array('allow_flags')),
-			array('config.add', array('flag_position', 0)),
-		);
+		return [
+			['config.update', ['nationalflags_version', '2.0.0']],
+			['config.remove', ['allow_flags']],
+			['config.add', ['flag_position', 0]],
+		];
 	}
 
 	public function update_schema()
 	{
-		return array(
-			'add_columns'	=> array(
-				$this->table_prefix . 'flags'        => array(
-					'flag_default'	=> array('BOOL', 0),
-				),
-			),
-		);
+		return [
+			'add_columns'	=> [
+				$this->table_prefix . 'flags'        => [
+					'flag_default'	=> ['BOOL', 0],
+				],
+			],
+		];
 	}
 
 	public function revert_schema()
 	{
-		return array(
-			'drop_columns'	=> array(
-				$this->table_prefix . 'flags'        => array(
+		return [
+			'drop_columns'	=> [
+				$this->table_prefix . 'flags'        => [
 					'flag_default',
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 }

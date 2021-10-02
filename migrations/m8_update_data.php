@@ -13,13 +13,13 @@ class m8_update_data extends \phpbb\db\migration\migration
 {
 	static public function depends_on()
 	{
-		return array('\rmcgirr83\nationalflags\migrations\m7_update_data');
+		return ['\rmcgirr83\nationalflags\migrations\m7_update_data'];
 	}
 
 	public function update_data()
 	{
-		return array(
-			array('config.remove', array('nationalflags_version')),
-		);
+		return [
+			['config.remove', ['nationalflags_version']],
+		];
 	}
 }

@@ -11,7 +11,7 @@ namespace rmcgirr83\nationalflags\core;
 
 use phpbb\config\config;
 use phpbb\controller\helper;
-use phpbb\cache\service as cache_service;
+use phpbb\cache\service as cache;
 use phpbb\db\driver\driver_interface as db;
 use phpbb\language\language;
 use phpbb\template\template;
@@ -23,11 +23,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class nationalflags
 {
-
-	/**
-	 * Target flag_is_set
-	 */
-	protected $flag_is_set = false;
 
 	/** @var config $config */
 	protected $config;
@@ -88,7 +83,7 @@ class nationalflags
 	public function __construct(
 			config $config,
 			helper $helper,
-			cache_service $cache,
+			cache $cache,
 			db $db,
 			language $language,
 			template $template,
@@ -179,6 +174,8 @@ class nationalflags
 
 	public function list_flags($flag_id = false)
 	{
+		$flag_is_set = false;
+
 		$sql = 'SELECT *
 			FROM ' . $this->flags_table . '
 		ORDER BY flag_name';
@@ -187,12 +184,12 @@ class nationalflags
 		$flag_options = '<option value="0">' . $this->language->lang('FLAG_EXPLAIN') . '</option>';
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$selected = ($row['flag_id'] == $flag_id && !$this->flag_is_set) ? ' selected="selected"' : '';
+			$selected = ($row['flag_id'] == $flag_id && !$flag_is_set) ? ' selected="selected"' : '';
 			if (!empty($selected))
 			{
-				$this->flag_is_set = true;
+				$flag_is_set = true;
 			}
-			else if ($row['flag_default'] && !$this->flag_is_set)
+			else if ($row['flag_default'] && !$flag_is_set)
 			{
 				$selected = ' selected="selected"';
 			}
@@ -259,11 +256,11 @@ class nationalflags
 				++$count;
 				if (!empty($cached_flags[$i]['user_count']))
 				{
-					$this->template->assign_block_vars('flag', array(
+					$this->template->assign_block_vars('flag', [
 						'FLAG' 			=> $this->get_user_flag($cached_flags[$i]['flag_id']),
 						'FLAG_USERS'	=> $this->user->lang('FLAG_USERS', (int) $cached_flags[$i]['user_count']),
-						'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $cached_flags[$i]['flag_id'])),
-					));
+						'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', ['flag_id' => $cached_flags[$i]['flag_id']]),
+					]);
 				}
 			}
 
@@ -272,15 +269,15 @@ class nationalflags
 				if ($this->cc_operator !== null)
 				{
 					$fid = 'nationalflags'; // can be any unique string to identify your extension's collapsible element, must have version 2.0.0 of collapsible categories for this to work
-					$this->template->assign_vars(array(
+					$this->template->assign_vars([
 						'S_NATIONALFLAGS_HIDDEN' => $this->cc_operator->is_collapsed($fid),
 						'U_NATIONALFLAGS_COLLAPSE_URL' => $this->cc_operator->get_collapsible_link($fid),
-					));
+					]);
 				}
-				$this->template->assign_vars(array(
+				$this->template->assign_vars([
 					'U_FLAGS'		=> $this->helper->route('rmcgirr83_nationalflags_display'),
 					'S_FLAGS'		=> true
-				));
+				]);
 			}
 		}
 	}
@@ -397,8 +394,7 @@ class nationalflags
 		{
 			$sql = 'SELECT user_id, user_flag
 				FROM ' . USERS_TABLE . '
-				WHERE user_flag > 0
-					AND ' . $this->db->sql_in_set('user_type', [USER_NORMAL, USER_FOUNDER]);
+				WHERE user_flag > 0';
 			$result = $this->db->sql_query($sql);
 
 			$users_and_flags = [];
@@ -477,7 +473,6 @@ class nationalflags
 			'FLAG_IMAGE'		=> ($flag_image) ? $this->ext_path . 'flags/' . $flag_image : '',
 			'FLAG_NAME'			=> $flag_name,
 			'S_FLAG_OPTIONS'	=> $s_flag_options,
-			'S_FLAGS'			=> true,
 			'S_FLAG_REQUIRED'	=> ($this->config['flags_required']) ? true : false,
 			'AJAX_FLAG_INFO' 	=> $this->helper->route('rmcgirr83_nationalflags_getflag', ['flag_id' => $user_flag]),
 		]);

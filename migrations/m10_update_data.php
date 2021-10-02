@@ -13,16 +13,16 @@ class m10_update_data extends \phpbb\db\migration\migration
 {
 	static public function depends_on()
 	{
-		return array('\rmcgirr83\nationalflags\migrations\m9_update_data');
+		return ['\rmcgirr83\nationalflags\migrations\m9_update_data'];
 	}
 
 	public function update_data()
 	{
-		return array(
-			array('config.add', array('flags_viewforum', true)),
-			array('config.add', array('flags_forumrow', true)),
-			array('config.add', array('flags_search', true)),
-			array('config.add', array('flags_memberlist', true)),
-		);
+		return [
+			['config.add', ['flags_viewforum', true]],
+			['config.add', ['flags_forumrow', true]],
+			['config.add', ['flags_search', true]],
+			['config.add', ['flags_memberlist', true]],
+		];
 	}
 }

@@ -13,14 +13,14 @@ class nationalflags_info
 {
 	function module()
 	{
-		return array(
+		return [
 			'filename'	=> '\rmcgirr83\nationalflags\acp\nationalflags_module',
 			'title'	=> 'ACP_FLAGS',
 			'version'	=> '1.0.0',
-			'modes'	=> array(
-				'config'	=> array('title' => 'ACP_FLAG_SETTINGS', 'auth' => 'ext_rmcgirr83/nationalflags && acl_a_board', 'cat' => array('ACP_CAT_FLAGS')),
-				'manage'		=> array('title' => 'ACP_FLAGS', 'auth' => 'ext_rmcgirr83/nationalflags && acl_a_board', 'cat' => array('ACP_CAT_FLAGS')),
-			),
-		);
+			'modes'	=> [
+				'config'	=> ['title' => 'ACP_FLAG_SETTINGS', 'auth' => 'ext_rmcgirr83/nationalflags && acl_a_board', 'cat' => ['ACP_CAT_FLAGS']],
+				'manage'		=> ['title' => 'ACP_FLAGS', 'auth' => 'ext_rmcgirr83/nationalflags && acl_a_board', 'cat' => ['ACP_CAT_FLAGS']],
+			],
+		];
 	}
 }

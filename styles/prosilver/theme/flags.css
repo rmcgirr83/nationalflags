@@ -27,11 +27,11 @@ ul.flags li.flagslist {
 .memberlist_flags {
 	margin-top: -6px;
 }
-	
+
 .flag_image {
 	font-size: 12px;
 	height: 32px;
-	vertical-align: middle;
+	vertical-align: bottom;
 }
 
 .avatarflag {

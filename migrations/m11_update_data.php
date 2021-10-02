@@ -13,13 +13,13 @@ class m11_update_data extends \phpbb\db\migration\migration
 {
 	static public function depends_on()
 	{
-		return array('\rmcgirr83\nationalflags\migrations\m10_update_data');
+		return ['\rmcgirr83\nationalflags\migrations\m10_update_data'];
 	}
 
 	public function update_data()
 	{
-		return array(
-			array('config.add', array('flags_cachetime', 86400)),
-		);
+		return [
+			['config.add', ['flags_cachetime', 86400]],
+		];
 	}
 }

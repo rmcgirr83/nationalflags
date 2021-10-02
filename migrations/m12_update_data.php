@@ -13,14 +13,14 @@ class m12_update_data extends \phpbb\db\migration\migration
 {
 	static public function depends_on()
 	{
-		return array('\rmcgirr83\nationalflags\migrations\m11_update_data');
+		return ['\rmcgirr83\nationalflags\migrations\m11_update_data'];
 	}
 
 	public function update_data()
 	{
-		return array(
-			array('config.add', array('flags_avatars', 1)),
-			array('config.remove', array('flags_cachetime')),
-		);
+		return [
+			['config.add', ['flags_avatars', 1]],
+			['config.remove', ['flags_cachetime']],
+		];
 	}
 }

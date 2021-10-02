@@ -18,14 +18,14 @@ class m5_update_data extends \phpbb\db\migration\migration
 
 	static public function depends_on()
 	{
-		return array('\rmcgirr83\nationalflags\migrations\m4_add_data');
+		return ['\rmcgirr83\nationalflags\migrations\m4_add_data'];
 	}
 
 	public function update_data()
 	{
-		return array(
-			array('config.update', array('nationalflags_version', '1.0.3')),
-			array('config.add', array('flags_display_to_guests', true)),
-		);
+		return [
+			['config.update', ['nationalflags_version', '1.0.3']],
+			['config.add', ['flags_display_to_guests', true]],
+		];
 	}
 }

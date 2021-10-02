@@ -14,16 +14,16 @@ class m13_update_data extends \phpbb\db\migration\migration
 {
 	static public function depends_on()
 	{
-		return array('\rmcgirr83\nationalflags\migrations\m12_update_data');
+		return ['\rmcgirr83\nationalflags\migrations\m12_update_data'];
 	}
 
 	public function update_data()
 	{
-		return array(
-			array('custom', array(
-				array(&$this, 'flag_update_image')
-			)),
-		);
+		return [
+			['custom', [
+				[&$this, 'flag_update_image']
+			]],
+		];
 	}
 
 	public function flag_update_image()
@@ -39,8 +39,8 @@ class m13_update_data extends \phpbb\db\migration\migration
 			foreach ($sql_ary as $num => $flag)
 			{
 				$sql = 'UPDATE ' . $this->table_prefix . 'flags
-					SET ' . $this->db->sql_build_array('UPDATE', array(
-								'flag_image'	=> (string) $flag['flag_image'])
+					SET ' . $this->db->sql_build_array('UPDATE', [
+								'flag_image'	=> (string) $flag['flag_image']]
 							) .
 					" WHERE flag_name = '" . (string) $flag['flag_name'] . "'";
 				$this->db->sql_query($sql);

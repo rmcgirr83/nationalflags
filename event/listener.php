@@ -147,6 +147,7 @@ class listener implements EventSubscriberInterface
 			'core.memberlist_team_modify_template_vars'	=> 'user_flags_modify_template_vars',
 			'core.memberlist_prepare_profile_data'		=> 'memberlist_prepare_profile_data',
 			'core.display_forums_modify_template_vars'	=> 'display_forums_modify_template_vars',
+			'core.viewforum_modify_page_title'			=> 'viewforum_modify_page_title',
 			'core.viewforum_modify_topicrow'			=> 'viewforum_modify_topicrow',
 		];
 	}
@@ -207,10 +208,10 @@ class listener implements EventSubscriberInterface
 		}
 		if ($this->config['flags_display_msg'])
 		{
-			$this->template->assign_vars(array(
+			$this->template->assign_vars([
 				'S_FLAG_MESSAGE'	=> (empty($this->user->data['user_flag'])) ? true : false,
 				'L_FLAG_PROFILE'	=> $this->language->lang('USER_NEEDS_FLAG', '<a href="' . append_sid("{$this->root_path}ucp.$this->php_ext", 'i=profile') . '">', '</a>'),
-			));
+			]);
 		}
 	}
 
@@ -233,9 +234,9 @@ class listener implements EventSubscriberInterface
 		}
 
 		// Request the user option vars and add them to the data array
-		$event['data'] = array_merge($event['data'], array(
+		$event['data'] = array_merge($event['data'], [
 			'user_flag'	=> $this->request->variable('user_flag', (int) $user_flag),
-		));
+		]);
 
 		$flags = $this->nationalflags->get_flag_cache();
 		$has_default = false;
@@ -247,9 +248,9 @@ class listener implements EventSubscriberInterface
 			}
 		}
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'FLAG_DEFAULT' => (empty($event['data']['user_flag']) && $has_default) ? true : false,
-		));
+		]);
 		$this->nationalflags->display_flag_options($event['data']['user_flag']);
 	}
 
@@ -283,9 +284,9 @@ class listener implements EventSubscriberInterface
 		//call function to trash the users_and_flags cache so it's regenerated
 		$this->nationalflags->trash_the_cache();
 
-		$event['sql_ary'] = array_merge($event['sql_ary'], array(
+		$event['sql_ary'] = array_merge($event['sql_ary'], [
 				'user_flag' => $event['data']['user_flag'],
-		));
+		]);
 	}
 
 	/**
@@ -300,9 +301,9 @@ class listener implements EventSubscriberInterface
 		//call function to trash the users_and_flags cache so it's regenerated
 		$this->nationalflags->trash_the_cache();
 
-		$event['user_row'] = array_merge($event['user_row'], array(
+		$event['user_row'] = array_merge($event['user_row'], [
 				'user_flag' => $this->request->variable('user_flag', 0),
-		));
+		]);
 	}
 
 	/**
@@ -335,10 +336,10 @@ class listener implements EventSubscriberInterface
 	{
 		$flag_display_position = $this->nationalflags->flag_display_position();
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'S_FLAGS'		=> $this->nationalflags->display_flags_on_forum($this->config['flags_viewforum']),
 			$flag_display_position => true,
-		));
+		]);
 	}
 	/**
 	 * Update viewtopic user data
@@ -386,11 +387,11 @@ class listener implements EventSubscriberInterface
 		$flag = $this->nationalflags->get_user_flag($event['user_poster_data']['user_flag']);
 		$flags = $this->nationalflags->get_flag_cache();
 
-		$event['post_row'] = array_merge($event['post_row'], array(
+		$event['post_row'] = array_merge($event['post_row'], [
 			'USER_FLAG' => $flag,
 			'FLAG_POSITION'	=> $this->config['flag_position'],
-			'U_FLAG'	=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $flags[$event['user_poster_data']['user_flag']]['flag_id'])) : '',
-		));
+			'U_FLAG'	=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', ['flag_id' => $flags[$event['user_poster_data']['user_flag']]['flag_id']]) : '',
+		]);
 	}
 
 	/**
@@ -408,12 +409,12 @@ class listener implements EventSubscriberInterface
 			$flags = $this->nationalflags->get_flag_cache();
 			$flag_display_position = $this->nationalflags->flag_display_position();
 
-			$this->template->assign_vars(array(
+			$this->template->assign_vars([
 				'USER_FLAG'		=> $flag,
 				'S_FLAGS'		=> true,
-				'U_FLAG'		=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $flags[$event['member']['user_flag']]['flag_id'])) : '',
+				'U_FLAG'		=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', ['flag_id' => $flags[$event['member']['user_flag']]['flag_id']]) : '',
 				$flag_display_position => true,
-			));
+			]);
 		}
 	}
 
@@ -450,10 +451,10 @@ class listener implements EventSubscriberInterface
 		$flag = $this->nationalflags->get_user_flag($event['row']['user_flag']);
 		$flags = $this->nationalflags->get_flag_cache();
 
-		$array = array_merge($array, array(
+		$array = array_merge($array, [
 			'USER_FLAG'		=> $flag,
-			'U_FLAG'		=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $flags[$event['row']['user_flag']]['flag_id'])) : '',
-		));
+			'U_FLAG'		=> ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', ['flag_id' => $flags[$event['row']['user_flag']]['flag_id']]) : '',
+		]);
 
 		$event['tpl_ary'] = $array;
 	}
@@ -472,9 +473,9 @@ class listener implements EventSubscriberInterface
 			return false;
 		}
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'S_FLAGS'		=> true,
-		));
+		]);
 	}
 
 	/**
@@ -492,14 +493,14 @@ class listener implements EventSubscriberInterface
 
 			$array = $event['msg_data'];
 			$array['USER_FLAG'] = $flag;
-			$array['U_FLAG'] = ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', array('flag_id' => $event['user_info']['user_flag'])) : '';
+			$array['U_FLAG'] = ($flag) ? $this->helper->route('rmcgirr83_nationalflags_getflags', ['flag_id' => $event['user_info']['user_flag']]) : '';
 			$event['msg_data'] = $array;
 
 			$flag_display_position = $this->nationalflags->flag_display_position();
-			$this->template->assign_vars(array(
+			$this->template->assign_vars([
 				'S_FLAGS'		=> true,
 				$flag_display_position => true,
-			));
+			]);
 		}
 	}
 
@@ -558,6 +559,18 @@ class listener implements EventSubscriberInterface
 		}
 
 		$event['forum_row'] = $template_vars;
+	}
+
+	/* viewforum_modify_page_title
+	* @param 	object 	The event object
+	* @return	null
+	* @access	public
+	*/
+	public function viewforum_modify_page_title($event)
+	{
+		$this->template->assign_vars([
+			'S_FLAGS'		=> true,
+		]);
 	}
 
 	/* viewforum_modify_topicrow

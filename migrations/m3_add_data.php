@@ -18,15 +18,15 @@ class m3_add_data extends \phpbb\db\migration\migration
 
 	static public function depends_on()
 	{
-		return array('\rmcgirr83\nationalflags\migrations\m2_initial_data');
+		return ['\rmcgirr83\nationalflags\migrations\m2_initial_data'];
 	}
 
 	public function update_data()
 	{
-		return array(
-			array('config.add', array('flags_num_display', 10)),
-			array('config.add', array('flags_display_index', true)),
-			array('config.update', array('nationalflags_version', '1.0.1')),
-		);
+		return [
+			['config.add', ['flags_num_display', 10]],
+			['config.add', ['flags_display_index', true]],
+			['config.update', ['nationalflags_version', '1.0.1']],
+		];
 	}
 }

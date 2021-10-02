@@ -16,7 +16,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -33,21 +33,21 @@ if (empty($lang) || !is_array($lang))
 // Some characters you may want to copy&paste:
 // ’ » “ ” …
 
-$lang = array_merge($lang, array(
-	'FLAGS'				=> array(
+$lang = array_merge($lang, [
+	'FLAGS'				=> [
 		1 => '%s flag',
 		2 => '%s flags',
-	),
+	],
 	'USER_FLAG'			=> 'Flag',
 	'USER_FLAG_EXPLAIN'	=> 'The board default flag is being displayed.',
 	'NATIONAL_FLAGS'	=> 'Flags',
 	'FLAG_EXPLAIN'		=> 'Choose your flag',
 	'USER_NEEDS_FLAG'	=> 'Please take a moment and %svisit your profile%s to choose a flag.',
 	'FLAGS_VIEWONLINE'	=> 'Viewing flags',
-	'FLAG_USERS'		=>  array(
+	'FLAG_USERS'		=>  [
 		1 => '%s User',
 		2 => '%s Users',
-	),
+	],
 	'MUST_CHOOSE_FLAG'	=> '<span class="error">You must choose a flag.</span>',
 	'NO_SUCH_FLAG'		=> '<span class="error">Flag doesn’t exist</span>',
 	'NO_USER_HAS_FLAG'	=> 'No user has this flag',
@@ -287,4 +287,4 @@ $lang = array_merge($lang, array(
 	'WALLIS_AND_FUTUNA_ISLANDS' => 'Wallis and Futuna Islands',
 	'MAYOTTE' => 'Mayotte',
 	'SERBIA' => 'Serbia',
-));
+]);
