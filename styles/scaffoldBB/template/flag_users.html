@@ -2,7 +2,7 @@
 
 <h2 class="solo fs-4" id="flagusers">{{ FLAG_IMAGE }} {{ FLAG }}</h2>
 		{% if S_FLAG_USERS %}
-		<div class="action-bar d-flex justify-content-end align-items-center">
+		<div class="action-bar d-flex justify-content-end align-items-center mb-1">
 			<div class="pagination flex-wrap">
 				{{ TOTAL_USERS }}
 				{% if loops.pagination|length %}
@@ -13,7 +13,7 @@
 			</div>
 		</div>
 
-		<div class="bg-gradient bg-primary forabg mb-3 rounded-3 py-1 px-2">
+		<div class="bg-gradient bg-primary forabg mb-0 rounded-3 py-1 px-2">
 			<div class="inner">
 			<ul class="topiclist list-unstyled text-light row gx-0 my-1 text-uppercase">
 				<li class="text-center text-md-start col-md-8 fw-bold">{{ lang('USERNAME') }}</li>
@@ -42,7 +42,7 @@
 			</div>
 		</div>
 
-		<div class="action-bar d-flex justify-content-end align-items-center">
+		<div class="action-bar d-flex justify-content-end align-items-center mt-1">
 			<div class="pagination flex-wrap">
 				{{ TOTAL_USERS }}
 				{% if loops.pagination|length %}
