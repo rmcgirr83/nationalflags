@@ -1,0 +1,18 @@
+{% INCLUDE 'overall_header.html' %}
+<div class="bg-gradient bg-primary forabg mb-3 rounded-3 py-1 px-2">
+	<div class="inner" id="flagusers">
+		<ul class="topiclist list-unstyled my-1">
+			<li class="header text-light fw-bold">
+				{{ lang('FLAGS') }}
+			</li>
+		</ul>
+		<ul class="bg-body flags forums hstack flex-wrap gap-2 justify-content-evenly list-unstyled mb-0">
+		{% for flag in loops.flag %}
+			<li class="flagslist text-center">
+				<a href="{{ flag.U_FLAG }}">{{ flag.FLAG }}</a><br>{{ flag.FLAG_USER_COUNT }}
+			</li>
+		{% endfor %}
+		</ul>
+	</div>
+</div>
+{% INCLUDE 'overall_footer.html' %}
