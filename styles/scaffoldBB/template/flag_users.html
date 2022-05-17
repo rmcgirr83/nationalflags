@@ -1,0 +1,63 @@
+{% INCLUDE 'overall_header.html' %}
+
+<h2 class="solo fs-4" id="flagusers">{{ FLAG_IMAGE }} {{ FLAG }}</h2>
+		{% if S_FLAG_USERS %}
+		<div class="action-bar d-flex justify-content-end align-items-center mb-1">
+			<div class="pagination flex-wrap">
+				{{ TOTAL_USERS }}
+				{% if loops.pagination|length %}
+					{% INCLUDE 'pagination.html' %}
+				{% else %}
+					&bull; {{ PAGE_NUMBER }}
+				{% endif %}
+			</div>
+		</div>
+
+		<div class="bg-gradient bg-primary forabg mb-0 rounded-3 py-1 px-2">
+			<div class="inner">
+			<ul class="topiclist list-unstyled text-light row gx-0 my-1 text-uppercase">
+				<li class="text-center text-md-start col-md-8 fw-bold">{{ lang('USERNAME') }}</li>
+				<li class="d-none d-md-inline-block topics col-md-1 text-center">{{ lang('POSTS') }}</li>
+				<li class="d-none d-md-inline-block lastpost col-md-3"><span>{{ lang('JOINED') }}</span></li>
+			</ul>
+			<ul class="topiclist topics bg-body list-unstyled mb-0">
+			{% for user_row in loops.user_row %}
+				<li class=" {% if user_row.S_ROW_COUNT is even %}bg1 bg-secondary bg-opacity-10{% else %}bg2 bg-secondary bg-opacity-25{% endif %}">
+					<div>
+						<ul class="row gx-2 list-unstyled p-2">
+							<li class="flag_inner col-md-8">
+								{% if user_row.USER_AVATAR %}{{ user_row.USER_AVATAR }}{% endif %} {{ user_row.USERNAME_FULL }}
+							</li>
+							<li class="d-none d-md-inline-block border-end border-start col-md-1 text-center topics">
+								{% if user_row.POSTS and S_DISPLAY_SEARCH %}<a class="text-decoration-none" href="{{ user_row.U_SEARCH_USER }}" title="{{ lang('SEARCH_USER_POSTS') }}">{{ user_row.POSTS }}</a>{% else %}{{ user_row.POSTS }}{% endif %}
+							</li>
+							<li class="d-none d-md-inline-block lastpost col-md-3">
+								<span style="margin-top:5px;font-size: 1.2em;">{{ user_row.JOINED }}</span>
+							</li>
+						</ul>
+					</div>
+				</li>
+			{% endfor %}
+			</ul>
+			</div>
+		</div>
+
+		<div class="action-bar d-flex justify-content-end align-items-center mt-1">
+			<div class="pagination flex-wrap">
+				{{ TOTAL_USERS }}
+				{% if loops.pagination|length %}
+					{% INCLUDE 'pagination.html' %}
+				{% else %}
+					 &bull; {{ PAGE_NUMBER }}
+				{% endif %}
+			</div>
+		</div>
+	{% else %}
+	<div class="alert alert-info panel" id="message">
+		<div class="inner">
+			<h2 class="message-title fs-4">{{ lang('INFORMATION') }}</h2>
+			<p>{{ MESSAGE_TEXT }}</p>
+		</div>
+	</div>
+	{% endif %}
+{% INCLUDE 'overall_footer.html' %}
