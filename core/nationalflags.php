@@ -448,6 +448,15 @@ class nationalflags
 	{
 		$flags = $this->get_flag_cache();
 
+		foreach ($flags as $id => $data)
+		{
+			$flags_id[] = $id;
+		}
+
+		if (!in_array($user_flag, $flags_id))
+		{
+			$user_flag = 0;
+		}
 		$flag_name = $flag_image = '';
 
 		foreach ($flags as $key => $value)

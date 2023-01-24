@@ -263,13 +263,26 @@ class listener implements EventSubscriberInterface
 	 */
 	public function user_flag_profile_validate($event)
 	{
-
-		if ($event['submit'] && empty($event['data']['user_flag']) && $this->config['flags_required'])
+		// stop nubs from being, uhmmm, nubs
+		$flags = $this->nationalflags->get_flag_cache();
+		foreach ($flags as $id => $data)
 		{
-			$array = $event['error'];
-			$array[] = $this->language->lang('MUST_CHOOSE_FLAG');
-			$event['error'] = $array;
+			$flags_id[] = $id;
 		}
+
+		$array = $event['error'];
+		if ($event['submit'])
+		{
+			if (!empty($event['data']['user_flag']) && !in_array($event['data']['user_flag'], $flags_id))
+			{
+				$array[] = $this->language->lang('FLAG_NOT_EXIST');
+			}
+			if (empty($event['data']['user_flag']) && $this->config['flags_required'])
+			{
+				$array[] = $this->language->lang('MUST_CHOOSE_FLAG');
+			}
+		}
+		$event['error'] = $array;
 	}
 
 	/**
