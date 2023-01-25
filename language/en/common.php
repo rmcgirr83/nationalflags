@@ -48,10 +48,9 @@ $lang = array_merge($lang, [
 		1 => '%s User',
 		2 => '%s Users',
 	],
-	'MUST_CHOOSE_FLAG'	=> '<span class="error">You must choose a flag.</span>',
-	'NO_SUCH_FLAG'		=> '<span class="error">Flag doesn’t exist</span>',
+	'MUST_CHOOSE_FLAG'	=> '<span class="error">You must choose a flag</span>',
 	'NO_USER_HAS_FLAG'	=> 'No user has this flag',
-	'FLAG_NOT_EXIST'	=> 'Flag does not exist',
+	'FLAG_NOT_EXIST'	=> 'Flag doesn’t exist',
 // uncomment and translate the following line for languages for the flags other than what is in the ACP
 // if a flag name in the ACP has a space, you must use _  in it's place below (hint: see "AMERICAN_SAMOA")
 // see above for Unicode characters to use

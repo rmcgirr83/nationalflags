@@ -133,6 +133,7 @@ class listener implements EventSubscriberInterface
 			'core.ucp_register_data_after'				=> 'user_flag_profile_validate',
 			'core.ucp_register_user_row_after'			=> 'user_flag_registration_sql',
 			'core.acp_users_modify_profile'				=> 'user_flag_profile',
+			'core.acp_users_profile_validate'			=> 'user_flag_profile_validate',
 			'core.acp_users_profile_modify_sql_ary'		=> 'user_flag_profile_sql',
 			'core.viewonline_overwrite_location'		=> 'viewonline_page',
 			'core.viewtopic_assign_template_vars_before'	=> 'viewtopic_template_vars_before',
@@ -270,18 +271,18 @@ class listener implements EventSubscriberInterface
 			$flags_id[] = $id;
 		}
 
+		$user_flag = $event['data']['user_flag'];
+
 		$array = $event['error'];
-		if ($event['submit'])
+		if (!empty($user_flag) && !in_array($user_flag, $flags_id))
 		{
-			if (!empty($event['data']['user_flag']) && !in_array($event['data']['user_flag'], $flags_id))
-			{
-				$array[] = $this->language->lang('FLAG_NOT_EXIST');
-			}
-			if (empty($event['data']['user_flag']) && $this->config['flags_required'])
-			{
-				$array[] = $this->language->lang('MUST_CHOOSE_FLAG');
-			}
+			$array[] = $this->language->lang('FLAG_NOT_EXIST');
 		}
+		if (!DEFINED('IN_ADMIN') && empty($user_flag) && $this->config['flags_required'])
+		{
+			$array[] = $this->language->lang('MUST_CHOOSE_FLAG');
+		}
+
 		$event['error'] = $array;
 	}
 
@@ -297,8 +298,10 @@ class listener implements EventSubscriberInterface
 		//call function to trash the users_and_flags cache so it's regenerated
 		$this->nationalflags->trash_the_cache();
 
+		$user_flag = $event['data']['user_flag'];
+
 		$event['sql_ary'] = array_merge($event['sql_ary'], [
-				'user_flag' => $event['data']['user_flag'],
+				'user_flag' => $user_flag,
 		]);
 	}
 

@@ -308,7 +308,7 @@ class nationalflags
 			else
 			{
 				return new JsonResponse([
-					'error' => $this->language->lang('NO_SUCH_FLAG'),
+					'error' => $this->language->lang('FLAG_NOT_EXIST'),
 				]);
 			}
 		}
