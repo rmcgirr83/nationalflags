@@ -358,7 +358,7 @@ class nationalflags
 		}
 		if (!$this->config['flags_display_to_guests'])
 		{
-			$check_display = ($this->user->data['user_id'] == ANONYMOUS || $this->user->data['is_bot']) ? false : true;
+			$check_display = ($this->user->data['user_id'] == ANONYMOUS || !empty($this->user->data['is_bot'])) ? false : true;
 			return $check_display;
 		}
 
