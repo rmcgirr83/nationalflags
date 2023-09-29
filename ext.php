@@ -25,9 +25,9 @@ class ext extends \phpbb\extension\base
 		$enableable = (phpbb_version_compare(PHPBB_VERSION, '3.3.4', '>=') && version_compare(PHP_VERSION, '7.2.*', '>'));
 		if (!$enableable)
 		{
-			$user = $this->container->get('user');
-			$user->add_lang_ext('rmcgirr83/nationalflags', 'nationalflags_acp');
-			trigger_error($user->lang('FLAGS_REQUIRE_540'), E_USER_WARNING);
+			$language = $this->container->get('language');
+			$language->add_lang('nationalflags_acp', 'rmcgirr83/nationalflags');
+			trigger_error($language->lang(('FLAGS_REQUIRE_540'), E_USER_WARNING));
 		}
 
 		return $enableable;
