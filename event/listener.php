@@ -552,7 +552,7 @@ class listener implements EventSubscriberInterface
 
 		if (!empty($flag_id) && $this->nationalflags->display_flags_on_forum($this->config['flags_memberlist']))
 		{
-			$template_vars['USERNAME_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag($flag_id, 16);
+			$template_vars['USERNAME_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag($flag_id, 12);
 		}
 
 		$event['template_data'] = $template_vars;
@@ -571,7 +571,7 @@ class listener implements EventSubscriberInterface
 
 		if (!empty($flag_id) && $this->nationalflags->display_flags_on_forum($this->config['flags_forumrow']))
 		{
-			$template_vars['LAST_POSTER_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag($flag_id, 16);
+			$template_vars['LAST_POSTER_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag($flag_id, 12);
 		}
 
 		$event['forum_row'] = $template_vars;
@@ -602,11 +602,11 @@ class listener implements EventSubscriberInterface
 
 		if (!empty($topic_starter) && $this->nationalflags->display_flags_on_forum($this->config['flags_forumrow']))
 		{
-			$template_vars['TOPIC_AUTHOR_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag($topic_starter, 16);
+			$template_vars['TOPIC_AUTHOR_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag($topic_starter, 12);
 		}
 		if (!empty($last_post_author) && $this->nationalflags->display_flags_on_forum($this->config['flags_forumrow']))
 		{
-			$template_vars['LAST_POST_AUTHOR_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag($last_post_author, 16);
+			$template_vars['LAST_POST_AUTHOR_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag($last_post_author, 12);
 		}
 
 		$event['topic_row'] = $template_vars;
