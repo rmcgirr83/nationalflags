@@ -35,7 +35,7 @@ class admin_controller
 	* define our constants
 	**/
 	const MAX_WIDTH = 32;
-	const MAX_HEIGHT = 32;
+	const MAX_HEIGHT = 24;
 
 	/** @var cache $cache */
 	protected $cache;
@@ -356,15 +356,17 @@ class admin_controller
 				$this->log_message('LOG_FLAG_ADD', $flag_row['flag_name'], 'MSG_FLAG_ADDED');
 			}
 		}
-
+		$flag_list =  $this->list_flag_names();
+		$flag_count = sizeof(explode(",", $flag_list));
 		$this->template->assign_vars([
 			'L_TITLE'		=> $this->language->lang('FLAG_ADD'),
+			'L_IMAGES_ON_SERVER'	=> $this->language->lang('IMAGES_ON_SERVER', $flag_count),
 			'U_ACTION'		=> $this->u_action . '&amp;action=add',
 			'U_BACK'		=> $this->u_action,
 			'FLAG_NAME'		=> $flag_row['flag_name'],
 			'FLAG_IMAGE'	=> $flag_row['flag_image'],
 			'ERROR_MSG'		=> (sizeof($errors)) ? implode('<br>', $errors) : '',
-			'FLAG_LIST'		=> $this->list_flag_names(),
+			'FLAG_LIST'		=> $flag_list,
 
 			'S_ADD_FLAG'	=> true,
 			'S_ERROR'		=> (sizeof($errors)) ? true : false,
@@ -434,8 +436,11 @@ class admin_controller
 		}
 
 		$found_flag = $this->ext_path_web . 'flags/' . $row['flag_image'];
+		$flag_list =  $this->list_flag_names();
+		$flag_count = sizeof(explode(",", $flag_list));
 		$this->template->assign_vars([
 			'L_TITLE'		=> $this->language->lang('FLAG_EDIT'),
+			'L_IMAGES_ON_SERVER'	=> $this->language->lang('IMAGES_ON_SERVER', $flag_count),
 			'U_ACTION'		=> $this->u_action . "&amp;flag_id=$flag_id&amp;action=edit",
 			'U_BACK'		=> $this->u_action . '&amp;mode=manage',
 			'ERROR_MSG'		=> (sizeof($errors)) ? implode('<br>', $errors) : '',
@@ -445,7 +450,7 @@ class admin_controller
 			'FLAG_ID'		=> $row['flag_id'],
 			'FLAG_DEFAULT'	=> $row['flag_default'],
 			'FOUND_FLAG'	=> (!empty($found_flag)) ? $found_flag : '',
-			'FLAG_LIST'		=> $this->list_flag_names(),
+			'FLAG_LIST'		=> $flag_list,
 
 			'S_ADD_FLAG'	=> true,
 			'S_UPLOAD_FLAG'	=> $this->can_upload_flag(),

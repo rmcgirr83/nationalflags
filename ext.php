@@ -22,7 +22,7 @@ class ext extends \phpbb\extension\base
 	 */
 	public function is_enableable()
 	{
-		$enableable = (phpbb_version_compare(PHPBB_VERSION, '3.3.4', '>=') && version_compare(PHP_VERSION, '7.2.*', '>'));
+		$enableable = (phpbb_version_compare(PHPBB_VERSION, '3.3', '>=') && version_compare(PHP_VERSION, '7.4.*', '>'));
 		if (!$enableable)
 		{
 			$language = $this->container->get('language');

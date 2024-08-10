@@ -52,7 +52,7 @@ $lang = array_merge($lang, [
 	'FLAG_UPLOAD_NOTICE'				=> 'Uploading an image will overwrite an image file already located on the server if one exists.  The image file <strong>is</strong> case sensitive.',
 	'FLAG_UPLOAD_NO_OVERWRITE'			=> 'You will not be able to overwrite an already existing image with the same name and extension as shown below.',
 	'FLAG_FOUND'						=> 'Flag found',
-	'IMAGES_ON_SERVER'					=> 'Image names on server',
+	'IMAGES_ON_SERVER'					=> '%d Image names on server',
 
 	//Settings
 	'FLAGS_REQUIRED'					=> 'Required field',

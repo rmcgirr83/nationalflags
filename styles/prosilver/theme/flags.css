@@ -30,7 +30,7 @@ ul.flags li.flagslist {
 
 .flag_image {
 	font-size: 12px;
-	height: 32px;
+	/*height: 32px;*/
 	vertical-align: bottom;
 }
 
