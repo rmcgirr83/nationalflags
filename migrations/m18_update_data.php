@@ -13,7 +13,7 @@ class m18_update_data extends \phpbb\db\migration\migration
 {
 	static public function depends_on()
 	{
-		return ['\rmcgirr83\nationalflags\migrations\m17_update_data'];
+		return ['\rmcgirr83\nationalflags\migrations\m17_add_data'];
 	}
 
 	public function update_data()
