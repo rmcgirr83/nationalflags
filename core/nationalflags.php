@@ -507,9 +507,9 @@ class nationalflags
 	 */
 	public function flag_name_lang_var($flag_name = '')
 	{
-		if (array_key_exists((strtoupper(str_replace(" ", "_", $flag_name))), $this->language->get_lang_array()))
+		if (array_key_exists((strtoupper(str_replace(" ", "_", trim($flag_name)))), $this->language->get_lang_array()))
 		{
-			$flag_name = html_entity_decode($this->language->lang(strtoupper(str_replace(" ", "_", $flag_name))));
+			$flag_name = html_entity_decode($this->language->lang(strtoupper(str_replace(" ", "_", trim($flag_name)))));
 		}
 
 		return $flag_name;
