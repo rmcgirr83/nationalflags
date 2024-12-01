@@ -61,6 +61,7 @@ services:
             - '%core.root_path%'
             - '%core.php_ext%'
             - '@rmcgirr83.nationalflags.nationalflags'
+            - '@?paybas.recenttopics.functions'
         tags:
             - { name: event.listener }
 

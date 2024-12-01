@@ -23,6 +23,7 @@ use phpbb\template\template;
 use phpbb\user;
 use phpbb\extension\manager;
 use rmcgirr83\nationalflags\core\nationalflags;
+use paybas\recenttopics\core\recenttopics;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -66,6 +67,9 @@ class listener implements EventSubscriberInterface
 	/* @var nationalflags $nationalflags */
 	protected $nationalflags;
 
+	/* @var recenttopics $recenttopics */
+	protected $recenttopics;
+
 	/**
 	* Constructor
 	*
@@ -81,6 +85,7 @@ class listener implements EventSubscriberInterface
 	* @param string                 $root_path		phpBB root path
 	* @param string                 $php_ext		phpEx
 	* @param nationalflags			$nationalflags	methods to be used by class
+	* @param recenttopics			$recenttopics	recent topics extension
 	* @access public
 	*/
 	public function __construct(
@@ -95,7 +100,8 @@ class listener implements EventSubscriberInterface
 			manager $ext_manager,
 			string $root_path,
 			string $php_ext,
-			nationalflags $nationalflags)
+			nationalflags $nationalflags,
+			recenttopics $recenttopics = null)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -109,6 +115,7 @@ class listener implements EventSubscriberInterface
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 		$this->nationalflags = $nationalflags;
+		$this->recenttopics = $recenttopics;
 
 		$this->ext_path = $this->ext_manager->get_extension_path('rmcgirr83/nationalflags', true);
 	}
@@ -150,6 +157,7 @@ class listener implements EventSubscriberInterface
 			'core.display_forums_modify_template_vars'	=> 'display_forums_modify_template_vars',
 			'core.viewforum_modify_page_title'			=> 'viewforum_modify_page_title',
 			'core.viewforum_modify_topicrow'			=> 'viewforum_modify_topicrow',
+			'paybas.recenttopics.modify_tpl_ary'		=> 'recenttopics_modify_tpl_ary',
 		];
 	}
 
@@ -610,5 +618,25 @@ class listener implements EventSubscriberInterface
 		}
 
 		$event['topic_row'] = $template_vars;
+	}
+
+
+	public function recenttopics_modify_tpl_ary($event)
+	{
+		$row = $event['row'];
+		$topic_starter = $this->nationalflags->user_flag_id($event['row']['topic_poster']);
+		$last_post_author = $this->nationalflags->user_flag_id($event['row']['topic_last_poster_id']);
+		$template_vars = $event['tpl_ary'];
+
+		if (!empty($topic_starter) && $this->nationalflags->display_flags_on_forum($this->config['flags_forumrow']))
+		{
+			$template_vars['TOPIC_AUTHOR_FULL'] .= '&nbsp;' . $this->nationalflags->get_user_flag($topic_starter, 12);
+		}
+		if (!empty($last_post_author) && $this->nationalflags->display_flags_on_forum($this->config['flags_forumrow']))
+		{
+			$template_vars['LAST_POST_AUTHOR_FULL']	.= '&nbsp;' . $this->nationalflags->get_user_flag($last_post_author, 12);
+		}
+
+		$event['tpl_ary'] = $template_vars;
 	}
 }

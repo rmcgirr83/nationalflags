@@ -253,7 +253,6 @@ class nationalflags
 			$count = 0;
 			for ($i = 0; $i < $max_display; ++$i)
 			{
-				++$count;
 				if (!empty($cached_flags[$i]['user_count']))
 				{
 					$this->template->assign_block_vars('flag', [
@@ -261,6 +260,8 @@ class nationalflags
 						'FLAG_USERS'	=> $this->user->lang('FLAG_USERS', (int) $cached_flags[$i]['user_count']),
 						'U_FLAG'		=> $this->helper->route('rmcgirr83_nationalflags_getflags', ['flag_id' => $cached_flags[$i]['flag_id']]),
 					]);
+
+					++$count;
 				}
 			}
 
