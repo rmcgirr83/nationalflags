@@ -158,6 +158,7 @@ class listener implements EventSubscriberInterface
 			'core.viewforum_modify_page_title'			=> 'viewforum_modify_page_title',
 			'core.viewforum_modify_topicrow'			=> 'viewforum_modify_topicrow',
 			'paybas.recenttopics.modify_tpl_ary'		=> 'recenttopics_modify_tpl_ary',
+			'core.delete_user_after'					=> 'delete_user_after',
 		];
 	}
 
@@ -620,7 +621,11 @@ class listener implements EventSubscriberInterface
 		$event['topic_row'] = $template_vars;
 	}
 
-
+	/* recenttopics_modify_tpl_ary
+	* @param 	object 	The event object
+	* @return	string	A flag image
+	* @access	public
+	*/
 	public function recenttopics_modify_tpl_ary($event)
 	{
 		$row = $event['row'];
@@ -638,5 +643,16 @@ class listener implements EventSubscriberInterface
 		}
 
 		$event['tpl_ary'] = $template_vars;
+	}
+
+	/* delete_user_after
+	* @param 	object 	The event object
+	* @return	string	A flag image
+	* @access	public
+	*/
+	public function delete_user_after($event)
+	{
+		//call function to trash the users_and_flags cache so it's regenerated
+		$this->nationalflags->trash_the_cache();
 	}
 }
