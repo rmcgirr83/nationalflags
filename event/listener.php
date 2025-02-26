@@ -159,6 +159,7 @@ class listener implements EventSubscriberInterface
 			'core.viewforum_modify_topicrow'			=> 'viewforum_modify_topicrow',
 			'paybas.recenttopics.modify_tpl_ary'		=> 'recenttopics_modify_tpl_ary',
 			'core.delete_user_after'					=> 'delete_user_after',
+			'core.memberlist_modify_memberrow_sql'		=> 'memberlist_modify_memberrow_sql',
 		];
 	}
 
@@ -654,5 +655,15 @@ class listener implements EventSubscriberInterface
 	{
 		//call function to trash the users_and_flags cache so it's regenerated
 		$this->nationalflags->trash_the_cache();
+	}
+
+	public function memberlist_modify_memberrow_sql($event)
+	{
+		$mode = $event['mode'];
+
+		if ($mode != 'group' && ($this->config['flags_display_index'] || $this->nationalflags->display_flags_on_forum()))
+		{
+			$this->nationalflags->top_flags();
+		}
 	}
 }
