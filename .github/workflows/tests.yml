@@ -19,3 +19,40 @@ jobs:
     uses: phpbb-extensions/test-framework/.github/workflows/tests.yml@3.3.x
     with:
       EXTNAME: rmcgirr83/nationalflags   # Your extension vendor/package name (required)
+
+      # Check for files with executable permissions? 1 (yes) or 0 (no)
+      # Default: 1
+      EXECUTABLE_FILES: 0
+
+      # Remove embedded ICC profiles from images? 1 (yes) or 0 (no)
+      # Default: 1
+      IMAGE_ICC: 0
+
+      # Run MySQL/MariaDB tests? 1 (yes) or 0 (no)
+      # Default: 1
+      RUN_MYSQL_JOBS: 0
+
+      # Run PostgreSQL tests? 1 (yes) or 0 (no)
+      # Default: 1
+      RUN_PGSQL_JOBS: 0
+
+      # Run MSSQL and SQLite3 tests? 1 (yes) or 0 (no)
+      # Default: 1
+      RUN_MSSQL_JOBS: 0
+
+      # Run Windows IIS & PostgreSQL tests? 1 (yes) or 0 (no)
+      # Default: 1
+      RUN_WINDOWS_JOBS: 0
+
+      # Run functional tests if you have them? 1 (yes) or 0 (no)
+      # Default: 1
+      RUN_FUNCTIONAL_TESTS: 0
+ 
+      # Preferred PHP version used for all test jobs.
+      # Default: '7.2'
+      PRIMARY_PHP_VERSION: '8.0'
+
+      # The MySQL and PostgreSQL jobs run tests across multiple PHP versions.
+      # List the PHP versions you want your extension tested with.
+      # Default: '["7.2", "7.3", "7.4", "8.0", "8.1", "8.2", "8.3", "8.4"]'
+      PHP_VERSION_MATRIX: '["8.0", "8.1", "8.2", "8.3", "8.4"]'
