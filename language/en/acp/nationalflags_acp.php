@@ -97,7 +97,6 @@ $lang = array_merge($lang, [
 	'FLAG_ERROR_NO_FLAG_NAME'			=> 'No flag name defined, this is a required field.',
 	'FLAG_ERROR_NO_FLAG_IMG'			=> 'No flag image defined, this is a required field.',
 	'FLAG_ERROR_NOT_EXIST'				=> 'The selected flag does not exist.',
-	'FLAG_CONFIG_SAVED'					=> '<strong>National flags settings changed</strong>',
 	'FLAG_NAME_EXISTS'					=> 'A flag with that name already exists',
 	'FLAG_SETTINGS_CHANGED'				=> 'National Flags settings changed.',
 	'FLAG_IMAGE_GENERAL_UPLOAD_ERROR'	=> 'Could not upload flag to %s. The flag image may already exist.',

@@ -210,7 +210,7 @@ class admin_controller
 				$this->set_options();
 
 				// Add option settings change action to the admin log
-				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'FLAG_CONFIG_SAVED');
+				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_FLAG_CONFIG_SAVED');
 
 				// Option settings have been updated and logged
 				// Confirm this to the user and provide link back to previous page

@@ -40,4 +40,5 @@ $lang = array_merge($lang, [
 	'LOG_FLAGS_DELETED'					=> '<strong>Deleted flag</strong><br>» %1$s',
 	'LOG_FLAG_EDIT'						=> '<strong>Updated flag</strong><br>» %1$s',
 	'LOG_FLAG_ADD'						=> '<strong>Added new flag</strong><br>» %1$s',
+	'LOG_FLAG_CONFIG_SAVED'				=> '<strong>National flags settings changed</strong>',
 ]);
